@@ -1,451 +1,114 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090b0f">
-  <meta name="description" content="RAMiiN AI — an independent AI and technology project, proudly rooted in Kurdistan. Coming soon.">
-  <title>RAMiiN AI — Kurdistan Edition</title>
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #090b0f;
-      --panel: rgba(17, 22, 29, .78);
-      --panel-strong: rgba(20, 26, 34, .94);
-      --text: #f3f6fa;
-      --muted: #9aa5b4;
-      --subtle: #697586;
-      --line: rgba(220, 232, 245, .11);
-      --accent-rgb: 174, 132, 255;
-      --accent2-rgb: 218, 184, 255;
-      --accent: rgb(var(--accent-rgb));
-      --accent2: rgb(var(--accent2-rgb));
-      --glow: rgba(var(--accent-rgb), .32);
-      --font: Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
-      --font-ku: "Noto Sans Arabic", "Noto Naskh Arabic", Tahoma, Arial, sans-serif;
-      --ease: cubic-bezier(.2, .75, .25, 1);
-    }
-
-    *, *::before, *::after { box-sizing: border-box; }
-    html { min-width: 320px; min-height: 100%; background: var(--bg); }
-    body {
-      min-width: 320px;
-      min-height: 100vh;
-      min-height: 100svh;
-      margin: 0;
-      overflow-x: hidden;
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font);
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
-    button, input, label { font: inherit; }
-    [lang="ckb"] { direction: rtl; font-family: var(--font-ku); letter-spacing: 0 !important; }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-    .control {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* The three feature selectors recolor the page without JavaScript. */
-    #module-vision:checked ~ .page {
-      --accent-rgb: 143, 119, 255;
-      --accent2-rgb: 199, 169, 255;
-    }
-    #module-language:checked ~ .page {
-      --accent-rgb: 195, 133, 239;
-      --accent2-rgb: 239, 174, 226;
-    }
-
-    .page {
-      position: relative;
-      isolation: isolate;
-      display: flex;
-      min-height: 100vh;
-      min-height: 100svh;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1.6rem;
-      overflow: hidden;
-      padding: max(1.6rem, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-right)) max(1.35rem, env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
-      text-align: center;
-    }
-
-    /* Ambient charcoal background, subtle grid and light grain. */
-    .ambient, .grid, .grain { position: absolute; inset: 0; pointer-events: none; }
-    .ambient { z-index: -4; overflow: hidden; }
-    .ambient::before, .ambient::after {
-      position: absolute;
-      width: min(58rem, 90vw);
-      aspect-ratio: 1;
-      border-radius: 50%;
-      content: "";
-      filter: blur(115px);
-      opacity: .14;
-      animation: drift 24s ease-in-out infinite alternate;
-    }
-    .ambient::before { top: -39rem; left: -27rem; background: var(--accent); }
-    .ambient::after { right: -36rem; bottom: -42rem; background: var(--accent2); animation-delay: -12s; }
-    .grid {
-      z-index: -3;
-      background-image: linear-gradient(rgba(255,255,255,.027) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.027) 1px, transparent 1px);
-      background-size: 58px 58px;
-      -webkit-mask-image: radial-gradient(ellipse at center, #000 4%, transparent 75%);
-      mask-image: radial-gradient(ellipse at center, #000 4%, transparent 75%);
-    }
-    .grain {
-      z-index: -2;
-      opacity: .12;
-      background-image: radial-gradient(rgba(255,255,255,.23) .55px, transparent .7px);
-      background-size: 5px 5px;
-      -webkit-mask-image: linear-gradient(transparent, #000 23%, #000 78%, transparent);
-      mask-image: linear-gradient(transparent, #000 23%, #000 78%, transparent);
-    }
-    .stars { position: absolute; z-index: -1; inset: 0; overflow: hidden; pointer-events: none; }
-    .stars i {
-      position: absolute;
-      left: var(--x);
-      bottom: -10px;
-      width: var(--s);
-      height: var(--s);
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 10px var(--glow);
-      opacity: 0;
-      animation: rise var(--d) linear infinite;
-      animation-delay: var(--delay);
-    }
-
-    .header, .footer { width: min(100%, 72rem); position: relative; z-index: 1; }
-    .header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-    .brand { display: inline-flex; align-items: center; gap: .72rem; color: var(--text); font-size: 1.02rem; font-weight: 760; letter-spacing: .23em; }
-    .brand-mark {
-      display: grid;
-      width: 2.05rem;
-      aspect-ratio: 1;
-      place-items: center;
-      border: 1px solid rgba(var(--accent-rgb), .45);
-      border-radius: 9px;
-      background: rgba(var(--accent-rgb), .08);
-      box-shadow: 0 0 22px rgba(var(--accent-rgb), .10);
-      color: var(--accent);
-      font-size: .9rem;
-      letter-spacing: 0;
-    }
-    .header-right { display: flex; align-items: center; gap: 1rem; }
-    .dev-status { display: inline-flex; align-items: center; gap: .55rem; color: var(--muted); font-size: .66rem; font-weight: 650; letter-spacing: .15em; text-transform: uppercase; }
-    .dev-status::before { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--glow); content: ""; }
-
-    .language-switch { display: inline-flex; align-items: center; gap: .2rem; padding: .22rem; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.025); }
-    .language-switch label { min-width: 2.6rem; padding: .34rem .55rem; border-radius: 999px; color: var(--subtle); cursor: pointer; font-size: .66rem; font-weight: 700; transition: background .2s ease, color .2s ease; }
-    #lang-en:checked ~ .page .lang-en-label, #lang-ku:checked ~ .page .lang-ku-label { background: rgba(var(--accent-rgb), .13); color: var(--text); }
-    #lang-en:focus-visible ~ .page .lang-en-label, #lang-ku:focus-visible ~ .page .lang-ku-label { outline: 2px solid var(--accent); outline-offset: 3px; }
-
-    .stage {
-      display: flex;
-      width: min(100%, 48rem);
-      flex: 1;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: clamp(.85rem, 2.2vh, 1.45rem);
-      padding: .5rem 0;
-    }
-    .eyebrow { display: inline-flex; align-items: center; gap: .65rem; color: var(--accent); font-size: .64rem; font-weight: 750; letter-spacing: .24em; text-transform: uppercase; }
-    .eyebrow::before, .eyebrow::after { width: 1.6rem; height: 1px; background: rgba(var(--accent-rgb), .55); content: ""; }
-
-    /* Animated AI core. The label toggles its visual power state. */
-    .reactor-wrap { display: grid; width: clamp(142px, 24vw, 180px); aspect-ratio: 1; place-items: center; margin: .1rem 0; }
-    .reactor { position: relative; display: grid; width: 100%; height: 100%; place-items: center; border-radius: 50%; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform .35s var(--ease); }
-    .reactor:hover { transform: scale(1.045); }
-    .reactor:active { transform: scale(.97); }
-    #power:focus-visible ~ .page .reactor { outline: 2px solid var(--accent); outline-offset: 9px; }
-    .halo { position: absolute; inset: 7%; border: 1px solid rgba(var(--accent-rgb), .13); border-radius: 50%; box-shadow: 0 0 55px rgba(var(--accent-rgb), .07), inset 0 0 35px rgba(var(--accent-rgb), .035); }
-    .ring { position: absolute; border: 1.5px solid transparent; border-radius: 50%; }
-    .ring-a { inset: 0; border-top-color: var(--accent); border-right-color: rgba(var(--accent-rgb), .22); filter: drop-shadow(0 0 8px var(--glow)); animation: spin 5s linear infinite; }
-    .ring-b { inset: 14%; border-bottom-color: var(--accent2); border-left-color: rgba(var(--accent2-rgb), .22); filter: drop-shadow(0 0 8px rgba(var(--accent2-rgb), .35)); animation: spin 7s linear infinite reverse; }
-    .ring-c { inset: 29%; border: 1px dashed rgba(230,239,249,.31); animation: spin 16s linear infinite; }
-    .core { position: relative; width: 13%; aspect-ratio: 1; border-radius: 50%; background: var(--accent); box-shadow: 0 0 18px 5px var(--glow), 0 0 48px 10px rgba(var(--accent2-rgb), .22); animation: pulse 2.8s ease-in-out infinite; }
-    .core::after { position: absolute; inset: -100%; border: 1px solid rgba(var(--accent-rgb), .2); border-radius: 50%; content: ""; animation: wave 2.8s ease-out infinite; }
-    .network { position: absolute; inset: -33%; width: 166%; height: 166%; overflow: visible; pointer-events: none; opacity: .7; }
-    .network line { stroke: rgba(var(--accent-rgb), .35); stroke-width: .8; stroke-dasharray: 3 5; animation: flow 4s linear infinite; }
-    .network circle { fill: var(--accent); transform-box: fill-box; transform-origin: center; animation: node 3.4s ease-in-out infinite; }
-    .network circle:nth-of-type(2n) { animation-delay: -.8s; }
-    .network circle:nth-of-type(3n) { animation-delay: -1.5s; }
-    #power:checked ~ .page .ring-a { animation-duration: 1.7s; }
-    #power:checked ~ .page .ring-b { animation-duration: 2.5s; }
-    #power:checked ~ .page .ring-c { animation-duration: 6s; }
-    #power:checked ~ .page .core { animation-duration: 1.35s; box-shadow: 0 0 30px 9px var(--glow), 0 0 78px 18px rgba(var(--accent2-rgb), .34); }
-    #power:checked ~ .page .network line { stroke: rgba(var(--accent-rgb), .68); animation-duration: 1.8s; }
-    #power:checked ~ .page .ambient::before, #power:checked ~ .page .ambient::after { opacity: .23; }
-    .activate-hint { color: var(--subtle); font-size: .69rem; line-height: 1.6; }
-    .activate-hint strong { color: var(--muted); font-weight: 650; }
-    #power:checked ~ .page .activate-hint { opacity: 0; }
-
-    .headline { max-width: 100%; }
-    .title { margin: 0; color: var(--text); font-size: clamp(2.35rem, 8.4vw, 4.65rem); font-weight: 250; line-height: 1.04; letter-spacing: .145em; padding-left: .145em; text-wrap: balance; }
-    #power:checked ~ .page .title { background: linear-gradient(90deg, var(--accent), #fff 44%, var(--accent2), var(--accent)); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; animation: shine 5s linear infinite; }
-    .subtitle { margin: .72rem 0 0; color: var(--muted); font-size: clamp(.92rem, 2.4vw, 1.08rem); font-weight: 350; line-height: 1.7; }
-    .kurdish-title { margin: 0; color: var(--text); font-size: clamp(1.65rem, 5.8vw, 2.25rem); font-weight: 650; line-height: 1.55; }
-    .kurdish-subtitle { margin: .05rem 0 0; color: var(--muted); font-size: .96rem; line-height: 1.8; }
-
-    /* CSS-only language switch: English is the default. */
-    .copy-ku { display: none; }
-    #lang-ku:checked ~ .page .copy-en { display: none; }
-    /* Keep detail cards hidden until their matching tab is selected. */
-    #lang-ku:checked ~ .page .headline .copy-ku,
-    #lang-ku:checked ~ .page .detail-tab .copy-ku,
-    #lang-ku:checked ~ .page .footer-ku { display: block; }
-
-    .modules { display: flex; flex-wrap: wrap; justify-content: center; gap: .55rem; margin-top: .25rem; }
-    .module-tab { display: flex; min-width: 6.7rem; flex-direction: column; align-items: center; gap: .17rem; padding: .62rem 1rem .58rem; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.025); color: var(--muted); cursor: pointer; font-size: .77rem; font-weight: 650; line-height: 1.25; transition: transform .22s ease, border-color .22s ease, background .22s ease, color .22s ease; -webkit-tap-highlight-color: transparent; }
-    .module-tab small { font-family: var(--font-ku); font-size: .68rem; font-weight: 400; }
-    .module-tab:hover { transform: translateY(-2px); border-color: rgba(var(--accent-rgb), .48); color: var(--text); }
-    #module-neural:checked ~ .page label[for="module-neural"], #module-vision:checked ~ .page label[for="module-vision"], #module-language:checked ~ .page label[for="module-language"] { border-color: rgba(var(--accent-rgb), .78); background: rgba(var(--accent-rgb), .11); box-shadow: 0 0 20px rgba(var(--accent-rgb), .1); color: var(--text); }
-    #module-neural:focus-visible ~ .page label[for="module-neural"], #module-vision:focus-visible ~ .page label[for="module-vision"], #module-language:focus-visible ~ .page label[for="module-language"] { outline: 2px solid var(--accent); outline-offset: 3px; }
-    .feature-panel { display: none; width: min(100%, 28rem); min-height: 4.5rem; padding: .88rem 1.15rem; border: 1px solid rgba(var(--accent-rgb), .2); border-radius: 15px; background: var(--panel); box-shadow: 0 14px 48px rgba(0,0,0,.16); -webkit-backdrop-filter: blur(13px); backdrop-filter: blur(13px); animation: reveal .32s var(--ease) both; }
-    .feature-panel p { margin: 0; color: #c7cfda; font-size: .83rem; line-height: 1.65; }
-    .feature-panel p + p { margin-top: .12rem; }
-    .feature-panel p[lang="ckb"] { display: none; }
-    #lang-ku:checked ~ .page .feature-panel p:not([lang="ckb"]) { display: none; }
-    #lang-ku:checked ~ .page .feature-panel p[lang="ckb"] { display: block; }
-    #module-neural:checked ~ .page .panel-neural, #module-vision:checked ~ .page .panel-vision, #module-language:checked ~ .page .panel-language { display: block; }
-
-    /* Extra click-to-open project cards. The default radio hides all cards. */
-    .detail-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: .48rem; margin-top: .12rem; }
-    .detail-tab {
-      display: inline-flex; align-items: center; justify-content: center; gap: .42rem;
-      min-height: 2.45rem; padding: .58rem .95rem; border: 1px solid rgba(var(--accent-rgb), .25);
-      border-radius: 999px; background: rgba(var(--accent-rgb), .045); color: #c9c0df;
-      cursor: pointer; font-size: .72rem; font-weight: 650; letter-spacing: .015em;
-      transition: transform .2s ease, border-color .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .detail-tab:hover { transform: translateY(-2px); border-color: rgba(var(--accent-rgb), .7); background: rgba(var(--accent-rgb), .10); color: #fff; }
-    .detail-tab:active { transform: scale(.97); }
-    #view-about:focus-visible ~ .page label[for="view-about"],
-    #view-roadmap:focus-visible ~ .page label[for="view-roadmap"],
-    #view-status:focus-visible ~ .page label[for="view-status"] { outline: 2px solid var(--accent); outline-offset: 3px; }
-    #view-about:checked ~ .page label[for="view-about"],
-    #view-roadmap:checked ~ .page label[for="view-roadmap"],
-    #view-status:checked ~ .page label[for="view-status"] {
-      border-color: rgba(var(--accent-rgb), .8); background: rgba(var(--accent-rgb), .16);
-      color: #fff; box-shadow: 0 0 18px rgba(var(--accent-rgb), .13);
-    }
-    .detail-card {
-      display: none; position: relative; width: min(100%, 32rem); padding: 1rem 1.2rem;
-      border: 1px solid rgba(var(--accent-rgb), .27); border-radius: 16px;
-      background: linear-gradient(145deg, rgba(27, 22, 43, .88), rgba(16, 17, 27, .9));
-      box-shadow: 0 18px 55px rgba(0,0,0,.24), inset 0 1px rgba(255,255,255,.035);
-      text-align: left; -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-      animation: reveal .3s var(--ease) both;
-    }
-    .detail-card h2 { margin: 0 2.2rem .38rem 0; color: #f5f0ff; font-size: .88rem; font-weight: 750; letter-spacing: .025em; }
-    .detail-card p { margin: 0; color: #b9b2c9; font-size: .78rem; line-height: 1.7; }
-    .detail-card p + p { margin-top: .32rem; }
-    .detail-card[lang="ckb"] { text-align: right; }
-    .detail-card[lang="ckb"] h2 { margin: 0 0 .38rem 2.2rem; }
-    .detail-close { position: absolute; top: .65rem; right: .7rem; display: grid; width: 1.8rem; height: 1.8rem; place-items: center; border: 1px solid var(--line); border-radius: 50%; color: var(--muted); cursor: pointer; font-size: 1rem; line-height: 1; transition: background .2s ease, color .2s ease; }
-    .detail-close:hover { background: rgba(var(--accent-rgb), .15); color: #fff; }
-    #view-about:checked ~ .page .detail-about,
-    #view-roadmap:checked ~ .page .detail-roadmap,
-    #view-status:checked ~ .page .detail-status { display: block; }
-    #lang-ku:checked ~ .page .detail-card.copy-en { display: none; }
-    #lang-en:checked ~ .page .detail-card.copy-ku { display: none; }
-
-    .power-button {
-      display: inline-flex; align-items: center; justify-content: center; gap: .48rem;
-      min-height: 2.45rem; padding: .62rem 1rem; border: 1px solid rgba(var(--accent-rgb), .52);
-      border-radius: 999px; background: linear-gradient(135deg, rgba(var(--accent-rgb), .2), rgba(var(--accent2-rgb), .1));
-      box-shadow: 0 5px 22px rgba(var(--accent-rgb), .08); color: #f5efff; cursor: pointer;
-      font-size: .72rem; font-weight: 750; letter-spacing: .07em; transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
-    }
-    .power-button:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(var(--accent-rgb), .2); }
-    .power-button:active { transform: scale(.97); }
-    .power-button .power-off { display: none; }
-    #power:checked ~ .page .power-button .power-on { display: none; }
-    #power:checked ~ .page .power-button .power-off { display: inline; }
-    .power-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-
-    .progress { position: relative; width: min(17rem, 66vw); height: 3px; overflow: hidden; border-radius: 99px; background: rgba(255,255,255,.09); }
-    .progress::after { position: absolute; inset: 0 auto 0 0; width: 35%; border-radius: inherit; background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent); box-shadow: 0 0 12px var(--glow); content: ""; animation: sweep 2.8s var(--ease) infinite; }
-    #power:checked ~ .page .progress::after { animation-duration: 1.45s; }
-
-    .footer { display: flex; flex-direction: column; align-items: center; gap: .5rem; color: var(--muted); font-size: .68rem; }
-    .status { display: inline-flex; align-items: center; gap: .65rem; letter-spacing: .18em; }
-    .dots { display: inline-flex; gap: 5px; }
-    .dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--glow); animation: bounce 1.5s ease-in-out infinite; }
-    .dots i:nth-child(2) { animation-delay: .18s; }
-    .dots i:nth-child(3) { animation-delay: .36s; }
-    .ready { display: none; color: var(--accent); }
-    #power:checked ~ .page .ready { display: inline; }
-    #power:checked ~ .page .waiting { display: none; }
-    .footer-copy { color: var(--subtle); font-size: .7rem; }
-    .copyright { margin-top: .15rem; color: #596371; font-size: .62rem; letter-spacing: .07em; }
-    #lang-ku:checked ~ .page .footer-en { display: none; }
-    #lang-en:checked ~ .page .footer-ku { display: none; }
-
-
-    /* A restrained Kurdistan flag backdrop: visible at the edges, softened behind content. */
-    .flag-backdrop {
-      position: absolute;
-      z-index: -5;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
-      opacity: .30;
-      -webkit-mask-image: radial-gradient(ellipse at 50% 46%, #000 20%, rgba(0,0,0,.88) 52%, transparent 100%);
-      mask-image: radial-gradient(ellipse at 50% 46%, #000 20%, rgba(0,0,0,.88) 52%, transparent 100%);
-    }
-    .flag-backdrop svg {
-      position: absolute;
-      width: max(112vw, 112rem);
-      height: max(100vh, 100svh);
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) rotate(-7deg) scale(1.08);
-      filter: saturate(1.18);
-    }
-    .flag-backdrop::after {
-      position: absolute;
-      inset: 0;
-      content: "";
-      background: linear-gradient(180deg, rgba(8,10,15,.18), rgba(8,10,15,.48)),
-                  radial-gradient(ellipse at center, transparent 8%, rgba(8,10,15,.48) 78%);
-    }
-    .dev-status { white-space: nowrap; }
-    .flag-caption {
-      display: inline-flex;
-      align-items: center;
-      gap: .42rem;
-      margin-top: .2rem;
-      color: rgba(244, 235, 196, .78);
-      font-size: .57rem;
-      font-weight: 750;
-      letter-spacing: .19em;
-      text-transform: uppercase;
-    }
-    .flag-caption .sun-mark { color: #f3c94f; font-size: .95rem; line-height: 1; text-shadow: 0 0 12px rgba(243,201,79,.42); }
-    @media (max-width: 560px) {
-      .flag-backdrop { opacity: .25; }
-      .flag-backdrop svg { width: 165vw; height: 100svh; }
-      .flag-caption { font-size: .52rem; letter-spacing: .13em; }
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes pulse { 0%,100% { transform: scale(.82); opacity: .78; } 50% { transform: scale(1.16); opacity: 1; } }
-    @keyframes wave { 0% { transform: scale(.55); opacity: .7; } 100% { transform: scale(2.2); opacity: 0; } }
-    @keyframes sweep { from { transform: translateX(-125%); } to { transform: translateX(340%); } }
-    @keyframes bounce { 0%,80%,100% { transform: translateY(0) scale(.7); opacity: .4; } 40% { transform: translateY(-5px) scale(1); opacity: 1; } }
-    @keyframes flow { to { stroke-dashoffset: -24; } }
-    @keyframes node { 0%,100% { transform: scale(.7); opacity: .55; } 50% { transform: scale(1.35); opacity: 1; } }
-    @keyframes shine { to { background-position: -220% 0; } }
-    @keyframes reveal { from { transform: translateY(7px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    @keyframes drift { to { transform: translate(7vw, 5vh) scale(1.12); } }
-    @keyframes rise { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .7; } 100% { transform: translateY(-110vh); opacity: 0; } }
-
-    @media (max-width: 560px) {
-      .page { gap: 1rem; padding-top: max(1.2rem, env(safe-area-inset-top)); }
-      .header { align-items: flex-start; }
-      .brand { gap: .55rem; font-size: .92rem; letter-spacing: .18em; }
-      .brand-mark { width: 1.8rem; border-radius: 8px; }
-      .header-right { flex-direction: column-reverse; align-items: flex-end; gap: .45rem; }
-      .dev-status { font-size: .54rem; letter-spacing: .1em; }
-      .language-switch label { min-width: 2.35rem; padding: .3rem .45rem; font-size: .62rem; }
-      .stage { gap: .95rem; padding: .35rem 0; }
-      .reactor-wrap { width: clamp(134px, 39vw, 158px); }
-      .title { font-size: clamp(2rem, 9.8vw, 3.1rem); letter-spacing: .085em; padding-left: .085em; }
-      .subtitle { margin-top: .5rem; }
-      .modules { gap: .42rem; }
-      .module-tab { min-width: 5.8rem; padding: .55rem .78rem; }
-      .feature-panel { padding: .78rem .92rem; }
-      .detail-tabs { gap: .38rem; }
-      .detail-tab, .power-button { min-height: 2.35rem; padding: .55rem .78rem; font-size: .68rem; }
-      .detail-card { padding: .9rem 1rem; }
-    }
-    @media (max-height: 730px) and (min-width: 561px) {
-      .page { gap: .7rem; padding-top: 1.05rem; padding-bottom: .9rem; }
-      .stage { gap: .72rem; }
-      .reactor-wrap { width: 125px; }
-      .title { font-size: clamp(2rem, 6.4vw, 3.7rem); }
-      .feature-panel { min-height: auto; padding: .62rem .95rem; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
-    }
-  </style>
-</head>
 <body>
-  <!-- All interactions are CSS-only: no scripts are used. -->
+  <div class="scroll-progress" aria-hidden="true"></div>
+
   <input class="control" type="checkbox" id="power" aria-label="Activate the RAMiiN AI core">
-  <input class="control" type="radio" name="language" id="lang-en" checked aria-label="English language">
-  <input class="control" type="radio" name="language" id="lang-ku" aria-label="Kurdish language">
+  <input class="control" type="radio" name="language" id="lang-en" checked aria-label="English">
+  <input class="control" type="radio" name="language" id="lang-ku" aria-label="کوردی">
   <input class="control" type="radio" name="module" id="module-neural" checked aria-label="Neural module">
   <input class="control" type="radio" name="module" id="module-vision" aria-label="Vision module">
   <input class="control" type="radio" name="module" id="module-language" aria-label="Language module">
-  <input class="control" type="radio" name="project-view" id="view-none" checked aria-label="Close project information">
+  <input class="control" type="radio" name="project-view" id="view-none" checked aria-label="Close panel">
   <input class="control" type="radio" name="project-view" id="view-about" aria-label="About RAMiiN AI">
   <input class="control" type="radio" name="project-view" id="view-roadmap" aria-label="Project roadmap">
   <input class="control" type="radio" name="project-view" id="view-status" aria-label="Development status">
 
-  <main class="page">
-    <div class="flag-backdrop" aria-hidden="true">
-      <svg viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <rect width="1200" height="225" fill="#e32636"/>
-        <rect y="225" width="1200" height="225" fill="#f7f5ef"/>
-        <rect y="450" width="1200" height="225" fill="#159447"/>
-        <g fill="none" stroke="#f5c928" stroke-width="13" stroke-linecap="round"><line x1="600.00" y1="246.50" x2="600.00" y2="192.50"/><line x1="626.82" y1="250.54" x2="642.74" y2="198.94"/><line x1="651.26" y1="262.31" x2="681.68" y2="217.70"/><line x1="671.15" y1="280.76" x2="713.37" y2="247.09"/><line x1="684.71" y1="304.25" x2="734.98" y2="284.53"/><line x1="690.75" y1="330.70" x2="744.59" y2="326.66"/><line x1="688.72" y1="357.75" x2="741.36" y2="369.77"/><line x1="678.81" y1="383.00" x2="725.57" y2="410.00"/><line x1="661.90" y1="404.21" x2="698.63" y2="443.79"/><line x1="639.48" y1="419.49" x2="662.91" y2="468.14"/><line x1="613.56" y1="427.48" x2="621.61" y2="480.88"/><line x1="586.44" y1="427.48" x2="578.39" y2="480.88"/><line x1="560.52" y1="419.49" x2="537.09" y2="468.14"/><line x1="538.10" y1="404.21" x2="501.37" y2="443.79"/><line x1="521.19" y1="383.00" x2="474.43" y2="410.00"/><line x1="511.28" y1="357.75" x2="458.64" y2="369.77"/><line x1="509.25" y1="330.70" x2="455.41" y2="326.66"/><line x1="515.29" y1="304.25" x2="465.02" y2="284.53"/><line x1="528.85" y1="280.76" x2="486.63" y2="247.09"/><line x1="548.74" y1="262.31" x2="518.32" y2="217.70"/><line x1="573.18" y1="250.54" x2="557.26" y2="198.94"/></g>
-        <circle cx="600" cy="337.5" r="76" fill="#f5c928"/>
-      </svg>
-    </div>
-    <div class="ambient" aria-hidden="true"></div>
-    <div class="grid" aria-hidden="true"></div>
-    <div class="grain" aria-hidden="true"></div>
-    <div class="stars" aria-hidden="true">
-      <i style="--x:8%;--s:2px;--d:13s;--delay:-2s"></i>
-      <i style="--x:21%;--s:3px;--d:16s;--delay:-8s"></i>
-      <i style="--x:34%;--s:2px;--d:12s;--delay:-5s"></i>
-      <i style="--x:49%;--s:3px;--d:17s;--delay:-10s"></i>
-      <i style="--x:63%;--s:2px;--d:14s;--delay:-4s"></i>
-      <i style="--x:77%;--s:3px;--d:18s;--delay:-12s"></i>
-      <i style="--x:90%;--s:2px;--d:15s;--delay:-7s"></i>
-    </div>
+  <div class="flag-backdrop" aria-hidden="true">
+    <svg viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="silk" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="400" y2="120" spreadMethod="repeat">
+          <stop offset="0" stop-color="#000" stop-opacity=".24"/>
+          <stop offset=".5" stop-color="#fff" stop-opacity=".18"/>
+          <stop offset="1" stop-color="#000" stop-opacity=".24"/>
+        </linearGradient>
+        <radialGradient id="sun"><stop offset="0" stop-color="#ffe784"/><stop offset="1" stop-color="#f0b90f"/></radialGradient>
+        <radialGradient id="sunglow"><stop offset="0" stop-color="#ffd84a" stop-opacity=".55"/><stop offset="1" stop-color="#ffd84a" stop-opacity="0"/></radialGradient>
+      </defs>
+      <rect width="1200" height="225" fill="#e32636"/>
+      <rect y="225" width="1200" height="225" fill="#f7f5ef"/>
+      <rect y="450" width="1200" height="225" fill="#159447"/>
+      <circle cx="600" cy="337.5" r="190" fill="url(#sunglow)"/>
+      <g fill="none" stroke="#f5c928" stroke-width="13" stroke-linecap="round">
+        <line x1="600.00" y1="246.50" x2="600.00" y2="192.50"/>
+        <line x1="626.82" y1="250.54" x2="642.74" y2="198.94"/>
+        <line x1="651.26" y1="262.31" x2="681.68" y2="217.70"/>
+        <line x1="671.15" y1="280.76" x2="713.37" y2="247.09"/>
+        <line x1="684.71" y1="304.25" x2="734.98" y2="284.53"/>
+        <line x1="690.75" y1="330.70" x2="744.59" y2="326.66"/>
+        <line x1="688.72" y1="357.75" x2="741.36" y2="369.77"/>
+        <line x1="678.81" y1="383.00" x2="725.57" y2="410.00"/>
+        <line x1="661.90" y1="404.21" x2="698.63" y2="443.79"/>
+        <line x1="639.48" y1="419.49" x2="662.91" y2="468.14"/>
+        <line x1="613.56" y1="427.48" x2="621.61" y2="480.88"/>
+        <line x1="586.44" y1="427.48" x2="578.39" y2="480.88"/>
+        <line x1="560.52" y1="419.49" x2="537.09" y2="468.14"/>
+        <line x1="538.10" y1="404.21" x2="501.37" y2="443.79"/>
+        <line x1="521.19" y1="383.00" x2="474.43" y2="410.00"/>
+        <line x1="511.28" y1="357.75" x2="458.64" y2="369.77"/>
+        <line x1="509.25" y1="330.70" x2="455.41" y2="326.66"/>
+        <line x1="515.29" y1="304.25" x2="465.02" y2="284.53"/>
+        <line x1="528.85" y1="280.76" x2="486.63" y2="247.09"/>
+        <line x1="548.74" y1="262.31" x2="518.32" y2="217.70"/>
+        <line x1="573.18" y1="250.54" x2="557.26" y2="198.94"/>
+      </g>
+      <circle cx="600" cy="337.5" r="76" fill="url(#sun)"/>
+      <rect class="sheen" x="-400" y="-200" width="2000" height="1100" fill="url(#silk)"/>
+    </svg>
+  </div>
+  <div class="ambient" aria-hidden="true"></div>
+  <div class="grid" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="stars" aria-hidden="true">
+    <i style="--x:8%;--s:2px;--d:13s;--delay:-2s"></i>
+    <i style="--x:21%;--s:3px;--d:16s;--delay:-8s"></i>
+    <i style="--x:34%;--s:2px;--d:12s;--delay:-5s"></i>
+    <i style="--x:49%;--s:3px;--d:17s;--delay:-10s"></i>
+    <i style="--x:63%;--s:2px;--d:14s;--delay:-4s"></i>
+    <i style="--x:77%;--s:3px;--d:18s;--delay:-12s"></i>
+    <i style="--x:90%;--s:2px;--d:15s;--delay:-7s"></i>
+  </div>
 
+  <main class="page">
     <header class="header">
-      <div class="brand"><span class="brand-mark" aria-hidden="true">R</span>RAMiiN</div>
+      <a class="brand" href="#top" aria-label="RAMiiN AI home">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <rect width="64" height="64" rx="16" fill="#090b0f" stroke="currentColor" stroke-opacity=".35"/>
+          <circle cx="32" cy="32" r="18" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3" stroke-opacity=".6"/>
+          <text x="32" y="43" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="800" fill="currentColor">R</text>
+        </svg>
+        <span>RAMiiN</span>
+      </a>
+
+      <nav class="nav" aria-label="Main">
+        <a href="#story"><span data-en>Story</span><span data-ku lang="ckb">چیرۆک</span></a>
+        <a href="#wordplay"><span data-en>Word</span><span data-ku lang="ckb">وشە</span></a>
+        <a href="#store"><span data-en>Store</span><span data-ku lang="ckb">فرۆشگا</span></a>
+        <a href="#contact"><span data-en>Contact</span><span data-ku lang="ckb">پەیوەندی</span></a>
+      </nav>
+
       <div class="header-right">
-        <span class="dev-status">KURDISTAN · AI LAB</span>
-        <span class="flag-caption"><span class="sun-mark" aria-hidden="true">☼</span> ROOTED IN KURDISTAN</span>
-        <fieldset class="language-switch" aria-label="Choose language" style="border:0;margin:0">
-          <legend class="sr-only">Choose language</legend>
+        <div class="theme-switch glass" role="group" aria-label="Theme">
+          <button class="theme-btn" data-theme="aurora"    aria-label="Aurora theme"    title="Aurora"></button>
+          <button class="theme-btn" data-theme="kurdistan" aria-label="Kurdistan theme" title="Kurdistan"></button>
+          <button class="theme-btn" data-theme="sunset"    aria-label="Sunset theme"    title="Sunset"></button>
+          <button class="theme-btn" data-theme="cyber"     aria-label="Cyber theme"     title="Cyber"></button>
+        </div>
+        <fieldset class="language-switch glass" aria-label="Language" style="border:0;margin:0">
+          <legend class="sr-only">Language</legend>
           <label class="lang-en-label" for="lang-en">EN</label>
-          <label class="lang-ku-label" for="lang-ku">کوردی</label>
+          <label class="lang-ku-label" for="lang-ku" lang="ckb">کوردی</label>
         </fieldset>
       </div>
     </header>
 
-    <section class="stage" aria-labelledby="main-title">
-      <p class="eyebrow">A NEW EXPERIENCE IS TAKING SHAPE</p>
+    <section class="stage" id="top">
+      <p class="eyebrow">
+        <span data-en>A NEW EXPERIENCE IS TAKING SHAPE</span>
+        <span data-ku lang="ckb">ئەزموونێکی نوێ لە دروستبووندایە</span>
+      </p>
 
       <div class="reactor-wrap">
         <label class="reactor" for="power" title="Activate the AI core">
-          <svg class="network" viewBox="0 0 200 200" aria-hidden="true">
+          <svg class="network" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
             <line x1="22" y1="100" x2="58" y2="52"/><line x1="22" y1="100" x2="58" y2="148"/>
             <line x1="58" y1="52" x2="100" y2="24"/><line x1="58" y1="148" x2="100" y2="176"/>
             <line x1="100" y1="24" x2="142" y2="52"/><line x1="100" y1="176" x2="142" y2="148"/>
@@ -455,92 +118,602 @@
             <circle cx="100" cy="24" r="3"/><circle cx="100" cy="176" r="3"/><circle cx="142" cy="52" r="3"/>
             <circle cx="142" cy="148" r="3"/><circle cx="178" cy="100" r="3"/>
           </svg>
-          <span class="halo"></span><span class="ring ring-a"></span><span class="ring ring-b"></span><span class="ring ring-c"></span><span class="core"></span>
+          <span class="halo"></span>
+          <span class="ring ring-a"></span>
+          <span class="ring ring-b"></span>
+          <span class="ring ring-c"></span>
+          <span class="core"></span>
         </label>
       </div>
-      <p class="activate-hint"><strong>ACTIVATE THE CORE</strong> · CLICK THE CENTER</p>
-      <label class="power-button" for="power"><span aria-hidden="true">◉</span><span class="power-on">POWER UP CORE</span><span class="power-off">POWER DOWN CORE</span></label>
 
-      <div class="headline">
-        <div class="copy-en">
-          <h1 class="title" id="main-title">COMING SOON</h1>
+      <p class="activate-hint">
+        <span data-en><strong>ACTIVATE THE CORE</strong> · CLICK THE CENTER</span>
+        <span data-ku lang="ckb"><strong>ناوکەکە چالاک بکە</strong> · کرتە لە ناوەڕاست بکە</span>
+      </p>
+
+      <label class="power-button" for="power">
+        <span aria-hidden="true">◉</span>
+        <span class="power-on"><span data-en>POWER UP CORE</span><span data-ku lang="ckb">چالاککردنی ناوک</span></span>
+        <span class="power-off"><span data-en>POWER DOWN CORE</span><span data-ku lang="ckb">ناچالاککردنی ناوک</span></span>
+      </label>
+
+      <div class="headline glass">
+        <div data-en>
+          <h1 class="title">COMING SOON</h1>
           <p class="subtitle">Something extraordinary is being built.</p>
         </div>
-        <div class="copy-ku" lang="ckb">
-          <h1 class="kurdish-title" id="main-title-ku">بەم زووانە</h1>
-          <p class="kurdish-subtitle">شتێکی تایبەت لە ڕێگایە...</p>
+        <div data-ku lang="ckb">
+          <h1 class="title">بەم زووانە</h1>
+          <p class="subtitle">شتێکی تایبەت لە ڕێگایە...</p>
         </div>
       </div>
 
       <nav class="modules" aria-label="AI feature modules">
-        <label class="module-tab" for="module-neural">Neural <small lang="ckb">تۆڕی دەمار</small></label>
-        <label class="module-tab" for="module-vision">Vision <small lang="ckb">بینین</small></label>
-        <label class="module-tab" for="module-language">Language <small lang="ckb">زمان</small></label>
+        <label class="module-tab glass" for="module-neural">
+          <span data-en>Neural</span><span data-ku lang="ckb">تۆڕی دەمار</span>
+          <small data-en lang="ckb">تۆڕی دەمار</small>
+          <small data-ku>Neural</small>
+        </label>
+        <label class="module-tab glass" for="module-vision">
+          <span data-en>Vision</span><span data-ku lang="ckb">بینین</span>
+          <small data-en lang="ckb">بینین</small>
+          <small data-ku>Vision</small>
+        </label>
+        <label class="module-tab glass" for="module-language">
+          <span data-en>Language</span><span data-ku lang="ckb">زمان</span>
+          <small data-en lang="ckb">زمان</small>
+          <small data-ku>Language</small>
+        </label>
       </nav>
 
-      <div class="feature-panel panel-neural">
+      <div class="feature-panel panel-neural glass">
         <p>Neural networks that learn patterns and relationships from data.</p>
         <p lang="ckb">تۆڕە دەمارەکان کە شێواز و پەیوەندییەکان لە داتاوە فێر دەبن.</p>
       </div>
-      <div class="feature-panel panel-vision">
+      <div class="feature-panel panel-vision glass">
         <p>Computer vision systems that interpret images and visual information.</p>
         <p lang="ckb">سیستەمی بینینی کۆمپیوتەر بۆ تێگەیشتن لە وێنە و زانیارییە بینراوەکان.</p>
       </div>
-      <div class="feature-panel panel-language">
+      <div class="feature-panel panel-language glass">
         <p>Language models built to understand, generate and work with text.</p>
         <p lang="ckb">مۆدێلە زمانییەکان بۆ تێگەیشتن، بەرهەمهێنان و کارکردن لەگەڵ دەق.</p>
       </div>
 
       <nav class="detail-tabs" aria-label="More about the project">
-        <label class="detail-tab" for="view-about">✦ <span class="copy-en">ABOUT</span><span class="copy-ku" lang="ckb">دەربارە</span></label>
-        <label class="detail-tab" for="view-roadmap">⌁ <span class="copy-en">ROADMAP</span><span class="copy-ku" lang="ckb">پلانی کار</span></label>
-        <label class="detail-tab" for="view-status">◷ <span class="copy-en">STATUS</span><span class="copy-ku" lang="ckb">دۆخی پڕۆژە</span></label>
+        <label class="detail-tab glass" for="view-about"><span aria-hidden="true">✦</span> <span data-en>ABOUT</span><span data-ku lang="ckb">دەربارە</span></label>
+        <label class="detail-tab glass" for="view-roadmap"><span aria-hidden="true">⌁</span> <span data-en>ROADMAP</span><span data-ku lang="ckb">پلانی کار</span></label>
+        <label class="detail-tab glass" for="view-status"><span aria-hidden="true">◷</span> <span data-en>STATUS</span><span data-ku lang="ckb">دۆخی پڕۆژە</span></label>
       </nav>
 
-      <section class="detail-card detail-about copy-en" aria-live="polite">
-        <label class="detail-close" for="view-none" aria-label="Close this panel">×</label>
+      <section class="detail-card detail-about copy-en glass" aria-live="polite">
+        <label class="detail-close" for="view-none" aria-label="Close">×</label>
         <h2>About RAMiiN AI</h2>
-        <p>An independent technology project exploring artificial intelligence, practical software and modern digital tools.</p>
+        <p>An independent technology project exploring artificial intelligence, practical software and modern digital tools — built from Kurdistan.</p>
       </section>
-      <section class="detail-card detail-about copy-ku" lang="ckb" aria-live="polite">
-        <label class="detail-close" for="view-none" aria-label="داخستنی ئەم بەشە">×</label>
+      <section class="detail-card detail-about copy-ku glass" lang="ckb" aria-live="polite">
+        <label class="detail-close" for="view-none" aria-label="داخستن">×</label>
         <h2>دەربارەی RAMiiN AI</h2>
-        <p>پڕۆژەیەکی تەکنەلۆژیای سەربەخۆیە کە لەسەر ژیریی دەستکرد، نەرمەکاڵای کرداری و ئامرازە دیجیتاڵییە نوێکان کار دەکات.</p>
+        <p>پڕۆژەیەکی تەکنەلۆژیای سەربەخۆیە کە لەسەر ژیریی دەستکرد، نەرمەکاڵای کرداری و ئامرازە دیجیتاڵییە نوێکان کار دەکات — لە کوردستانەوە دروستکراوە.</p>
       </section>
-      <section class="detail-card detail-roadmap copy-en" aria-live="polite">
-        <label class="detail-close" for="view-none" aria-label="Close this panel">×</label>
+      <section class="detail-card detail-roadmap copy-en glass" aria-live="polite">
+        <label class="detail-close" for="view-none" aria-label="Close">×</label>
         <h2>Project roadmap</h2>
-        <p>Step by step: research and learning, building useful prototypes, testing the experience, then sharing project updates.</p>
+        <ol class="steps">
+          <li>Research and learning</li>
+          <li>Building useful prototypes</li>
+          <li>Testing the experience</li>
+          <li>Sharing project updates</li>
+        </ol>
       </section>
-      <section class="detail-card detail-roadmap copy-ku" lang="ckb" aria-live="polite">
-        <label class="detail-close" for="view-none" aria-label="داخستنی ئەم بەشە">×</label>
+      <section class="detail-card detail-roadmap copy-ku glass" lang="ckb" aria-live="polite">
+        <label class="detail-close" for="view-none" aria-label="داخستن">×</label>
         <h2>پلانی کارکردنی پڕۆژە</h2>
-        <p>هەنگاو بە هەنگاو: توێژینەوە و فێربوون، دروستکردنی نموونەی کرداری، تاقیکردنەوەی ئەزموونی بەکارهێنان، پاشان بڵاوکردنەوەی نوێکارییەکان.</p>
+        <ol class="steps">
+          <li>توێژینەوە و فێربوون</li>
+          <li>دروستکردنی نموونەی کرداری</li>
+          <li>تاقیکردنەوەی ئەزموونی بەکارهێنان</li>
+          <li>بڵاوکردنەوەی نوێکارییەکان</li>
+        </ol>
       </section>
-      <section class="detail-card detail-status copy-en" aria-live="polite">
-        <label class="detail-close" for="view-none" aria-label="Close this panel">×</label>
+      <section class="detail-card detail-status copy-en glass" aria-live="polite">
+        <label class="detail-close" for="view-none" aria-label="Close">×</label>
         <h2>Development status</h2>
         <p><strong>Currently:</strong> In development. This page is a preview; launch timing and feature availability will be announced when confirmed.</p>
       </section>
-      <section class="detail-card detail-status copy-ku" lang="ckb" aria-live="polite">
-        <label class="detail-close" for="view-none" aria-label="داخستنی ئەم بەشە">×</label>
+      <section class="detail-card detail-status copy-ku glass" lang="ckb" aria-live="polite">
+        <label class="detail-close" for="view-none" aria-label="داخستن">×</label>
         <h2>دۆخی گەشەپێدانی پڕۆژە</h2>
         <p><strong>ئێستا:</strong> لە قۆناغی گەشەپێداندایە. ئەم پەڕەیە پیشاندانی پێشوەختەیە؛ کاتی کردنەوە و بەردەستبوونی تایبەتمەندییەکان کاتێک پشتڕاست کرانەوە ڕادەگەیەنرێن.</p>
       </section>
 
-      <div class="progress" role="progressbar" aria-label="Indeterminate development animation"></div>
+      <a class="power-button arrow-link" href="#story">
+        <span data-en>Meet Ramin</span><span data-ku lang="ckb">ڕامین بناسە</span>
+        <span aria-hidden="true">↓</span>
+      </a>
+
+      <div class="progress" aria-hidden="true"></div>
     </section>
 
-    <footer class="footer" role="status">
+    <section class="story" id="story" aria-labelledby="story-title">
+      <div class="founder glass">
+        <div class="portrait-wrap" aria-hidden="true">
+          <svg viewBox="0 0 100 100" focusable="false">
+            <text x="50" y="64" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="46" font-weight="800" fill="currentColor">R</text>
+          </svg>
+        </div>
+        <div class="founder-info">
+          <h2 id="story-title">
+            <span data-en>Ramin Sirwan Ahmad</span>
+            <span data-ku lang="ckb">ڕامین سیروان ئەحمەد</span>
+          </h2>
+          <p class="role">
+            <span data-en>Software Engineer · AI Researcher · Founder</span>
+            <span data-ku lang="ckb">ئەندازیاری سۆفتوێر · لێکۆڵەری AI · دامەزرێنەر</span>
+          </p>
+          <span class="location">
+            <span data-en>Kurdistan Region</span>
+            <span data-ku lang="ckb">هەرێمی کوردستان</span>
+          </span>
+          <div class="skills">
+            <span>Neural Networks</span>
+            <span>Computer Vision</span>
+            <span>NLP</span>
+            <span>Kurdish Tech</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-body glass">
+        <h3>
+          <span data-en>Built here, in Kurdistan.</span>
+          <span data-ku lang="ckb">لێرە دروستکراوە، لە کوردستان.</span>
+        </h3>
+        <p>
+          <span data-en>RAMiiN began with a question: why does the software of tomorrow almost never speak Kurdish?</span>
+          <span data-ku lang="ckb">RAMiiN بە پرسیارێکەوە دەستی پێکرد: بۆچی نەرمەکاڵای داهاتوو هەرگیز بە کوردی قسە ناکات؟</span>
+        </p>
+        <p>
+          <span data-en>I'm Ramin Sirwan Ahmad — a Kurdish software engineer. I grew up between the mountains and a fast-moving city, in a family that taught me two things at once: how to keep tradition, and how to build the future. My first lines of code were written late at night, from borrowed books, a second-hand laptop, and a stubborn belief that the next big idea could come from anywhere. Including here.</span>
+          <span data-ku lang="ckb">من ڕامین سیروان ئەحمەدم — ئەندازیارێکی سۆفتوێری کورد. لە نێوان چیاکان و شارێکی خێرا گەشەسەندوو گەورە بووم، لە خێزانێک کە دوو شتیم فێر کرد: چۆن نەریت بپارێزم، و چۆن داهاتوو دروست بکەم. یەکەم دێڕەکانی کۆدم لە شەوانی درەنگدا نووسراون، لە کتێبی قەرزکراو، لاپتۆپێکی دووەم دەست و باوەڕێکی سوور کە بیرۆکەی گەورەی داهاتوو لە هەر شوێنێکەوە دەتوانێت بێت. لەوانەش لێرە.</span>
+        </p>
+        <p>
+          <span data-en>Today, I work with neural networks, computer vision, and language models. And everywhere I look, Kurdish is missing. It's absent from most translation engines. It's invisible in speech recognition. That's not a small gap — it's an open door.</span>
+          <span data-ku lang="ckb">ئەمڕۆ لەگەڵ تۆڕە دەمارییەکان، بینینی کۆمپیوتەر و مۆدێلە زمانییەکان کار دەکەم. و لە هەموو شوێنێک کوردی ونە. لە زۆربەی بزوێنەرەکانی وەرگێڕاندا نییە. لە ناسینەوەی دەنگدا نەبینراوە. ئەمە بۆشاییەکی بچووک نییە — دەرگایەکی کراوەیە.</span>
+        </p>
+        <p>
+          <span data-en>RAMiiN is my answer to that door. A small, independent lab. Built slowly. Built on purpose. Kurdish at the center — not as a feature, but as the starting point.</span>
+          <span data-ku lang="ckb">RAMiiN وەڵامی منە بۆ ئەو دەرگایە. تاقیگەیەکی بچووک و سەربەخۆ. بە هێواشی دروستکراوە. بە مەبەست دروستکراوە. کوردی لە ناوەندیدا — نەک وەک تایبەتمەندییەک، بەڵکو وەک خاڵی دەستپێک.</span>
+        </p>
+        <blockquote class="pull">
+          <span data-en>Kurdish deserves software that understands it.</span>
+          <span data-ku lang="ckb">کوردی شایەنی نەرمەکاڵایەکە کە لێی تێبگات.</span>
+        </blockquote>
+        <ul class="timeline">
+          <li>
+            <div class="yr">2019</div>
+            <p class="ev"><span data-en>First lines of code, from borrowed books and a second-hand laptop.</span><span data-ku lang="ckb">یەکەم دێڕەکانی کۆد، لە کتێبی قەرزکراو و لاپتۆپێکی دووەم دەست.</span></p>
+          </li>
+          <li>
+            <div class="yr">2021</div>
+            <p class="ev"><span data-en>First professional engineering role — shipping real software to real users.</span><span data-ku lang="ckb">یەکەم ڕۆڵی ئەندازیاری پیشەیی — گەیاندنی نەرمەکاڵای ڕاستەقینە بە بەکارهێنەرانی ڕاستەقینە.</span></p>
+          </li>
+          <li>
+            <div class="yr">2023</div>
+            <p class="ev"><span data-en>Deep focus on AI — neural networks, computer vision, and language.</span><span data-ku lang="ckb">سەرنجی قووڵ لەسەر AI — تۆڕە دەمارییەکان، بینینی کۆمپیوتەر و زمان.</span></p>
+          </li>
+          <li>
+            <div class="yr">2024</div>
+            <p class="ev"><span data-en>RAMiiN is founded — a Kurdish-first AI lab.</span><span data-ku lang="ckb">RAMiiN دامەزرا — تاقیگەیەکی AI کە کوردی-پێشەنگە.</span></p>
+          </li>
+        </ul>
+        <ul class="principles">
+          <li>
+            <span class="p-num">01</span>
+            <h4><span data-en>Kurdish-first</span><span data-ku lang="ckb">کوردی-پێشەنگ</span></h4>
+            <p><span data-en>Every model, every interface starts with Kurdish.</span><span data-ku lang="ckb">هەر مۆدێلێک، هەر ڕووکارێک بە کوردی دەست پێدەکات.</span></p>
+          </li>
+          <li>
+            <span class="p-num">02</span>
+            <h4><span data-en>Practical</span><span data-ku lang="ckb">کرداری</span></h4>
+            <p><span data-en>Real software for real problems, not demo magic.</span><span data-ku lang="ckb">نەرمەکاڵای ڕاستەقینە بۆ کێشەی ڕاستەقینە، نەک سیحری نمایش.</span></p>
+          </li>
+          <li>
+            <span class="p-num">03</span>
+            <h4><span data-en>Open by design</span><span data-ku lang="ckb">کراوە بە دیزاین</span></h4>
+            <p><span data-en>Built in the open, shared with the people who use it.</span><span data-ku lang="ckb">بە کراوەیی دروستکراوە، لەگەڵ ئەو کەسانەدا هاوبەشە کە بەکاری دەهێنن.</span></p>
+          </li>
+        </ul>
+      </div>
+
+      <div class="term glass" dir="ltr" lang="en" aria-hidden="true">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <p style="--n:30;--t:.3s"><b>$</b> ramiin init --home kurdistan</p>
+        <p style="--n:29;--t:1.6s"><em>✓</em> language: <u>Kurdish · English</u></p>
+        <p style="--n:32;--t:2.8s"><em>✓</em> focus: <u>AI · practical software</u></p>
+        <p style="--n:3;--t:4.2s"><b>$</b> <span class="caret"></span></p>
+      </div>
+
+      <div class="story-foot">
+        <p class="signature-text">
+          <span data-en>— Ramin Sirwan Ahmad · Kurdistan</span>
+          <span data-ku lang="ckb">— ڕامین سیروان ئەحمەد · کوردستان</span>
+        </p>
+        <a class="back-top" href="#top">
+          <span aria-hidden="true">↑</span>
+          <span data-en>Back to top</span>
+          <span data-ku lang="ckb">گەڕانەوە بۆ سەرەوە</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== WORD GAME (NEW) ===== -->
+    <section class="wordplay" id="wordplay" aria-labelledby="wordplay-title">
+      <div class="section-head">
+        <span class="section-kicker"><span data-en>WORD OF THE MOMENT</span><span data-ku lang="ckb">وشەی ساتەکە</span></span>
+        <h2 id="wordplay-title"><span data-en>A little Kurdish</span><span data-ku lang="ckb">کەمێک کوردی</span></h2>
+        <p><span data-en>Tap the card to discover another word.</span><span data-ku lang="ckb">کرتە لە کارتەکە بکە بۆ دۆزینەوەی وشەیەکی تر.</span></p>
+      </div>
+
+      <button class="word-card" id="word-card" type="button" aria-live="polite" aria-label="Tap for a new Kurdish word">
+        <span class="word-lang">
+          <span data-en>KURDISH (SORANI)</span>
+          <span data-ku lang="ckb">کوردی (سۆرانی)</span>
+        </span>
+        <span class="word-ku" id="word-ku" lang="ckb">خۆشەویستی</span>
+        <span class="word-en" id="word-en">love</span>
+        <span class="word-hint">
+          <span data-en>Tap for another</span>
+          <span data-ku lang="ckb">کرتە بکە بۆ وشەیەکی تر</span>
+        </span>
+      </button>
+    </section>
+
+    <section class="store" id="store" aria-labelledby="store-title">
+      <div class="section-head">
+        <span class="section-kicker"><span data-en>STORE</span><span data-ku lang="ckb">فرۆشگا</span></span>
+        <h2 id="store-title"><span data-en>Support the project</span><span data-ku lang="ckb">پشتگیری پڕۆژە بکە</span></h2>
+        <p><span data-en>Every order funds the next step of RAMiiN.</span><span data-ku lang="ckb">هەر داواکارییەک پارە بۆ هەنگاوی داهاتووی RAMiiN دابین دەکات.</span></p>
+      </div>
+
+      <div class="store-grid">
+        <div class="product glass">
+          <div class="product-visual">
+            <span class="product-badge"><span data-en>NEW</span><span data-ku lang="ckb">نوێ</span></span>
+            <svg viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+              <path d="M50 45 L70 30 L130 30 L150 45 L160 55 L140 70 L145 170 L55 170 L60 70 L40 55 Z" fill="currentColor" fill-opacity=".15" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M80 60 L100 80 L120 60" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <text x="100" y="130" text-anchor="middle" font-family="Inter, Arial" font-size="22" font-weight="800" fill="currentColor">R</text>
+            </svg>
+          </div>
+          <div class="product-body">
+            <h3 class="product-name"><span data-en>RAMiiN Tee</span><span data-ku lang="ckb">تیشێرتی RAMiiN</span></h3>
+            <p class="product-desc"><span data-en>Heavyweight organic cotton, Kurdish-inspired sun print. Multiple sizes.</span><span data-ku lang="ckb">پەمبەوی ئۆرگانیک، چاپی خۆری کوردی. قەبارەی جیاواز.</span></p>
+            <div class="product-foot">
+              <span class="product-price">$25 <small>USD</small></span>
+              <button class="buy-btn" data-buy="RAMiiN Tee ($25)">
+                <span data-en>Order</span><span data-ku lang="ckb">داواکاری</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product glass">
+          <div class="product-visual">
+            <svg viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+              <circle cx="100" cy="100" r="55" fill="currentColor" fill-opacity=".1" stroke="currentColor" stroke-width="2"/>
+              <circle cx="100" cy="100" r="30" fill="currentColor" fill-opacity=".15" stroke="currentColor" stroke-width="2"/>
+              <text x="100" y="110" text-anchor="middle" font-family="Inter, Arial" font-size="18" font-weight="800" fill="currentColor">R</text>
+            </svg>
+          </div>
+          <div class="product-body">
+            <h3 class="product-name"><span data-en>Sticker Pack</span><span data-ku lang="ckb">پاکێتی ستیکەر</span></h3>
+            <p class="product-desc"><span data-en>12 waterproof stickers: logo, flag, and Kurdish AI slogans.</span><span data-ku lang="ckb">١٢ ستیکەری دژە ئاو: لۆگۆ، ئاڵا و دروشمی AI ی کوردی.</span></p>
+            <div class="product-foot">
+              <span class="product-price">$8 <small>USD</small></span>
+              <button class="buy-btn" data-buy="Sticker Pack ($8)">
+                <span data-en>Order</span><span data-ku lang="ckb">داواکاری</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product glass">
+          <div class="product-visual">
+            <svg viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+              <path d="M100 30 L120 80 L175 80 L130 115 L145 170 L100 140 L55 170 L70 115 L25 80 L80 80 Z" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+              <text x="100" y="112" text-anchor="middle" font-family="Inter, Arial" font-size="16" font-weight="800" fill="currentColor">★</text>
+            </svg>
+          </div>
+          <div class="product-body">
+            <h3 class="product-name"><span data-en>Early Access</span><span data-ku lang="ckb">دەستگەیشتنی پێشوەخت</span></h3>
+            <p class="product-desc"><span data-en>Be one of the first to try RAMiiN. Includes a private channel.</span><span data-ku lang="ckb">یەکەم کەس بە بۆ تاقیکردنەوەی RAMiiN. کەناڵێکی تایبەت لەگەڵدایە.</span></p>
+            <div class="product-foot">
+              <span class="product-price">$50 <small>USD</small></span>
+              <button class="buy-btn" data-buy="Early Access ($50)">
+                <span data-en>Order</span><span data-ku lang="ckb">داواکاری</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div class="section-head">
+        <span class="section-kicker"><span data-en>CONTACT</span><span data-ku lang="ckb">پەیوەندی</span></span>
+        <h2 id="contact-title"><span data-en>Get in touch</span><span data-ku lang="ckb">پەیوەندیم پێوە بکە</span></h2>
+        <p><span data-en>For partnerships, press, or just to say hello.</span><span data-ku lang="ckb">بۆ هاوبەشی، ڕۆژنامەوانی، یان تەنها بۆ سڵاوکردن.</span></p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-card glass">
+          <div class="contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+          </div>
+          <span class="contact-label">Facebook</span>
+          <span class="contact-value">Ramin Sirwan Ahmad</span>
+          <p class="contact-meta"><span data-en>Personal account</span><span data-ku lang="ckb">هەژماری کەسی</span></p>
+          <a class="contact-action" href="https://www.facebook.com/ramin.sirwan.ahmad" target="_blank" rel="noopener noreferrer">
+            <span data-en>Open Facebook</span><span data-ku lang="ckb">کردنەوەی فەیسبووک</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+
+        <div class="contact-card glass">
+          <div class="contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          </div>
+          <span class="contact-label">Email</span>
+          <span class="contact-value">raminsirwan.ai@gmail.com</span>
+          <p class="contact-meta"><span data-en>Best for detailed messages</span><span data-ku lang="ckb">باشترین بۆ نامەی وردەکاری</span></p>
+          <button class="contact-action" type="button" data-copy="raminsirwan.ai@gmail.com">
+            <span data-en>Copy / open mail</span><span data-ku lang="ckb">کۆپی / کردنەوەی ئیمەیڵ</span>
+          </button>
+        </div>
+
+        <div class="contact-card glass">
+          <div class="contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-7.5-8-13a8 8 0 0 1 16 0c0 5.5-8 13-8 13z"/><circle cx="12" cy="9" r="3"/></svg>
+          </div>
+          <span class="contact-label"><span data-en>Location</span><span data-ku lang="ckb">شوێن</span></span>
+          <span class="contact-value"><span data-en>Kurdistan Region</span><span data-ku lang="ckb">هەرێمی کوردستان</span></span>
+          <p class="contact-meta"><span data-en>Remote-friendly · GMT+3</span><span data-ku lang="ckb">دور-دەست · GMT+3</span></p>
+        </div>
+      </div>
+
+      <form class="contact-form" id="contact-form">
+        <h3><span data-en>Send a message</span><span data-ku lang="ckb">نامەیەک بنێرە</span></h3>
+        <p><span data-en>This opens your email app with everything filled in.</span><span data-ku lang="ckb">ئەمە ئەپی ئیمەیڵەکەت دەکاتەوە بە هەموو شتێک پڕکراوە.</span></p>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="cf-name"><span data-en>Name</span><span data-ku lang="ckb">ناو</span></label>
+            <input type="text" id="cf-name" name="name" required autocomplete="name">
+          </div>
+          <div class="form-field">
+            <label for="cf-email"><span data-en>Email</span><span data-ku lang="ckb">ئیمەیڵ</span></label>
+            <input type="email" id="cf-email" name="email" required autocomplete="email">
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="cf-message"><span data-en>Message</span><span data-ku lang="ckb">نامە</span></label>
+          <textarea id="cf-message" name="message" required></textarea>
+        </div>
+
+        <button class="form-submit" type="submit">
+          <span data-en>Send</span><span data-ku lang="ckb">ناردن</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </form>
+    </section>
+
+    <footer class="footer" role="contentinfo">
       <div class="status">
-        <span class="waiting">PROJECT IN DEVELOPMENT</span>
-        <span class="ready">CORE ACTIVATED</span>
+        <span class="waiting"><span data-en>PROJECT IN DEVELOPMENT</span><span data-ku lang="ckb">پڕۆژەکە لە گەشەپێداندایە</span></span>
+        <span class="ready"><span data-en>CORE ACTIVATED</span><span data-ku lang="ckb">ناوک چالاکە</span></span>
         <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
       </div>
-      <p class="footer-copy footer-en">Building ideas at the intersection of AI and technology.</p>
-      <p class="footer-copy footer-ku" lang="ckb">بیرۆکە لە خاڵی یەکگرتنی ژیریی دەستکرد و تەکنەلۆژیا دروست دەکەین.</p>
-      <p class="copyright">© RAMiiN · ALL RIGHTS RESERVED</p>
+
+      <p class="footer-copy footer-en">Building ideas at the intersection of AI, language and Kurdistan.</p>
+      <p class="footer-copy footer-ku" lang="ckb">بیرۆکە لە خاڵی یەکگرتنی ژیریی دەستکرد، زمان و کوردستان دروست دەکەین.</p>
+
+      <div class="socials">
+        <a class="social-btn glass" href="https://www.facebook.com/ramin.sirwan.ahmad" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+          <span>Facebook</span>
+        </a>
+        <a class="social-btn glass" href="mailto:raminsirwan.ai@gmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          <span>Email</span>
+        </a>
+        <a class="social-btn glass" href="#top">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+          <span data-en>Back to top</span><span data-ku lang="ckb">گەڕانەوە</span>
+        </a>
+      </div>
+
+      <p class="copyright">© RAMiiN · <span data-en>ALL RIGHTS RESERVED</span><span data-ku lang="ckb">هەموو مافەکان پارێزراوە</span> · Ramin Sirwan Ahmad</p>
     </footer>
   </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+  (function () {
+    'use strict';
+
+    /* ---------- Theme ---------- */
+    var themeBtns = document.querySelectorAll('.theme-btn');
+    var THEMES = ['aurora', 'kurdistan', 'sunset', 'cyber'];
+    var savedTheme = 'aurora';
+    try { savedTheme = localStorage.getItem('ramiin-theme') || 'aurora'; } catch (e) {}
+    if (THEMES.indexOf(savedTheme) === -1) savedTheme = 'aurora';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      try { localStorage.setItem('ramiin-theme', theme); } catch (e) {}
+      themeBtns.forEach(function (b) { b.classList.toggle('is-active', b.dataset.theme === theme); });
+      var label = theme.charAt(0).toUpperCase() + theme.slice(1);
+      showToast('🎨 Theme: ' + label);
+    }
+    themeBtns.forEach(function (btn) {
+      if (btn.dataset.theme === savedTheme) btn.classList.add('is-active');
+      btn.addEventListener('click', function () { setTheme(btn.dataset.theme); });
+    });
+
+    /* ---------- Language ---------- */
+    var en = document.getElementById('lang-en');
+    var ku = document.getElementById('lang-ku');
+    var savedLang = null;
+    try { savedLang = localStorage.getItem('ramiin-lang'); } catch (e) {}
+    if (!savedLang) savedLang = /^(ku|ckb)/i.test(navigator.language || '') ? 'ku' : 'en';
+    if (savedLang === 'ku') ku.checked = true;
+
+    function syncTitle() { document.title = ku.checked ? 'RAMiiN AI — بەم زووانە' : 'RAMiiN AI — Kurdistan Edition'; }
+    [en, ku].forEach(function (r) {
+      r.addEventListener('change', function () {
+        syncTitle();
+        try { localStorage.setItem('ramiin-lang', ku.checked ? 'ku' : 'en'); } catch (e) {}
+      });
+    });
+    syncTitle();
+
+    /* ---------- Toast ---------- */
+    var toast = document.getElementById('toast');
+    var toastTimer;
+    function showToast(msg) {
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 2800);
+    }
+    window.showToast = showToast;
+
+    /* ---------- Copy to clipboard ---------- */
+    document.querySelectorAll('[data-copy]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var text = el.getAttribute('data-copy');
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            el.setAttribute('aria-copied', 'true');
+            showToast('✓ Copied: ' + text);
+            setTimeout(function () { el.removeAttribute('aria-copied'); }, 2000);
+          }).catch(function () {});
+        }
+      });
+    });
+
+    /* ---------- Scroll progress ---------- */
+    var bar = document.querySelector('.scroll-progress');
+    if (bar) {
+      window.addEventListener('scroll', function () {
+        var h = document.documentElement;
+        var max = h.scrollHeight - h.clientHeight;
+        var pct = max > 0 ? h.scrollTop / max : 0;
+        bar.style.transform = 'scaleX(' + pct + ')';
+      }, { passive: true });
+    }
+
+    /* ---------- Buy buttons → mailto ---------- */
+    document.querySelectorAll('[data-buy]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var product = btn.getAttribute('data-buy');
+        var subject = encodeURIComponent('RAMiiN order: ' + product);
+        var body = encodeURIComponent('Hi Ramin,\n\nI\'d like to order: ' + product + '\n\nPlease send payment details.\n\nThanks!');
+        window.location.href = 'mailto:raminsirwan.ai@gmail.com?subject=' + subject + '&body=' + body;
+        showToast('✉ Opening email to order: ' + product);
+      });
+    });
+
+    /* ---------- Contact form → mailto ---------- */
+    var form = document.getElementById('contact-form');
+    if (form) {
+      form.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var name = form.querySelector('[name="name"]').value.trim();
+        var email = form.querySelector('[name="email"]').value.trim();
+        var message = form.querySelector('[name="message"]').value.trim();
+        if (!name || !email || !message) {
+          showToast('⚠ Please fill all fields');
+          return;
+        }
+        var subject = encodeURIComponent('Message from ' + name);
+        var body = encodeURIComponent(message + '\n\n— ' + name + '\n' + email);
+        window.location.href = 'mailto:raminsirwan.ai@gmail.com?subject=' + subject + '&body=' + body;
+        showToast('✉ Opening your email app');
+      });
+    }
+
+    /* ---------- Esc closes cards ---------- */
+    var noneRadio = document.getElementById('view-none');
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && noneRadio) noneRadio.checked = true;
+    });
+
+    /* ---------- Terminal type animation on scroll ---------- */
+    var term = document.querySelector('.term');
+    if (term && 'IntersectionObserver' in window) {
+      term.classList.add('wait');
+      var obs = new IntersectionObserver(function (entries, o) {
+        if (entries[0].isIntersecting) { term.classList.remove('wait'); o.disconnect(); }
+      }, { threshold: 0.5 });
+      obs.observe(term);
+    }
+
+    /* ===== WORD GAME (NEW) ===== */
+    var WORDS = [
+      ['خۆشەویستی', 'love'],
+      ['ژیریی دەستکرد', 'artificial intelligence'],
+      ['تەکنەلۆژیا', 'technology'],
+      ['کوردستان', 'Kurdistan'],
+      ['خەون', 'dream'],
+      ['هیوا', 'hope'],
+      ['زانست', 'science'],
+      ['داهاتوو', 'future'],
+      ['نیشتمان', 'homeland'],
+      ['زمان', 'language'],
+      ['دەنگ', 'voice'],
+      ['ڕووناکی', 'light'],
+      ['بیرکردنەوە', 'thinking'],
+      ['فێربوون', 'learning'],
+      ['ئازادی', 'freedom'],
+      ['چیرۆک', 'story'],
+      ['هاوڕێ', 'friend'],
+      ['هەڵمەت', 'adventure'],
+      ['کۆد', 'code'],
+      ['دروستکردن', 'building'],
+      ['مێژوو', 'history'],
+      ['شیعر', 'poetry'],
+      ['ئاوات', 'wish'],
+      ['کولتوور', 'culture'],
+      ['گەشەپێدان', 'development']
+    ];
+
+    var wordCard = document.getElementById('word-card');
+    var wordKu = document.getElementById('word-ku');
+    var wordEn = document.getElementById('word-en');
+    var currentWord = 0;
+
+    if (wordCard) {
+      wordCard.addEventListener('click', function () {
+        var next;
+        do { next = Math.floor(Math.random() * WORDS.length); }
+        while (next === currentWord && WORDS.length > 1);
+        currentWord = next;
+
+        wordCard.classList.remove('flash');
+        void wordCard.offsetWidth;
+
+        wordKu.textContent = WORDS[next][0];
+        wordEn.textContent = WORDS[next][1];
+
+        wordCard.classList.add('flash');
+      });
+    }
+  })();
+  </script>
 </body>
 </html>
