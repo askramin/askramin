@@ -1,631 +1,421 @@
-<!doctype html>
-<html lang="ckb" dir="rtl">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0e0b16">
-<title>RAMiiN PESHMERGAH</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{color-scheme:dark;--bg:#08070d;--p:#111019;--p2:#151222;--l:#2b2440;--t:#f4f0ff;--m:#aaa3b9;--g:#48dfa0;--r:#ff777f;--b:#62c7ff;--a:#ffc45f;--v:#a66bff;--v2:#783cf0;--v3:#c18aff;--shadow:0 18px 50px rgba(84,35,160,.12)}
-*{box-sizing:border-box}
-html,body{margin:0}
-body{background:radial-gradient(ellipse at 86% -8%,rgba(112,54,200,.23) 0,transparent 43%),radial-gradient(ellipse at 0% 75%,rgba(59,29,102,.12) 0,transparent 38%),var(--bg);color:var(--t);font:15px/1.6 Vazirmatn,Inter,"Segoe UI",system-ui,sans-serif;min-height:100vh}
-html[dir=ltr] body{font-family:Inter,Vazirmatn,"Segoe UI",system-ui,sans-serif}
-button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer}
-:focus-visible{outline:2px solid var(--v);outline-offset:2px}
-.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
-html[dir=rtl] aside{order:2}
-html[dir=rtl] main{order:1}
-aside{position:sticky;top:0;height:100vh;border-inline-end:1px solid var(--l);background:#0c0e13;padding:20px 14px;display:flex;flex-direction:column;gap:22px}
-.brand{display:flex;gap:11px;align-items:center;padding:0 6px}
-.mark{width:38px;height:38px;border:1px solid #7544ba;border-radius:12px;display:grid;place-items:center;color:#d6b7ff;font-weight:900;background:linear-gradient(145deg,#25143d,#120f1e);box-shadow:0 0 26px rgba(141,76,240,.17)}
-.brand b{display:block;font-size:14px;letter-spacing:.3px}
-.brand small{color:var(--m);font-size:12px}
-.nav{display:grid;gap:4px}
-.nav button{display:flex;gap:10px;align-items:center;background:none;border:0;color:#b4c0c9;text-align:start;padding:10px;border-radius:9px;width:100%}
-.nav i{font-style:normal;width:20px;color:var(--v);text-align:center;flex:none}
-.nav button:hover,.nav button.on{background:#24173a;color:var(--t)}
-.foot{margin-top:auto;border-top:1px solid var(--l);padding:14px 6px 0;color:var(--m);font-size:12px}
-.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--g);margin-inline-end:7px}
-main{min-width:0;display:flex;flex-direction:column}
-.flag{height:3px;background:linear-gradient(90deg,#6c35db,#b66cff 48%,#713be7)}
-.top{height:58px;border-bottom:1px solid var(--l);display:flex;align-items:center;justify-content:space-between;padding:0 28px;color:var(--m);font-size:13px}
-.top b{color:var(--t);font-weight:600}
-.langsw{display:flex;border:1px solid var(--l);border-radius:99px;padding:3px;gap:2px}
-.langsw button{border:0;background:none;color:var(--m);font-size:12px;padding:5px 12px;border-radius:99px}
-.langsw button.on{background:var(--v);color:#15112b;font-weight:700}
-.view{display:none;width:min(1240px,100%);margin:0 auto;padding:34px 28px 90px;flex:1}
-.view.on{display:block}
-h1{font-size:clamp(28px,5vw,44px);line-height:1.18;letter-spacing:-.5px;margin:0 0 12px;max-width:17em}
-.lead{color:var(--m);max-width:620px;margin:0}
-.hint{color:var(--m);font-size:12px;font-weight:400}
-.go{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:28px 0 0}
-.entry{text-align:start;display:flex;flex-direction:column;align-items:flex-start;gap:11px;background:linear-gradient(160deg,rgba(24,20,35,.98),rgba(13,12,19,.98));border:1px solid #34264d;border-top:3px solid var(--c);border-radius:15px;padding:20px;min-height:188px;box-shadow:var(--shadow);transition:transform .18s ease,border-color .18s ease,background .18s ease}
-.entry:hover{background:linear-gradient(160deg,#211936,#13101d);border-color:#62428f;transform:translateY(-2px)}
-.entry h3{margin:0;font-size:15px}
-.entry p{margin:0;font-size:13px;color:var(--m)}
-.ico{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:17px;flex:none;background:color-mix(in srgb,var(--c) 20%,transparent);color:var(--c)}
-.chat{margin-top:28px;border:1px solid #3a2b55;background:#12101b;border-radius:14px;padding:12px}
-.chat textarea{width:100%;min-height:76px;max-height:180px;resize:vertical;background:none;border:0;outline:0;padding:6px 8px}
-.tools{display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:6px;flex-wrap:wrap}
-.resp{display:none;margin-top:24px;border:1px solid var(--l);background:var(--p);border-radius:12px;padding:14px;color:#cdd8e0;white-space:pre-wrap}
-.resp.on{display:block}
-.btn{border:0;border-radius:9px;background:linear-gradient(135deg,#b27aff,#8a4cf0);color:#140d22;padding:10px 17px;font-weight:800;box-shadow:0 7px 22px rgba(143,77,235,.18)}
-.btn:hover{background:linear-gradient(135deg,#c99dff,#a16cff)}
-.btn.alt{background:#1a2029;color:var(--t);border:1px solid var(--l);font-weight:500}
-input,select,textarea{background:#0f1218;border:1px solid var(--l);border-radius:8px;padding:9px 11px}
-input:focus,select:focus,textarea:focus{border-color:#5b4fcf}
-.find{width:100%;margin:22px 0 12px}
-.pills{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px}
-.pill{flex:none;border:1px solid var(--l);background:#10131a;border-radius:99px;padding:7px 13px;font-size:13px;color:#b4c0c9}
-.pill:hover{border-color:var(--c)}
-.pill.on{background:var(--c);border-color:var(--c);color:#0a0c10;font-weight:650}
-.mod{background:var(--p);border:1px solid var(--l);border-top:3px solid var(--c);border-radius:14px;padding:22px}
-.mod h2{margin:0 0 6px;font-size:23px;color:var(--c)}
-.s{margin:0 0 18px;color:var(--m);max-width:62ch}
-.cols{display:grid;grid-template-columns:1.5fr 1fr;gap:22px}
-h4{margin:0 0 8px;font-size:14px;color:var(--c)}
-ul{margin:0 0 14px;padding-inline-start:18px}
-li{margin:0 0 7px;color:#d4dde4;font-size:14px}
-.warn{margin-top:16px;border:1px solid #5b4524;background:#1c160e;color:#e8ce96;border-radius:10px;padding:10px 12px;font-size:13px}
-.two{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;margin-top:22px}
-.panel{background:var(--p);border:1px solid var(--l);border-top:2px solid var(--v2);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
-.panel h3{margin:0 0 12px;font-size:16px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
-.add{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.add .w{grid-column:1/-1}
-.row{display:flex;gap:8px;align-items:center;padding:9px 10px;border:1px solid var(--l);border-radius:9px;background:#10131a;margin-bottom:8px}
-.row .g{flex:1;min-width:0;word-break:break-word}
-.row select{padding:6px 8px;font-size:13px}
-.x{background:none;border:0;color:var(--m);padding:4px 8px;border-radius:6px;font-size:13px}
-.x:hover{color:var(--r)}
-.ck label{display:flex;gap:9px;align-items:flex-start;margin-bottom:9px;font-size:14px;color:#d4dde4}
-.ck input{margin-top:4px;accent-color:var(--v)}
-.ck .done span{color:var(--m);text-decoration:line-through}
-#rp{width:100%;min-height:230px;resize:vertical;font:13px/1.5 ui-monospace,Consolas,monospace;direction:ltr;text-align:start}
-footer{padding:16px 24px;text-align:center;color:#66727f;font-size:12px;border-top:1px solid #1b2028}
-
-/* Dashboard cards and safe browser-side utilities */
-.dash-head{margin:4px 0 0;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
-.dash-head h1{margin-bottom:9px;max-width:22em}
-.dash-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px}
-.meta-chip{border:1px solid #382a51;background:#171222;color:#c9b9e4;border-radius:99px;padding:6px 11px;font-size:12px}
-.dash-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:26px}
-.dash-card{position:relative;isolation:isolate;min-width:0;min-height:178px;padding:21px 20px 18px;text-align:start;display:flex;flex-direction:column;align-items:flex-start;gap:12px;border:1px solid #342747;border-radius:17px;background:linear-gradient(150deg,#15121e 0%,#0e0d14 82%);box-shadow:var(--shadow);overflow:hidden;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
-.dash-card:before{content:"";position:absolute;inset:0 18px auto;height:3px;border-radius:0 0 8px 8px;background:linear-gradient(90deg,#7738e5,#bd83ff);z-index:-1}
-.dash-card:not(:disabled):hover{transform:translateY(-3px);border-color:#8054b8;box-shadow:0 20px 48px rgba(95,45,167,.2)}
-.dash-card:disabled{cursor:default;opacity:.88}
-.card-top{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px}
-.dash-icon{width:47px;height:47px;display:grid;place-items:center;border-radius:14px;font-size:21px;color:var(--v3);background:rgba(142,83,225,.16);border:1px solid rgba(165,112,238,.15)}
-.dash-card h2{font-size:17px;margin:1px 0 0;font-weight:800;line-height:1.35}
-.dash-card p{font-size:13px;line-height:1.7;color:var(--m);margin:0;max-width:52ch}
-.state{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:4px 9px;font-size:10px;font-weight:800;letter-spacing:.3px;white-space:nowrap;border:1px solid #176b48;color:#5ee6a3;background:rgba(13,88,56,.18)}
-.state:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
-.state.soon{border-color:#52347e;color:#bb91ff;background:rgba(105,55,165,.16)}
-.dash-card[data-tone="green"] .dash-icon{color:#4ce7a2;background:rgba(38,180,119,.13)}
-.dash-card[data-tone="cyan"] .dash-icon{color:#39d9eb;background:rgba(35,173,190,.13)}
-.dash-card[data-tone="red"] .dash-icon{color:#ff777f;background:rgba(197,58,76,.13)}
-.dash-card[data-tone="amber"] .dash-icon{color:#ffca58;background:rgba(197,137,39,.13)}
-.ai-notice{margin-top:20px;padding:16px 18px;border:1px solid #4c3670;border-radius:14px;background:linear-gradient(100deg,rgba(104,55,165,.18),rgba(21,16,30,.65));color:#d6c8ed;font-size:13px}
-.ai-notice strong{color:#e8d9ff}
-.tools-intro{margin:0 0 22px;color:var(--m)}
-.tool-panels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:24px}
-.utility{background:linear-gradient(155deg,#15121e,#0e0d14);border:1px solid #352747;border-top:2px solid var(--v2);border-radius:15px;padding:19px;min-width:0;box-shadow:var(--shadow)}
-.utility h2{margin:0 0 7px;font-size:17px;color:#d5baff}
-.utility p{margin:0 0 13px;color:var(--m);font-size:13px}
-.utility textarea,.utility input{width:100%;margin:0 0 9px;min-width:0}
-.utility textarea{min-height:94px;resize:vertical}
-.utility-result{margin-top:12px;padding:11px 12px;border-radius:10px;background:#0b0a11;border:1px solid #30243f;color:#d9d0e8;font-size:13px;line-height:1.7;overflow-wrap:anywhere}
-.utility-result:empty{display:none}
-.result-good{color:#66e6a9}.result-warn{color:#ffcf71}.result-bad{color:#ff9299}
-.result-list{margin:8px 0 0;padding-inline-start:19px}
-.result-list li{font-size:13px;margin-bottom:5px}
-.external-link{display:inline-block;text-decoration:none;margin-top:8px;color:#d7b9ff;border:1px solid #63448c;border-radius:8px;padding:8px 12px}
-.external-link:hover{background:#25183a}
-.small-note{font-size:11px;color:var(--m);margin-top:8px}
-input::placeholder,textarea::placeholder{color:#777185}
-@media(max-width:980px){.dash-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.view{width:min(100%,900px)}}
-@media(max-width:760px){.dash-grid,.tool-panels{grid-template-columns:1fr}.dash-card{min-height:150px}.dash-head{align-items:flex-start}.view{padding-top:25px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
-
-@media(max-width:760px){
-.app{grid-template-columns:1fr}
-aside{position:fixed;inset-inline:0;bottom:0;top:auto;height:auto;flex-direction:row;padding:6px 8px calc(6px + env(safe-area-inset-bottom));border-inline-end:0;border-top:1px solid var(--l);z-index:9;order:0!important}
-.brand,.foot{display:none}
-.nav{display:flex;width:100%}
-.nav button{flex:1;flex-direction:column;gap:2px;font-size:10.5px;padding:6px 2px;align-items:center;text-align:center}
-.go,.cols,.two{grid-template-columns:1fr}
-.top{padding:0 16px}
-.view{padding:28px 16px 100px}
-footer{padding-bottom:80px}
-}
-</style>
-</head>
-<body>
-<div class="app">
-<aside>
-  <div class="brand"><div class="mark">⚡</div><div><b>RAMiiN PESHMERGAH</b><small data-i18n="brand_sub">شوێنی کاری ئەمنیەت</small></div></div>
-  <nav class="nav" id="nav">
-    <button data-v="home" class="on"><i>◈</i><span data-i18n="nav_home">یاریدەدەر</span></button>
-    <button data-v="cyber"><i>⌬</i><span data-i18n="nav_cyber">تاقیگەی سایبەر</span></button>
-    <button data-v="bounty"><i>⚑</i><span data-i18n="nav_bounty">Bug Bounty</span></button>
-    <button data-v="tasks"><i>✓</i><span data-i18n="nav_tasks">ئەرکەکان</span></button>
-    <button data-v="tools"><i>⌘</i><span data-i18n="nav_tools">ئامرازەکان</span></button>
-  </nav>
-  <div class="foot"><span class="dot"></span><span data-i18n="foot_ready">شوێنی کار ئامادەیە</span><br><span data-i18n="foot_local">داتا لەم براوزەرەدا دەمێنێتەوە</span><br>RAMiiN PESHMERGAH · v1.0</div>
-</aside>
-<main>
-<div class="flag"></div>
-<header class="top">
-  <div><span data-i18n="workspace_lbl">شوێنی کار</span> / <b id="crumb">داشبۆرد</b></div>
-  <div class="langsw" id="langsw"><button data-lang="ku" class="on">کوردی</button><button data-lang="en">EN</button></div>
-</header>
-
-<section class="view on" id="v-home">
-  <div class="dash-head">
-    <div>
-      <h1 data-i18n="dashboard_h1">بەخێربێیت بۆ RAMiiN PESHMERGAH</h1>
-      <p class="lead" data-i18n="dashboard_lead">شوێنی یەکگرتووی فێربوونی سایبەری، ڕاپۆرتکردن و ئامرازە پارێزراوەکانت.</p>
-      <div class="dash-meta"><span class="meta-chip" data-i18n="meta_local">پاراستنی داتا لەسەر ئامێرەکەت</span><span class="meta-chip" data-i18n="meta_version">وەشانی ١.٠</span></div>
-    </div>
-  </div>
-  <div class="dash-grid" aria-label="Dashboard">
-    <article class="dash-card" data-tone="purple" aria-label="AI assistant status">
-      <div class="card-top"><span class="dash-icon">✦</span><span class="state soon" data-i18n="status_setup">پێویستی بە ڕێکخستنە</span></div>
-      <h2 data-i18n="card_ai_t">یاریدەدەری AI</h2><p data-i18n="card_ai_d">پەیوەندی بە AI هێشتا چالاک نەکراوە؛ پێویستی بە API لە سێرڤەری پارێزراو هەیە.</p>
-    </article>
-    <button class="dash-card" data-tone="green" data-go="cyber"><div class="card-top"><span class="dash-icon">⌬</span><span class="state" data-i18n="status_active">چالاک</span></div><h2 data-i18n="card_cyber_t">تاقیگەی سایبەر</h2><p data-i18n="card_cyber_d">بابەتەکانی Red Team، Blue Team، وێب، API و بەرگری فێربە.</p></button>
-    <button class="dash-card" data-tone="amber" data-go="bounty"><div class="card-top"><span class="dash-icon">⚑</span><span class="state" data-i18n="status_active">چالاک</span></div><h2 data-i18n="card_bounty_t">شوێنگری Bug Bounty</h2><p data-i18n="card_bounty_d">ئامانجەکان، دۆخی کار، چێکلیست و قاڵبی ڕاپۆرت بەڕێوەببە.</p></button>
-    <button class="dash-card" data-tone="cyan" data-go="tools" data-tool="hash"><div class="card-top"><span class="dash-icon">#</span><span class="state" data-i18n="status_active">چالاک</span></div><h2 data-i18n="card_hash_t">ناسینەوە و دروستکردنی Hash</h2><p data-i18n="card_hash_d">درێژی hash بە شێوەی خەمڵاندن بناسە و SHA-2 لەسەر ئامێرەکەت دروست بکە.</p></button>
-    <button class="dash-card" data-tone="green" data-go="tools" data-tool="headers"><div class="card-top"><span class="dash-icon">✓</span><span class="state" data-i18n="status_active">چالاک</span></div><h2 data-i18n="card_headers_t">پشکنینی HTTP Headers</h2><p data-i18n="card_headers_d">هێدەرە پارێزراوەکان بپشکنە و کەمبوونەکان بدۆزەرەوە.</p></button>
-    <button class="dash-card" data-tone="purple" data-go="tools" data-tool="csp"><div class="card-top"><span class="dash-icon">⌘</span><span class="state" data-i18n="status_active">چالاک</span></div><h2 data-i18n="card_csp_t">شیکردنەوەی CSP</h2><p data-i18n="card_csp_d">سیاسەتی Content Security Policy بپشکنە و ئاگادارییە بنەڕەتییەکان ببینە.</p></button>
-    <button class="dash-card" data-tone="red" data-go="tools" data-tool="cve"><div class="card-top"><span class="dash-icon">!</span><span class="state" data-i18n="status_active">چالاک</span></div><h2 data-i18n="card_cve_t">گەڕان لە CVE</h2><p data-i18n="card_cve_d">ناو یان ژمارەی CVE بنووسە و لە داتابەیسی فەرمی NVD بگەڕێ.</p></button>
-    <button class="dash-card" data-tone="green" data-go="tasks"><div class="card-top"><span class="dash-icon">☑</span><span class="state" data-i18n="status_active">چالاک</span></div><h2 data-i18n="card_tasks_t">بەڕێوەبردنی ئەرکەکان</h2><p data-i18n="card_tasks_d">کارەکان زیاد بکە، تەواوبوونیان دیاری بکە و لە براوزەرەکەتدا هەڵیانگرە.</p></button>
-    <article class="dash-card" data-tone="purple"><div class="card-top"><span class="dash-icon">⌘</span><span class="state soon" data-i18n="status_soon">لە پلاندانایە</span></div><h2 data-i18n="card_agent_t">Agent IDE</h2><p data-i18n="card_agent_d">شوێنی کاری کۆد و یاریدەدەری ئۆتۆماتیک لە قۆناغی داهاتوودا؛ پێویستی بە سێرڤەر و دەسەڵاتی دیاریکراوە.</p></article>
-  </div>
-  <div class="ai-notice"><strong data-i18n="ai_notice_t">تێبینی گرنگ:</strong> <span data-i18n="ai_notice_d">ئەم وەشانە dashboard ـێکی ناوخۆییە. هیچ نامەیەک بۆ AI نانێردرێت و هیچ کلیلی API لە براوزەر هەڵناگیرێت.</span></div>
-</section>
-<section class="view" id="v-cyber">
-  <h1 data-i18n="cyber_h1">وەک هێرشکەر بیر بکەرەوە، وەک بەرگریکار کار بکە.</h1>
-  <p class="lead" data-i18n="cyber_lead">بابەتێک هەڵبژێرە. هەر یەکێکیان بنەما سەرەکییەکان، چۆنیەتی بەرگری، و شوێنی یاسایی بۆ تەمرین دەگرێتەوە.</p>
-  <input class="find" id="q" type="search" data-i18n-ph="search_ph" placeholder="گەڕان بە بابەت: red team، JWT، phishing، cloud" aria-label="Search topics">
-  <div class="pills" id="pills"></div>
-  <article class="mod" id="mod"></article>
-  <div class="warn" data-i18n="warn">تەنها لەسەر سیستەمی خۆت، ئامێری تاقیگە، یان ئامانجێک کە ڕێگەی نووسراوت بۆ هەیە تاقی بکەرەوە. دەستگەیشتنی بێ مۆڵەت لە زۆربەی وڵاتانی جیهاندا تاوانە.</div>
-</section>
-
-<section class="view" id="v-bounty">
-  <h1 data-i18n="bounty_h1">بیدۆزەرەوە، بیسەلمێنە، ڕاپۆرتی بکە.</h1>
-  <p class="lead" data-i18n="bounty_lead">پڕۆگرامەکان شوێنگری بکە، ڕێڕەوێکی دووبارەبوونەوە بەکاربهێنە و ڕاپۆرتی ڕوون بنووسە. هەمیشە پابەندی scope ی هەر پڕۆگرامێک بە.</p>
-  <div class="two">
-    <div class="panel"><h3><span data-i18n="tracker_t">شوێنگری ئامانج</span><span class="hint" id="stat"></span></h3>
-      <div class="add">
-        <input id="bn" class="w" data-i18n-ph="name_ph" placeholder="ناوی پڕۆگرام یان ئامانج" aria-label="Program name">
-        <select id="bp" aria-label="Platform"></select>
-        <input id="bt" data-i18n-ph="note_ph" placeholder="تێبینی: scope، لینک" aria-label="Note">
-        <button class="btn w" id="ba" data-i18n="btn_addtarget">زیادکردنی ئامانج</button>
-      </div>
-      <div id="tl"></div>
-    </div>
-    <div class="panel"><h3 data-i18n="rules_t">ڕێساکان پێش تاقیکردنەوە</h3>
-      <ul id="rulesList"></ul>
-    </div>
-  </div>
-  <div class="two">
-    <div class="panel ck"><h3><span data-i18n="workflow_t">ڕێڕەوی گەڕان</span><button class="x" id="cr" data-i18n="btn_reset">ڕیسێت</button></h3><div id="cl"></div></div>
-    <div class="panel"><h3 data-i18n="report_t">قاڵبی ڕاپۆرت</h3>
-      <p class="hint" data-i18n="report_note" style="margin:0 0 8px">ڕاپۆرتی Bug Bounty لە ئاستی نێودەوڵەتیدا دەخوێنرێتەوە، بۆیە ئەم قاڵبە بە ئینگلیزی دەمێنێتەوە.</p>
-      <textarea id="rp" aria-label="Report template"></textarea>
-      <div class="tools"><span class="hint" id="cm"></span><button class="btn" id="cp" data-i18n="btn_copy">کۆپیکردنی ڕاپۆرت</button></div></div>
-  </div>
-</section>
-
-<section class="view" id="v-tools">
-  <h1 data-i18n="tools_h1">ئامرازە پارێزراوەکان</h1>
-  <p class="lead" data-i18n="tools_lead">ئەم شیکردنەوانە لە ناو براوزەرەکەتدا ئەنجام دەدرێن؛ هیچ داتایەک بۆ سێرڤەر نانێردرێت.</p>
-  <div class="tool-panels">
-    <section class="utility" id="tool-hash">
-      <h2 data-i18n="hash_h">ناسینەوە و دروستکردنی Hash</h2>
-      <p data-i18n="hash_d">دەقێک بنووسە بۆ دروستکردنی SHA-256، یان hash ـێک بلکێنە بۆ خەمڵاندنی جۆرەکەی. درێژی بە تەنها بەڵگەی یەکلاکەرەوە نییە.</p>
-      <textarea id="hashInput" data-i18n-ph="hash_ph" placeholder="دەق یان hash لێرە دابنێ..."></textarea>
-      <div class="tools"><button class="btn alt" type="button" id="hashIdentify" data-i18n="hash_identify">خەمڵاندنی جۆر</button><button class="btn" type="button" id="hashCalc" data-i18n="hash_calc">دروستکردنی SHA-256</button></div>
-      <div class="utility-result" id="hashResult" aria-live="polite"></div>
-    </section>
-    <section class="utility" id="tool-headers">
-      <h2 data-i18n="headers_h">پشکنینی HTTP Security Headers</h2>
-      <p data-i18n="headers_d">هێدەرەکانی وەڵامی HTTP لێرە بلکێنە؛ تەنها بوونی هێدەر دەبینرێت، بەهای هەر هێدەرێکیش پێویستی بە پشکنینی زیاتر هەیە.</p>
-      <textarea id="headersInput" data-i18n-ph="headers_ph" placeholder="Content-Security-Policy: default-src 'self'&#10;X-Content-Type-Options: nosniff"></textarea>
-      <button class="btn" type="button" id="headersCheck" data-i18n="headers_check">پشکنین</button>
-      <div class="utility-result" id="headersResult" aria-live="polite"></div>
-    </section>
-    <section class="utility" id="tool-csp">
-      <h2 data-i18n="csp_h">شیکردنەوەی Content Security Policy</h2>
-      <p data-i18n="csp_d">ڕیزی CSP بلکێنە بۆ دۆزینەوەی چەند مەترسییەکی باو. ئەمە audit ـێکی سەرەتاییە، نەک پشکنینی تەواوی سیاسەت.</p>
-      <textarea id="cspInput" data-i18n-ph="csp_ph" placeholder="default-src 'self'; object-src 'none'; base-uri 'self'"></textarea>
-      <button class="btn" type="button" id="cspCheck" data-i18n="csp_check">شیکردنەوە</button>
-      <div class="utility-result" id="cspResult" aria-live="polite"></div>
-    </section>
-    <section class="utility" id="tool-cve">
-      <h2 data-i18n="cve_h">گەڕان لە CVE / NVD</h2>
-      <p data-i18n="cve_d">ژمارەی CVE یان وشەی سەرەکی بنووسە. گەڕانەکە لە ماڵپەڕی فەرمی NVD دەکرێت.</p>
-      <input id="cveInput" type="search" data-i18n-ph="cve_ph" placeholder="CVE-2024-xxxx یان ناوی بەرهەم" />
-      <a class="external-link" id="cveLink" href="https://nvd.nist.gov/vuln/search" target="_blank" rel="noopener noreferrer" data-i18n="cve_search">کردنەوەی گەڕانی NVD</a>
-      <div class="small-note" data-i18n="cve_note">پێداچوونەوە بە CVSS، وەشانە کاریگەرەکان و ئاگادارییەکانی بەرهەمهێنەر بکە؛ تەنها ژمارەی CVE بڕیاری پاراستن نییە.</div>
-    </section>
-  </div>
-</section>
-
-<section class="view" id="v-tasks">
-  <h1 data-i18n="tasks_h1">کارەکانت پلان بکە.</h1>
-  <p class="lead" data-i18n="tasks_lead">لیستێکی کورت لەوەی ئەمڕۆ گرنگە ڕابگرە. ئەرکەکان لەم براوزەرەدا هەڵدەگیرێن.</p>
-  <div class="panel" style="margin-top:24px">
-    <div class="add" style="grid-template-columns:1fr auto"><input id="tn" data-i18n-ph="task_ph" placeholder="ئەرکی نوێ" aria-label="New task"><button class="btn" id="tb" data-i18n="btn_addtask">زیادکردنی ئەرک</button></div>
-    <div id="tkl"></div>
-  </div>
-</section>
-
-<footer data-i18n="foot_credit">RAMiiN PESHMERGAH · بۆ فێربوون و کارکردنی سایبەری دروستکراوە.</footer>
-</main>
-</div>
-<script>
-const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const ld=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
-const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
-const esc=s=>String(s).replace(/[&<>"']/g,c=>"&#"+c.charCodeAt(0)+";");
-
-const STR={
-en:{
- brand_sub:"Cybersecurity workspace",
- workspace_lbl:"Workspace", nav_tools:"Tools", dashboard_h1:"Welcome to RAMiiN PESHMERGAH", dashboard_lead:"Your unified workspace for cybersecurity learning, reporting and safe utilities.", meta_local:"Data stays on this device", meta_version:"Version 1.0",
- status_active:"ACTIVE", status_soon:"COMING SOON", status_setup:"SETUP REQUIRED",
- card_ai_t:"AI Assistant", card_ai_d:"AI is not connected yet. A secure server-side API integration is required.", card_cyber_t:"Cyber Lab", card_cyber_d:"Learn Red Team, Blue Team, web, API and defensive security topics.", card_bounty_t:"Bug Bounty Tracker", card_bounty_d:"Manage targets, workflow status, checklists and report templates.", card_hash_t:"Hash Identifier & Generator", card_hash_d:"Estimate hash formats and generate SHA-2 digests locally in your browser.", card_headers_t:"HTTP Security Headers", card_headers_d:"Review common security headers and identify missing protections.", card_csp_t:"CSP Policy Review", card_csp_d:"Review a Content Security Policy for common configuration weaknesses.", card_cve_t:"CVE Explorer", card_cve_d:"Search the official NVD database by CVE ID or product keyword.", card_tasks_t:"Task Manager", card_tasks_d:"Add tasks, mark them complete and keep them in this browser.", card_agent_t:"Agent IDE", card_agent_d:"A future coding workspace; it requires a server and carefully scoped permissions.", ai_notice_t:"Important:", ai_notice_d:"This version is a local dashboard. Messages are not sent to an AI model and API keys are never stored in the browser.",
- tools_h1:"Safe security utilities", tools_lead:"These checks run in your browser. No input is uploaded to a server.", hash_h:"Hash identifier and generator", hash_d:"Enter text to create a SHA-256 digest, or paste a hash for a format estimate. Length alone cannot prove an algorithm.", hash_ph:"Paste text or a hash here...", hash_identify:"Estimate format", hash_calc:"Generate SHA-256", headers_h:"HTTP security headers review", headers_d:"Paste HTTP response headers. This checks whether common headers exist; each header value still needs manual review.", headers_ph:"Content-Security-Policy: default-src 'self'\nX-Content-Type-Options: nosniff", headers_check:"Review headers", csp_h:"Content Security Policy review", csp_d:"Paste a CSP policy to check for common weaknesses. This is a basic review, not a complete policy audit.", csp_ph:"default-src 'self'; object-src 'none'; base-uri 'self'", csp_check:"Analyze policy", cve_h:"CVE / NVD search", cve_d:"Enter a CVE ID or keyword. Search opens the official NVD website.", cve_ph:"CVE-2024-xxxx or product name", cve_search:"Open NVD search", cve_note:"Review CVSS, affected versions and vendor advisories. A CVE number alone is not a security decision.",
- nav_home:"Assistant", nav_cyber:"Cyber Lab", nav_bounty:"Bug Bounty", nav_tasks:"Tasks",
- foot_ready:"Workspace ready", foot_local:"Data stays in this browser",
- home_h1:"Learn security, hunt bugs, get work done.",
- home_lead:"Your private lab for cybersecurity study, bug bounty tracking and daily tasks.",
- entry_cyber_t:"Cyber Lab", entry_cyber_d:"Red team, blue team, ethical hacking, web, cloud and more.",
- entry_bounty_t:"Bug Bounty", entry_bounty_d:"Track targets, follow a checklist, write clear reports.",
- entry_tasks_t:"Tasks", entry_tasks_d:"Plan your work and tick it off.",
- chat_ph:"Ask RAMiiN PESHMERGAH anything. The AI connection is added in the next phase.",
- chat_hint:"Enter to send, Shift+Enter for a new line", btn_newchat:"New chat", btn_send:"Send",
- cyber_h1:"Think like an attacker, work like a defender.",
- cyber_lead:"Pick a topic. Each one covers the core ideas, how to defend, and where to practice legally.",
- search_ph:"Search topics: red team, JWT, phishing, cloud",
- core_h:"Core ideas", def_h:"Defense and good practice", prac_h:"Practice legally",
- no_match:"No topic matches your search.",
- warn:"Practice only on systems you own, lab machines, or targets where you have written permission. Unauthorized access is a crime in almost every country.",
- bounty_h1:"Find it, prove it, report it.",
- bounty_lead:"Track programs, follow a repeatable workflow and write clear reports. Always follow each program's scope.",
- tracker_t:"Target tracker", name_ph:"Program or target name", note_ph:"Note: scope, link", btn_addtarget:"Add target",
- opt_vdp:"Company VDP", opt_other:"Other",
- no_targets:"No targets yet. Add the first program you plan to study.",
- rules_t:"Rules before you test",
- rules:["Test only assets listed in scope.","Use your own accounts and data. Never touch other users' data.","No denial of service, spam or social engineering unless the program allows it.","Stop at a proof of concept. Do not copy or change data.","Report privately and wait for permission before sharing anything.","Unsure? Ask the program before you test."],
- workflow_t:"Hunt workflow", btn_reset:"Reset",
- checklist:["Read the policy, scope and out-of-scope list","Confirm safe harbor and which test types are allowed","Map the app: roles, pages, APIs and JavaScript files","Test access control with two of your own accounts","Check login, sessions and password reset","Test input handling where in scope (XSS, injection)","Look for business logic and race conditions","Check configuration and information exposure","Capture minimal proof: request, screenshot, steps","Search for duplicates, then write the report"],
- report_t:"Report template", btn_copy:"Copy report", copied:"Copied", select_manual:"Text selected. Copy it manually.",
- report_note:"Bug bounty reports are read internationally, so this template stays in English.",
- tasks_h1:"Plan your work.", tasks_lead:"Keep a short list of what matters today. Tasks are saved in this browser.",
- task_ph:"New task", btn_addtask:"Add task", no_tasks:"No tasks yet. Add what you want to finish today.",
- foot_credit:"RAMiiN PESHMERGAH · Built for cybersecurity learning and defensive work.",
- hash_empty:"Enter text or a hash first.", hash_bcrypt:"Likely bcrypt hash (prefix match).", hash_argon:"Likely Argon2 encoded hash.", hash_scrypt:"Likely scrypt encoded hash.", hash_unknown:"Format not recognized. It may be encoded, salted or a custom format.", hash_32:"32 hexadecimal characters: could be MD5 or NTLM (ambiguous).", hash_crypto_unavailable:"Web Crypto is unavailable. Open this page in a modern browser over HTTPS or localhost.", headers_empty:"Paste HTTP headers first.", headers_result:"Header presence review (not a full security audit):", missing:"not found", csp_empty:"Paste a CSP policy first.", csp_default:"No default-src directive found.", csp_object:"No object-src directive found; consider object-src 'none'.", csp_base:"No base-uri directive found.", csp_inline:"unsafe-inline found; review whether nonces or hashes can replace it.", csp_eval:"unsafe-eval found; review whether it can be removed.", csp_wildcard:"Wildcard source (*) found; narrow allowed sources where possible.", csp_no_findings:"No basic warning detected. This does not prove the policy is secure.", csp_result:"Basic CSP review:" ,
- stat:(n,rep,paid)=>n+" targets, "+rep+" reported, "+paid+" paid",
- status:["Researching","Testing","Reported","Triaged","Paid","Duplicate","Closed"]
-},
-ku:{
- brand_sub:"شوێنی کاری سایبەری",
- workspace_lbl:"شوێنی کار", nav_tools:"ئامرازەکان", dashboard_h1:"بەخێربێیت بۆ RAMiiN PESHMERGAH", dashboard_lead:"شوێنی یەکگرتووی فێربوونی سایبەری، ڕاپۆرتکردن و ئامرازە پارێزراوەکانت.", meta_local:"داتا لەسەر ئەم ئامێرە دەمێنێتەوە", meta_version:"وەشانی ١.٠",
- status_active:"چالاک", status_soon:"لە پلاندانایە", status_setup:"پێویستی بە ڕێکخستنە",
- card_ai_t:"یاریدەدەری AI", card_ai_d:"پەیوەندی بە AI هێشتا چالاک نەکراوە؛ پێویستی بە API لە سێرڤەری پارێزراو هەیە.", card_cyber_t:"تاقیگەی سایبەر", card_cyber_d:"بابەتەکانی Red Team، Blue Team، وێب، API و بەرگری فێربە.", card_bounty_t:"شوێنگری Bug Bounty", card_bounty_d:"ئامانجەکان، دۆخی کار، چێکلیست و قاڵبی ڕاپۆرت بەڕێوەببە.", card_hash_t:"ناسینەوە و دروستکردنی Hash", card_hash_d:"درێژی hash بە شێوەی خەمڵاندن بناسە و SHA-2 لەسەر ئامێرەکەت دروست بکە.", card_headers_t:"پشکنینی HTTP Headers", card_headers_d:"هێدەرە پارێزراوە باوەکان بپشکنە و کەمبوونەکان بدۆزەرەوە.", card_csp_t:"شیکردنەوەی سیاسەتی CSP", card_csp_d:"سیاسەتی Content Security Policy بپشکنە و ئاگادارییە باوەکان ببینە.", card_cve_t:"گەڕان لە CVE", card_cve_d:"ژمارەی CVE یان وشەی سەرەکی بنووسە و لە داتابەیسی فەرمی NVD بگەڕێ.", card_tasks_t:"بەڕێوەبردنی ئەرکەکان", card_tasks_d:"ئەرک زیاد بکە، تەواوبوونیان دیاری بکە و لە براوزەرەکەتدا هەڵیانگرە.", card_agent_t:"Agent IDE", card_agent_d:"شوێنی کاری کۆد لە قۆناغی داهاتوودا؛ پێویستی بە سێرڤەر و دەسەڵاتی دیاریکراوە.", ai_notice_t:"تێبینی گرنگ:", ai_notice_d:"ئەم وەشانە داشبۆردێکی ناوخۆییە. هیچ پەیامێک بۆ مۆدێلی AI نانێردرێت و هیچ کلیلی API لە براوزەر هەڵناگیرێت.",
- tools_h1:"ئامرازە پارێزراوەکانی سایبەر", tools_lead:"ئەم پشکنینانە لە ناو براوزەرەکەتدا ئەنجام دەدرێن؛ هیچ داتایەک بۆ سێرڤەر نانێردرێت.", hash_h:"ناسینەوە و دروستکردنی Hash", hash_d:"دەقێک بنووسە بۆ دروستکردنی SHA-256، یان hash ـێک بلکێنە بۆ خەمڵاندنی جۆرەکەی. درێژی بە تەنها بەڵگەی یەکلاکەرەوە نییە.", hash_ph:"دەق یان hash لێرە دابنێ...", hash_identify:"خەمڵاندنی جۆر", hash_calc:"دروستکردنی SHA-256", headers_h:"پشکنینی HTTP Security Headers", headers_d:"هێدەرەکانی وەڵامی HTTP لێرە بلکێنە؛ تەنها بوونی هێدەر دەبینرێت و بەهای هەر هێدەرێک پێویستی بە پشکنینی زیاتر هەیە.", headers_ph:"Content-Security-Policy: default-src 'self'\nX-Content-Type-Options: nosniff", headers_check:"پشکنین", csp_h:"شیکردنەوەی Content Security Policy", csp_d:"ڕیزی CSP بلکێنە بۆ دۆزینەوەی چەند لاوازییەکی باو. ئەمە پشکنینێکی سەرەتاییە، نەک audit ـێکی تەواو.", csp_ph:"default-src 'self'; object-src 'none'; base-uri 'self'", csp_check:"شیکردنەوە", cve_h:"گەڕان لە CVE / NVD", cve_d:"ژمارەی CVE یان وشەی سەرەکی بنووسە. گەڕانەکە لە ماڵپەڕی فەرمی NVD دەکرێت.", cve_ph:"CVE-2024-xxxx یان ناوی بەرهەم", cve_search:"کردنەوەی گەڕانی NVD", cve_note:"CVSS، وەشانە کاریگەرەکان و ئاگادارییەکانی بەرهەمهێنەر بپشکنە؛ تەنها ژمارەی CVE بڕیاری پاراستن نییە.",
- nav_home:"یاریدەدەر", nav_cyber:"تاقیگەی سایبەر", nav_bounty:"Bug Bounty", nav_tasks:"ئەرکەکان",
- foot_ready:"شوێنی کار ئامادەیە", foot_local:"داتا لەم براوزەرەدا دەمێنێتەوە",
- home_h1:"فێربە لە ئەمنیەت، بەدوای هەڵەدا بگەڕێ، کارەکانت تەواو بکە.",
- home_lead:"تاقیگەی تایبەتی خۆت بۆ فێربوونی سایبەرسیکیوریتی، شوێنگری Bug Bounty و ئەرکە ڕۆژانەکانت.",
- entry_cyber_t:"تاقیگەی سایبەر", entry_cyber_d:"Red Team، Blue Team، Ethical Hacking، وێب، کلاود و زیاتر.",
- entry_bounty_t:"Bug Bounty", entry_bounty_d:"شوێنگری ئامانجەکان بکە، لیستی کار بەکاربهێنە، ڕاپۆرتی ڕوون بنووسە.",
- entry_tasks_t:"ئەرکەکان", entry_tasks_d:"کارەکانت پلان بکە و تیکی لێبدە.",
- chat_ph:"یاریدەدەری AI لە قۆناغی داهاتوودا دوای ڕێکخستنی سێرڤەر چالاک دەکرێت.",
- chat_hint:"Enter بۆ ناردن، Shift+Enter بۆ هێڵی نوێ", btn_newchat:"گفتوگۆی نوێ", btn_send:"ناردن",
- cyber_h1:"وەک هێرشکەر بیر بکەرەوە، وەک بەرگریکار کار بکە.",
- cyber_lead:"بابەتێک هەڵبژێرە. هەر یەکێکیان بنەما سەرەکییەکان، چۆنیەتی بەرگری، و شوێنی یاسایی بۆ تەمرین دەگرێتەوە.",
- search_ph:"گەڕان بە بابەت: red team، JWT، phishing، cloud",
- core_h:"بنەما سەرەکییەکان", def_h:"بەرگری و کرداری باش", prac_h:"تەمرینی یاسایی",
- no_match:"هیچ بابەتێک لەگەڵ گەڕانەکەت ناگونجێت.",
- warn:"تەنها لەسەر سیستەمی خۆت، ئامێری تاقیگە، یان ئامانجێک کە ڕێگەی نووسراوت بۆ هەیە تاقی بکەرەوە. دەستگەیشتنی بێ مۆڵەت لە زۆربەی وڵاتانی جیهاندا تاوانە.",
- bounty_h1:"بیدۆزەرەوە، بیسەلمێنە، ڕاپۆرتی بکە.",
- bounty_lead:"پڕۆگرامەکان شوێنگری بکە، ڕێڕەوێکی دووبارەبوونەوە بەکاربهێنە و ڕاپۆرتی ڕوون بنووسە. هەمیشە پابەندی scope ی هەر پڕۆگرامێک بە.",
- tracker_t:"شوێنگری ئامانج", name_ph:"ناوی پڕۆگرام یان ئامانج", note_ph:"تێبینی: scope، لینک", btn_addtarget:"زیادکردنی ئامانج",
- opt_vdp:"VDP ـی کۆمپانیا", opt_other:"هیتر",
- no_targets:"هێشتا هیچ ئامانجێک نییە. یەکەم پڕۆگرامی ئامادەیت بۆی بخوێنیت زیاد بکە.",
- rules_t:"ڕێساکان پێش تاقیکردنەوە",
- rules:["تەنها ئەو بەشانە تاقی بکەرەوە کە لە scope دا نووسراون.","هەژمار و داتای خۆت بەکاربهێنە. هەرگیز دەست لە داتای بەکارهێنەرانی تر مەدە.","هیچ DoS، سپام یان Social Engineering مەکە، مەگەر پڕۆگرامەکە ڕێگەی پێبدات.","لە Proof of Concept ڕابوەستە. داتا کۆپی یان نەگۆڕە.","بە شێوەی تایبەت ڕاپۆرت بکە و پێش بڵاوکردنەوەی هەر شتێک چاوەڕوانی مۆڵەت بە.","دڵنیا نیت؟ پێش تاقیکردنەوە لە پڕۆگرامەکە بپرسە."],
- workflow_t:"ڕێڕەوی گەڕان", btn_reset:"ڕیسێت",
- checklist:["سیاسەت، scope و لیستی دەرەوەی scope بخوێنەرەوە","دڵنیابە لە safe harbor و کام جۆرە تاقیکردنەوە ڕێگەپێدراوە","ئەپەکە نەخشە بکە: ڕۆڵەکان، پەڕەکان، API و فایلی JavaScript","access control بە دوو هەژماری خۆت تاقی بکەرەوە","چوونەژوورەوە، session و گۆڕینی وشەی نهێنی بپشکنە","input handling لەو شوێنانەی لە scope دان تاقی بکەرەوە (XSS، injection)","بەدوای business logic و race condition بگەڕێ","ڕێکخستن و دەرکەوتنی زانیاری بپشکنە","کەمترین بەڵگە وەربگرە: request، وێنەی سکرین، هەنگاوەکان","بگەڕێ بۆ دووبارەکان، پاشان ڕاپۆرتەکە بنووسە"],
- report_t:"قاڵبی ڕاپۆرت", btn_copy:"کۆپیکردنی ڕاپۆرت", copied:"کۆپی کرا", select_manual:"دەق هەڵبژێردرا. بە دەست کۆپی بکە.",
- report_note:"ڕاپۆرتی Bug Bounty لە ئاستی نێودەوڵەتیدا دەخوێنرێتەوە، بۆیە ئەم قاڵبە بە ئینگلیزی دەمێنێتەوە.",
- tasks_h1:"کارەکانت پلان بکە.", tasks_lead:"لیستێکی کورت لەوەی ئەمڕۆ گرنگە ڕابگرە. ئەرکەکان لەم براوزەرەدا هەڵدەگیرێن.",
- task_ph:"ئەرکی نوێ", btn_addtask:"زیادکردنی ئەرک", no_tasks:"هێشتا هیچ ئەرکێک نییە. ئەوەی دەتەوێت ئەمڕۆ تەواوی بکەیت زیاد بکە.",
- foot_credit:"RAMiiN PESHMERGAH · بۆ فێربوون و کارکردنی سایبەری دروستکراوە.",
- hash_empty:"سەرەتا دەقێک یان hash بنووسە.", hash_bcrypt:"بە پێی پێشگرەکە، لەوانەیە hash ـی bcrypt بێت.", hash_argon:"بە پێی شێوازەکە، لەوانەیە hash ـی Argon2 بێت.", hash_scrypt:"بە پێی شێوازەکە، لەوانەیە hash ـی scrypt بێت.", hash_unknown:"فۆرماتەکە نەناسرا؛ لەوانەیە encoded، salted یان تایبەت بێت.", hash_32:"٣٢ نووسەی hexadecimal: لەوانەیە MD5 یان NTLM بێت (جیاکردنەوەیان لە درێژییەوە ناکرێت).", hash_crypto_unavailable:"Web Crypto بەردەست نییە. لە براوزەرێکی نوێ و HTTPS یان localhost بەکاریبهێنە.", headers_empty:"سەرەتا HTTP Headers بلکێنە.", headers_result:"پشکنینی بوونی هێدەرەکان (نەک audit ـێکی تەواو):", missing:"نەدۆزرایەوە", csp_empty:"سەرەتا سیاسەتی CSP بلکێنە.", csp_default:"دیرەکتیڤی default-src نییە.", csp_object:"دیرەکتیڤی object-src نییە؛ بیر لە object-src 'none' بکەرەوە.", csp_base:"دیرەکتیڤی base-uri نییە.", csp_inline:"unsafe-inline دۆزرایەوە؛ بپشکنە ئایا nonce یان hash جێگەی دەگرێتەوە.", csp_eval:"unsafe-eval دۆزرایەوە؛ بپشکنە ئایا دەتوانرێت لاببرێت.", csp_wildcard:"سەرچاوەی wildcard (*) دۆزرایەوە؛ تا بکرێت سنووری سەرچاوەکان تەنگتر بکە.", csp_no_findings:"هیچ ئاگادارییەکی سەرەتایی نەدۆزرایەوە؛ ئەمە سەلامەتی سیاسەتەکە ناسەلمێنێت.", csp_result:"ئەنجامی پشکنینی سەرەتایی CSP:",
- stat:(n,rep,paid)=>n+" ئامانج، "+rep+" ڕاپۆرتکراو، "+paid+" پارەدراو",
- status:["لێکۆڵینەوە","تاقیکردنەوە","ڕاپۆرتکراو","پشتڕاستکراوە","پارەدراو","دووبارە","داخراو"]
-}};
-
-const PLATFORMS=[{id:"h1",n:"HackerOne"},{id:"bc",n:"Bugcrowd"},{id:"in",n:"Intigriti"},{id:"yh",n:"YesWeHack"},{id:"vdp",key:"opt_vdp"},{id:"other",key:"opt_other"}];
-
-const MOD=[
-{id:"path",c:"g",icon:"◈",
- en:{t:"Learning path",s:"A realistic route from zero to your first valid bug bounty report.",
-  core:["Networking: TCP/IP, DNS, HTTP and TLS (Network+ level)","Linux command line plus basic Bash and Python","Web basics: HTML, JavaScript, cookies, sessions, APIs","OWASP Top 10 with hands-on labs","Burp Suite as your intercepting proxy","Read disclosed reports daily, then write your own"],
-  def:["Learn how each bug is fixed, not only how it breaks","Turn every lab into a short written note"],
-  prac:"PortSwigger Web Security Academy (free) and TryHackMe starter paths."},
- ku:{t:"ڕێڕەوی فێربوون",s:"ڕێگایەکی ڕاستەقینە لە سفرەوە بۆ یەکەم ڕاپۆرتی دروستی Bug Bounty.",
-  core:["تۆڕ: TCP/IP، DNS، HTTP و TLS (ئاستی Network+)","کۆمانی لاینی Linux لەگەڵ بنەمای Bash و Python","بنەمای وێب: HTML، JavaScript، cookies، session، API","OWASP Top 10 لەگەڵ تاقیگەی کرداری","Burp Suite وەک پڕۆکسی ڕاگرتنت","ڕۆژانە ڕاپۆرتی بڵاوکراوە بخوێنەرەوە، پاشان هی خۆت بنووسە"],
-  def:["فێربە چۆن هەر هەڵەیەک چارەسەر دەکرێت، نەک تەنها چۆن شکێنراوە","هەر تاقیگەیەک بکە بە تێبینییەکی کورتی نووسراو"],
-  prac:"PortSwigger Web Security Academy (بەخۆڕایی) و ڕێڕەوە سەرەتاییەکانی TryHackMe."}},
-{id:"eh",c:"g",icon:"⌬",
- en:{t:"Ethical hacking",s:"Authorized testing that finds weaknesses before criminals do. Permission and scope come first.",
-  core:["Phases: recon, scanning, enumeration, exploitation (lab or authorized only), post-exploitation, reporting","Written permission, clear scope and rules of engagement","Log every action: time, target, step, result","Prove impact with minimum access, then stop","Explain the fix, not only the bug"],
-  def:["Rank fixes by impact and likelihood","Retest after the patch"],
-  prac:"A home lab: VirtualBox, Kali Linux and intentionally vulnerable machines you own."},
- ku:{t:"هاکینگی ئەخلاقی",s:"تاقیکردنەوەی مۆڵەتدراو کە لاوازی دەدۆزێتەوە پێش ئەوەی تاوانباران بیدۆزنەوە. مۆڵەت و scope پێش هەموو شتێکن.",
-  core:["قۆناغەکان: recon، scanning، enumeration، exploitation (تەنها تاقیگە یان مۆڵەتدراو)، post-exploitation، ڕاپۆرتکردن","مۆڵەتی نووسراو، scope ـی ڕوون و rules of engagement","هەر کردارێک تۆمار بکە: کات، ئامانج، هەنگاو، ئەنجام","کاریگەری بە کەمترین دەستگەیشتن بسەلمێنە، پاشان ڕابوەستە","چارەسەرەکە ڕوون بکەرەوە، نەک تەنها هەڵەکە"],
-  def:["چارەسەرەکان بەپێی کاریگەری و ئەگەری ڕیز بکە","دوای patch دووبارە تاقی بکەرەوە"],
-  prac:"تاقیگەی ماڵەوە: VirtualBox، Kali Linux و ئامێری لاواز کە بە ئەنقەست دروستکراون و هی خۆتن."}},
-{id:"red",c:"r",icon:"⚔",
- en:{t:"Red team",s:"Goal-driven adversary emulation that tests people, process and technology together.",
-  core:["Objective based (reach one target asset), not a bug list","MITRE ATT&CK maps real attacker tactics and techniques","Kill chain: recon, access, persistence, movement, objective","Strict rules of engagement, stop contacts and deconfliction","Purple teaming: share results live with defenders","Report the attack path, missed detections and fixes"],
-  def:["Every red action should become a blue detection","Success means defenders improve, not only that the test succeeded"],
-  prac:"Atomic Red Team and MITRE Caldera inside an isolated lab."},
- ku:{t:"Red Team",s:"لێکچواندنەوەی هێرشبەرێکی ئامانجدار کە خەڵک، پرۆسە و تەکنەلۆژیا پێکەوە تاقی دەکاتەوە.",
-  core:["پابەندی ئامانجە (گەیشتن بە یەک asset ـی ئامانج)، نەک لیستی هەڵە","MITRE ATT&CK تاکتیک و تەکنیکی ڕاستەقینەی هێرشکەران نەخشە دەکات","Kill chain: recon، access، persistence، movement، objective","rules of engagement ـی توند، کەسی ڕاگرتن و deconfliction","Purple teaming: ئەنجامەکان ڕاستەوخۆ لەگەڵ بەرگریکاران بڵاو بکەرەوە","ڕێگای هێرش، دۆزینەوە لەدەستچووەکان و چارەسەرەکان ڕاپۆرت بکە"],
-  def:["هەر کردارێکی Red دەبێت ببێتە دۆزینەوەیەکی Blue","سەرکەوتن واتای باشترکردنی بەرگریکارانە، نەک تەنها سەرکەوتنی تاقیکردنەوەکە"],
-  prac:"Atomic Red Team و MITRE Caldera لەناو تاقیگەیەکی جیاکراوە."}},
-{id:"blue",c:"b",icon:"⛨",
- en:{t:"Blue team",s:"Defend, detect and respond. Blue team turns logs and alerts into decisions.",
-  core:["Logging and SIEM: collect, normalize, correlate (Wazuh, Splunk, Elastic)","EDR, hardening and patch management","Threat hunting: look for behavior, not only known signatures","Incident response: prepare, detect and analyze, contain and recover, lessons learned","Detection rules (Sigma) mapped to ATT&CK","Backups, least privilege, MFA and segmentation"],
-  def:["Track time to detect and time to respond","Run tabletop exercises with your team"],
-  prac:"A Wazuh or Security Onion lab fed with test events from your own machines."},
- ku:{t:"Blue Team",s:"بەرگری بکە، دۆزینەوە بکە و وەڵام بدەوە. Blue Team لۆگ و ئاگادارکردنەوەکان دەکاتە بڕیار.",
-  core:["لۆگ و SIEM: کۆکردنەوە، ڕێکخستن، پەیوەستکردن (Wazuh، Splunk، Elastic)","EDR، hardening و بەڕێوەبردنی patch","Threat hunting: بەدوای ڕەفتاردا بگەڕێ، نەک تەنها نیشانەی ناسراو","Incident response: ئامادەکاری، دۆزینەوە و شیکردنەوە، ڕاگرتن و گەڕاندنەوە، وانە وەرگرتن","یاساکانی دۆزینەوە (Sigma) پەیوەست بە ATT&CK","باکئەپ، کەمترین دەسەڵات، MFA و segmentation"],
-  def:["کاتی دۆزینەوە و کاتی وەڵامدانەوە شوێنگری بکە","لەگەڵ تیمەکەت tabletop exercise ئەنجام بدە"],
-  prac:"تاقیگەیەکی Wazuh یان Security Onion کە ڕووداوی تاقیکردنەوەی لە ئامێرەکانی خۆتەوە پێی دەدرێت."}},
-{id:"web",c:"a",icon:"⌘",
- en:{t:"Web and OWASP",s:"Most bounty rewards come from web apps and APIs. Learn the classics deeply.",
-  core:["Broken access control: IDOR and missing role checks (use two of your own accounts)","Injection: SQL injection, XSS, command injection","Authentication and session flaws: reset flows, token handling","Security misconfiguration and exposed secrets","SSRF, insecure deserialization, vulnerable components","Business logic: price, coupon, workflow and race conditions"],
-  def:["Check authorization on the server for every request","Parameterized queries, output encoding and CSP","Validate input and keep dependencies updated"],
-  prac:"PortSwigger Academy, OWASP Juice Shop and DVWA."},
- ku:{t:"وێب و OWASP",s:"زۆربەی پاداشتەکانی Bug Bounty لە ئەپی وێب و API ـەوەن. کلاسیکەکان بە قوڵی فێربە.",
-  core:["Broken access control: IDOR و نەبوونی پشکنینی ڕۆڵ (دوو هەژماری خۆت بەکاربهێنە)","Injection: SQL injection، XSS، command injection","هەڵەی authentication و session: ڕێڕەوی reset، بەڕێوەبردنی token","ڕێکخستنی هەڵە و نهێنی دەرکەوتوو","SSRF، deserialization ـی ناپارێزراو، پێکهاتەی لاواز","Business logic: نرخ، کۆپۆن، workflow و race condition"],
-  def:["لای سێرڤەر بۆ هەر request ـێک authorization بپشکنە","parameterized query، output encoding و CSP","input ـەکان پشکنین بکە و dependency ـەکان نوێ ڕابگرە"],
-  prac:"PortSwigger Academy، OWASP Juice Shop و DVWA."}},
-{id:"api",c:"a",icon:"⌁",
- en:{t:"API and mobile",s:"Modern apps are APIs behind a screen. Test the API, not only the UI.",
-  core:["Map endpoints from JavaScript files, OpenAPI docs and proxy history","Object-level and function-level authorization (BOLA, BFLA)","Mass assignment, excessive data exposure, missing rate limits","JWT and OAuth pitfalls: weak validation, redirect handling","Mobile: certificate pinning, insecure storage, exported components"],
-  def:["Authorize per object and per function","Return only needed fields and enforce rate limits"],
-  prac:"OWASP crAPI and Damn Vulnerable GraphQL Application."},
- ku:{t:"API و مۆبایل",s:"ئەپی ئەمڕۆ API ـن لە پشت شاشەیەکەوە. API تاقی بکەرەوە، نەک تەنها UI.",
-  core:["endpoint ـەکان لە فایلی JavaScript، دۆکیومێنتی OpenAPI و مێژووی پڕۆکسی نەخشە بکە","authorization لە ئاستی object و function (BOLA، BFLA)","Mass assignment، دەرکەوتنی زۆری داتا، نەبوونی rate limit","کێشەی JWT و OAuth: پشکنینی لاواز، بەڕێوەبردنی redirect","مۆبایل: certificate pinning، هەڵگرتنی ناپارێزراو، exported component"],
-  def:["بۆ هەر object و function بە تایبەتی authorize بکە","تەنها فیلدی پێویست بگەڕێنەوە و rate limit جێبەجێ بکە"],
-  prac:"OWASP crAPI و Damn Vulnerable GraphQL Application."}},
-{id:"recon",c:"g",icon:"⌕",
- en:{t:"Recon and OSINT",s:"Know the surface before touching anything. Passive first, active only inside scope.",
-  core:["Passive: public DNS, certificate transparency, search engines, web archives, public code","Active (in scope only): service discovery and content discovery","Track assets: domains, subdomains, technologies, endpoints","Note format: asset, finding, evidence, next step","Never touch anything outside the written scope"],
-  def:["Reduce exposure: remove old subdomains, secrets and debug pages"],
-  prac:"Your own domain, or programs that approve recon in their scope."},
- ku:{t:"Recon و OSINT",s:"پێش دەستلێدان، ئاستەکە بناسە. سەرەتا passive، active تەنها لەناو scope.",
-  core:["Passive: DNS ـی گشتی، certificate transparency، گەڕۆک، ئەرشیفی وێب، کۆدی گشتی","Active (تەنها لەناو scope): دۆزینەوەی سێرڤیس و ناوەڕۆک","asset ـەکان شوێنگری بکە: domain، subdomain، تەکنەلۆژیا، endpoint","فۆڕماتی تێبینی: asset، دۆزراوە، بەڵگە، هەنگاوی داهاتوو","هەرگیز دەست لە هیچ شتێکی دەرەوەی scope ـی نووسراو مەدە"],
-  def:["دەرکەوتن کەم بکەرەوە: subdomain ی کۆن، نهێنی و پەڕەی debug لابە"],
-  prac:"domain ـی خۆت، یان پڕۆگرامێک کە recon لە scope ـیدا قبوڵ دەکات."}},
-{id:"net",c:"g",icon:"⬡",
- en:{t:"Network security",s:"If you understand traffic, you understand attacks and defenses.",
-  core:["OSI and TCP/IP, ports, DNS, DHCP, ARP, routing","Packet analysis with Wireshark and tcpdump","Firewalls, IDS/IPS, VPN, segmentation, zero trust","Common weaknesses: default credentials, open management ports, plaintext protocols, weak Wi-Fi settings","Scan (Nmap) only networks you own or are authorized to test"],
-  def:["Disable unused services, encrypt in transit, segment networks"],
-  prac:"Cisco Packet Tracer, Wireshark sample captures and your own home network."},
- ku:{t:"ئەمنیەتی تۆڕ",s:"ئەگەر traffic تێبگەیت، هێرش و بەرگریش تێدەگەیت.",
-  core:["OSI و TCP/IP، port، DNS، DHCP، ARP، routing","شیکردنەوەی packet بە Wireshark و tcpdump","Firewall، IDS/IPS، VPN، segmentation، zero trust","لاوازی باو: credential ـی بنەڕەتی، port ـی بەڕێوەبردنی کراوە، پڕۆتۆکۆلی plaintext، ڕێکخستنی لاوازی WiFi","تەنها تۆڕی خۆت یان ئەوەی مۆڵەتت پێدراوە بە Nmap سکان بکە"],
-  def:["سێرڤیسی بەکارنەهاتوو ببنەوە، لە گواستنەوەدا encrypt بکە، تۆڕ segment بکە"],
-  prac:"Cisco Packet Tracer، نموونەی captureی Wireshark و تۆڕی ماڵی خۆت."}},
-{id:"brute",c:"r",icon:"⟳",
- en:{t:"Brute force and passwords",s:"Guessing attacks work because of weak, reused passwords and missing limits. Learn the concept and the defense.",
-  core:["Types: brute force, dictionary, password spraying, credential stuffing","Why they succeed: weak or reused passwords, no rate limit, no MFA","Offline cracking follows a hash leak; slow hashing makes it costly","In bug bounty, login guessing is usually out of scope. Read the policy first","A valid finding: no rate limit, lockout or MFA on a sensitive flow, proven with minimal steps on your own test account"],
-  def:["Rate limiting with backoff, and MFA (prefer passkeys)","Hash with Argon2id or bcrypt and a unique salt","Block breached passwords and alert on spraying patterns"],
-  prac:"Only your own lab apps (DVWA, Juice Shop) or programs that explicitly allow it."},
- ku:{t:"Brute Force و وشەی نهێنی",s:"هێرشی گرامان بەهۆی وشەی نهێنی لاواز و دووبارەبووەوە و نەبوونی سنوورکارکردن سەردەکەوێت. چەمک و بەرگری فێربە.",
-  core:["جۆرەکان: brute force، dictionary، password spraying، credential stuffing","بۆچی سەردەکەون: وشەی نهێنی لاواز یان دووبارە، نەبوونی rate limit، نەبوونی MFA","cracking ـی offline دوای leak ـی hash ڕوودەدات؛ hashing ـی خاو تێچووی زیاد دەکات","لە Bug Bounty دا، گرامانی چوونەژوورەوە زۆرجار دەرەوەی scope ـە. سەرەتا سیاسەتەکە بخوێنەرەوە","دۆزراوەیەکی دروست: نەبوونی rate limit، lockout یان MFA لە ڕێڕەوێکی هەستیار، بە کەمترین هەنگاو لەسەر هەژمارە تاقیکردنەوەکەی خۆت سەلمێنراوە"],
-  def:["Rate limiting لەگەڵ backoff، و MFA (باشترە passkey بێت)","بە Argon2id یان bcrypt و salt ـی تایبەت hash بکە","وشە نهێنییە leak ـکراوەکان بلۆک بکە و لە spraying ئاگادارکردنەوە بدە"],
-  prac:"تەنها ئەپی تاقیگەی خۆت (DVWA، Juice Shop) یان پڕۆگرامێک کە بە ڕوونی ڕێگەی پێدەدات."}},
-{id:"social",c:"a",icon:"☍",
- en:{t:"Social engineering",s:"Attacking people instead of machines. Awareness plus technical controls is the defense.",
-  core:["Principles: authority, urgency, scarcity, reciprocity, trust","Forms: phishing, voice calls, SMS, pretexting, baiting, tailgating","Red flags: pressure, unusual requests, mismatched sender, secrecy, payment or password asks","Awareness tests need written approval from the organization","In bug bounty, targeting staff or users is almost always out of scope"],
-  def:["Verify through a second channel and report suspicious messages","SPF, DKIM, DMARC and phishing-resistant MFA (FIDO2)","Regular awareness training run by the security team"],
-  prac:"Awareness courses and CTF OSINT challenges, never real people."},
- ku:{t:"Social Engineering",s:"هێرشکردنە سەر خەڵک لە جیاتی ئامێر. ئاگایی زیادی کۆنترۆڵی تەکنیکی بەرگرییە.",
-  core:["بنەما: دەسەڵات، پەلەیی، کەمی، گەڕانەوە، متمانە","جۆرەکان: phishing، پەیوەندی دەنگی، SMS، pretexting، baiting، tailgating","نیشانە ئاگادارکەرەکان: فشار، داواکاری نائاسایی، نەگونجانی نێردەر، نهێنیکاری، داوای پارە یان وشەی نهێنی","تاقیکردنەوەی ئاگایی پێویستی بە مۆڵەتی نووسراوی ڕێکخراوەکەیە","لە Bug Bounty دا، ئامانجگرتنی ستاف یان بەکارهێنەران هەمیشە نزیکەی هەمیشە دەرەوەی scope ـە"],
-  def:["لەڕێگەی کەناڵێکی دووەمەوە پشتڕاست بکەرەوە و پەیامی گومانلێکراو ڕاپۆرت بکە","SPF، DKIM، DMARC و MFA ـی بەرگری لە phishing (FIDO2)","ڕاهێنانی ئاگایی بەردەوام لەلایەن تیمی ئەمنیەتەوە"],
-  prac:"کۆرسی ئاگایی و ئاڵنگاری OSINT ـی CTF، هەرگیز کەسی ڕاستەقینە."}},
-{id:"crypto",c:"g",icon:"⚿",
- en:{t:"Crypto and authentication",s:"Know what hashing, encryption and signing protect, and where developers misuse them.",
-  core:["Hashing is not encryption; salts and slow password hashes","TLS basics: certificates, versions, weak configurations","JWT: algorithm confusion, weak secrets, missing checks","Password reset, OAuth and SSO flow weaknesses","Never invent your own crypto"],
-  def:["Use proven libraries, rotate keys, keep secrets in a vault"],
-  prac:"CryptoHack (free) and PortSwigger JWT and OAuth labs."},
- ku:{t:"Crypto و Authentication",s:"بزانە hashing، encryption و signing چی دەپارێزن، و لەکوێ دێڤەلۆپەران بە هەڵە بەکاریان دەهێنن.",
-  core:["Hashing وەک encryption نییە؛ salt و hashی خاوی وشەی نهێنی","بنەمای TLS: گەواهی، وەشان، ڕێکخستنی لاواز","JWT: تێکەڵبوونی algorithm، نهێنی لاواز، نەبوونی پشکنین","لاوازی ڕێڕەوی reset ی وشەی نهێنی، OAuth و SSO","هەرگیز crypto ی خۆت دانەمەزرێنە"],
-  def:["لایبراریی سەلمێنراو بەکاربهێنە، کلیلەکان بگۆڕە، نهێنییەکان لە vault ـدا ڕابگرە"],
-  prac:"CryptoHack (بەخۆڕایی) و تاقیگەکانی JWT و OAuth ی PortSwigger."}},
-{id:"cloud",c:"b",icon:"☁",
- en:{t:"Cloud security",s:"Misconfiguration is the main cloud risk. Start with identity and storage.",
-  core:["Shared responsibility model","IAM: least privilege, no long-lived keys, MFA on the root account","Public storage, exposed metadata services, open security groups","Audit logs, alerts and backups","Scan infrastructure-as-code in CI"],
-  def:["Block public access by default and review permissions monthly"],
-  prac:"flaws.cloud, or CloudGoat inside your own account with budget alerts."},
- ku:{t:"ئەمنیەتی کلاود",s:"ڕێکخستنی هەڵە سەرەکیترین مەترسی کلاودە. لە identity و storage دەست پێ بکە.",
-  core:["مۆدێلی بەرپرسیاریەتی هاوبەش","IAM: کەمترین دەسەڵات، بێ کلیلی درێژخایەن، MFA لەسەر هەژماری root","storage ی گشتی، سێرڤیسی metadata ی دەرکەوتوو، security group ی کراوە","لۆگی audit، ئاگادارکردنەوە و باکئەپ","infrastructure-as-code لە CI دا سکان بکە"],
-  def:["بە شێوەی بنەڕەتی دەستگەیشتنی گشتی بلۆک بکە و مانگانە مۆڵەتەکان بپشکنەوە"],
-  prac:"flaws.cloud، یان CloudGoat لەناو هەژماری خۆت لەگەڵ ئاگادارکردنەوەی بودجە."}},
-{id:"mal",c:"b",icon:"☣",
- en:{t:"Malware and forensics",s:"Defensive analysis: understand threats safely and investigate incidents.",
-  core:["Analyze only in an isolated VM with no network and snapshots on","Static first (strings, hashes, metadata), then behavior in a sandbox","DFIR: preserve evidence, chain of custody, timeline, memory and disk artifacts","Indicators of compromise: hashes, domains, IPs, registry keys","Write findings as a clear incident timeline"],
-  def:["Never open samples on your daily machine","Hash everything and keep originals read-only"],
-  prac:"Blue Team Labs Online, CyberDefenders, and Autopsy or Volatility on public sample images."},
- ku:{t:"Malware و Forensics",s:"شیکردنەوەی بەرگریانە: بە سەلامەتی مەترسییەکان تێبگە و ڕووداوەکان لێکۆڵینەوەیان بکە.",
-  core:["تەنها لەناو VM ـێکی جیاکراوە بێ تۆڕ و snapshot چالاک شیکردنەوە بکە","سەرەتا static (strings، hash، metadata)، پاشان ڕەفتار لەناو sandbox","DFIR: پاراستنی بەڵگە، chain of custody، timeline، شوێنەواری memory و disk","نیشانەکانی compromise: hash، domain، IP، کلیلی registry","دۆزراوەکان وەک timeline ـێکی ڕوونی ڕووداو بنووسە"],
-  def:["هەرگیز sample لەسەر ئامێری ڕۆژانەت مەکەرەوە","هەموو شتێک hash بکە و ئۆریجینالەکان read-only ڕابگرە"],
-  prac:"Blue Team Labs Online، CyberDefenders، و Autopsy یان Volatility لەسەر وێنەی sample ی گشتی."}},
-{id:"labs",c:"g",icon:"⚑",
- en:{t:"Practice labs and platforms",s:"Legal places to learn and earn. Read each platform's rules.",
-  core:["Learn: TryHackMe, Hack The Box, PortSwigger Academy, PicoCTF, OverTheWire","Local targets: OWASP Juice Shop, DVWA, VulnHub, Metasploitable in an isolated VM","Bounty: HackerOne, Bugcrowd, Intigriti, YesWeHack","Start with vulnerability disclosure programs and read disclosed reports","Build a public portfolio: write-ups, CTF ranks, GitHub notes"],
-  def:["Use a separate VM and browser profile for testing"],
-  prac:"Goal: one lab a day and one write-up a week."},
- ku:{t:"تاقیگە و پلاتفۆرمی تەمرین",s:"شوێنی یاسایی بۆ فێربوون و بەدەستهێنانی پارە. یاساکانی هەر پلاتفۆرمێک بخوێنەرەوە.",
-  core:["فێربوون: TryHackMe، Hack The Box، PortSwigger Academy، PicoCTF، OverTheWire","ئامانجی لۆکاڵ: OWASP Juice Shop، DVWA، VulnHub، Metasploitable لەناو VM ـێکی جیاکراوە","Bounty: HackerOne، Bugcrowd، Intigriti، YesWeHack","لەگەڵ پڕۆگرامی vulnerability disclosure دەست پێ بکە و ڕاپۆرتی بڵاوکراوە بخوێنەرەوە","پۆرتفۆلیۆیەکی گشتی دروست بکە: write-up، پلەی CTF، تێبینی GitHub"],
-  def:["بۆ تاقیکردنەوە VM و profile ی براوزەری جیاواز بەکاربهێنە"],
-  prac:"ئامانج: ڕۆژانە یەک تاقیگە و هەفتانە یەک write-up."}}
-];
-
-let LANG=ld("lang","ku"); if(!["ku","en"].includes(LANG)) LANG="ku"; let VIEW="home";
-const T0="Title: [Bug type] in [feature]\nSeverity: [Low / Medium / High / Critical]\n\nSummary:\nWhat is wrong, in two sentences.\n\nSteps to reproduce:\n1. \n2. \n3. \n\nImpact:\nWhat an attacker could do and who is affected.\n\nProof:\nRequests, screenshots or a short video.\n\nSuggested fix:\n";
-$("#rp").value=T0;
-
-function go(v){
-  VIEW=v;
-  $$(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));
-  $$("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
-  $("#crumb").textContent=STR[LANG]["nav_"+v];
-  scrollTo(0,0);
-  try{history.replaceState(null,"","#"+v)}catch(e){}
-}
-$$('[data-v],[data-go]').forEach(b=>b.onclick=()=>{const target=b.dataset.v||b.dataset.go;go(target);if(b.dataset.tool)focusTool(b.dataset.tool)});
-
-function applyLang(l){
-  LANG=l; sv("lang",l);
-  document.documentElement.lang=l==="ku"?"ckb":"en";
-  document.documentElement.dir=l==="ku"?"rtl":"ltr";
-  $$("#langsw button").forEach(b=>b.classList.toggle("on",b.dataset.lang===l));
-  $$("[data-i18n]").forEach(e=>{const k=e.dataset.i18n;if(STR[l][k]!==undefined)e.textContent=STR[l][k]});
-  $$("[data-i18n-ph]").forEach(e=>{const k=e.dataset.i18nPh;if(STR[l][k]!==undefined)e.placeholder=STR[l][k]});
-  $("#crumb").textContent=STR[l]["nav_"+VIEW];
-  platforms(); rules(); pills(); mod(); tracker(); checks(); tasks();
-}
-$$("#langsw button").forEach(b=>b.onclick=()=>applyLang(b.dataset.lang));
-
-const form=$("#chatForm"),box=$("#prompt"),resp=$("#resp");
-if(form&&box&&resp){
-  form.addEventListener("submit",e=>{e.preventDefault();resp.textContent=STR[LANG].ai_notice_d;resp.classList.add("on")});
-  box.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
-  const clearChat=$("#nc"); if(clearChat)clearChat.onclick=()=>{box.value="";resp.classList.remove("on");box.focus()};
-}
-
-function platforms(){
-  $("#bp").innerHTML=PLATFORMS.map(p=>`<option value="${p.id}">${p.n||STR[LANG][p.key]}</option>`).join("");
-}
-function rules(){ $("#rulesList").innerHTML=STR[LANG].rules.map(r=>"<li>"+r+"</li>").join(""); }
-
-const li=a=>a.map(x=>"<li>"+x+"</li>").join("");
-let cur="path";
-function pills(){
-  const q=$("#q").value.toLowerCase().trim();
-  const r=MOD.filter(m=>!q||JSON.stringify(m).toLowerCase().includes(q));
-  $("#pills").innerHTML=r.map(m=>`<button class="pill${m.id===cur?" on":""}" style="--c:var(--${m.c})" data-id="${m.id}">${m.icon} ${m[LANG].t}</button>`).join("")||`<span class="hint">${STR[LANG].no_match}</span>`;
-  $$(".pill").forEach(b=>b.onclick=()=>{cur=b.dataset.id;pills();mod()});
-}
-function mod(){
-  const m=MOD.find(x=>x.id===cur)||MOD[0],d=m[LANG],e=$("#mod");
-  e.style.setProperty("--c","var(--"+m.c+")");
-  e.innerHTML=`<h2>${m.icon} ${d.t}</h2><p class="s">${d.s}</p><div class="cols"><div><h4>${STR[LANG].core_h}</h4><ul>${li(d.core)}</ul></div><div><h4>${STR[LANG].def_h}</h4><ul>${li(d.def)}</ul><h4>${STR[LANG].prac_h}</h4><ul><li>${d.prac}</li></ul></div></div>`;
-}
-$("#q").oninput=pills;
-
-let storedTargets=ld("bb",[]); let T=Array.isArray(storedTargets)?storedTargets.filter(x=>x&&typeof x.n==="string").map(x=>({n:x.n,p:String(x.p||"other"),t:String(x.t||""),s:Number.isInteger(x.s)&&x.s>=0&&x.s<7?x.s:0})):[];
-function stat(){const rep=T.filter(t=>t.s===2||t.s===3).length,paid=T.filter(t=>t.s===4).length;$("#stat").textContent=STR[LANG].stat(T.length,rep,paid);}
-function tracker(){
-  $("#tl").innerHTML=T.map((t,i)=>{const pn=PLATFORMS.find(p=>p.id===t.p);const pname=pn?(pn.n||STR[LANG][pn.key]):t.p;
-   return `<div class="row"><div class="g"><b>${esc(t.n)}</b><div class="hint">${esc(pname)}${t.t?" - "+esc(t.t):""}</div></div><select data-i="${i}" aria-label="Status">${STR[LANG].status.map((s,si)=>`<option value="${si}"${si===t.s?" selected":""}>${s}</option>`).join("")}</select><button class="x" data-d="${i}" aria-label="Delete">✕</button></div>`}).join("")||`<p class="hint">${STR[LANG].no_targets}</p>`;
-  $$("#tl select").forEach(s=>s.onchange=()=>{T[s.dataset.i].s=parseInt(s.value);sv("bb",T);stat()});
-  $$("#tl [data-d]").forEach(b=>b.onclick=()=>{T.splice(b.dataset.d,1);sv("bb",T);tracker()});
-  stat();
-}
-$("#ba").onclick=()=>{const n=$("#bn").value.trim();if(!n)return;
-  T.push({n,p:$("#bp").value,t:$("#bt").value.trim(),s:0});sv("bb",T);$("#bn").value=$("#bt").value="";tracker()};
-
-let C0=ld("ck",{}); let C=C0&&typeof C0==="object"&&!Array.isArray(C0)?C0:{};
-function checks(){
-  $("#cl").innerHTML=STR[LANG].checklist.map((c,i)=>`<label class="${C[i]?"done":""}"><input type="checkbox" data-k="${i}"${C[i]?" checked":""}><span>${c}</span></label>`).join("");
-  $$("#cl input").forEach(x=>x.onchange=()=>{C[x.dataset.k]=x.checked;sv("ck",C);checks()});
-}
-$("#cr").onclick=()=>{C={};sv("ck",C);checks()};
-
-$("#cp").onclick=async()=>{
-  try{await navigator.clipboard.writeText($("#rp").value);$("#cm").textContent=STR[LANG].copied}
-  catch(e){$("#rp").select();$("#cm").textContent=STR[LANG].select_manual}
-  setTimeout(()=>$("#cm").textContent="",2500)};
-
-let storedTasks=ld("tk",[]); let K=Array.isArray(storedTasks)?storedTasks.filter(x=>x&&typeof x.t==="string").map(x=>({t:x.t,d:!!x.d})):[];
-function tasks(){
-  $("#tkl").innerHTML=K.map((t,i)=>`<div class="row ck"><label style="flex:1;margin:0" class="${t.d?"done":""}"><input type="checkbox" data-k="${i}"${t.d?" checked":""}><span>${esc(t.t)}</span></label><button class="x" data-d="${i}" aria-label="Delete">✕</button></div>`).join("")||`<p class="hint">${STR[LANG].no_tasks}</p>`;
-  $$("#tkl input").forEach(x=>x.onchange=()=>{K[x.dataset.k].d=x.checked;sv("tk",K);tasks()});
-  $$("#tkl [data-d]").forEach(b=>b.onclick=()=>{K.splice(b.dataset.d,1);sv("tk",K);tasks()});
-}
-const addTask=()=>{const v=$("#tn").value.trim();if(!v)return;K.push({t:v,d:false});sv("tk",K);$("#tn").value="";tasks()};
-$("#tb").onclick=addTask;
-$("#tn").onkeydown=e=>{if(e.key==="Enter")addTask()};
-
-
-function focusTool(name){const el=document.getElementById("tool-"+name);if(el){el.scrollIntoView({behavior:"smooth",block:"start"});const first=el.querySelector("textarea,input");if(first)first.focus({preventScroll:true})}}
-const hashResult=$("#hashResult"), headersResult=$("#headersResult"), cspResult=$("#cspResult");
-function identifyHash(v){
-  const x=v.trim(); if(!x)return STR[LANG].hash_empty;
-  if(/^\$2[aby]\$\d{2}\$/.test(x))return STR[LANG].hash_bcrypt;
-  if(/^\$argon2(id|i|d)\$/.test(x))return STR[LANG].hash_argon;
-  if(/^\$scrypt\$/.test(x))return STR[LANG].hash_scrypt;
-  if(!/^[a-f0-9]+$/i.test(x))return STR[LANG].hash_unknown;
-  const choices={32:STR[LANG].hash_32,40:"SHA-1",64:"SHA-256",96:"SHA-384",128:"SHA-512"};
-  return choices[x.length]||STR[LANG].hash_unknown;
-}
-$("#hashIdentify").onclick=()=>{const v=$("#hashInput").value;hashResult.textContent=identifyHash(v)};
-$("#hashCalc").onclick=async()=>{
-  const v=$("#hashInput").value;
-  if(!v){hashResult.textContent=STR[LANG].hash_empty;return}
-  if(!window.crypto||!crypto.subtle||!window.TextEncoder){hashResult.textContent=STR[LANG].hash_crypto_unavailable;return}
-  try{const bytes=new TextEncoder().encode(v);const digest=await crypto.subtle.digest("SHA-256",bytes);const hex=[...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,"0")).join("");hashResult.innerHTML='<span class="result-good">SHA-256</span><br><code dir="ltr">'+esc(hex)+'</code>'}
-  catch(e){hashResult.textContent=STR[LANG].hash_crypto_unavailable}
-};
-$("#headersCheck").onclick=()=>{
-  const raw=$("#headersInput").value.trim(); if(!raw){headersResult.textContent=STR[LANG].headers_empty;return}
-  const found=Object.create(null);raw.split(/\r?\n/).forEach(line=>{const i=line.indexOf(":");if(i>0)found[line.slice(0,i).trim().toLowerCase()]=line.slice(i+1).trim()});
-  const tests=[
-    ["content-security-policy","Content-Security-Policy"],
-    ["strict-transport-security","Strict-Transport-Security"],
-    ["x-content-type-options","X-Content-Type-Options"],
-    ["referrer-policy","Referrer-Policy"],
-    ["permissions-policy","Permissions-Policy"],
-    ["cross-origin-opener-policy","Cross-Origin-Opener-Policy"]
-  ];
-  const rows=tests.map(([k,label])=>found[k]?'<li><span class="result-good">✓ '+label+'</span>: '+esc(found[k])+'</li>':'<li><span class="result-warn">• '+label+'</span>: '+esc(STR[LANG].missing)+'</li>').join("");
-  headersResult.innerHTML='<strong>'+STR[LANG].headers_result+'</strong><ul class="result-list">'+rows+'</ul>';
-};
-$("#cspCheck").onclick=()=>{
-  const raw=$("#cspInput").value.trim();if(!raw){cspResult.textContent=STR[LANG].csp_empty;return}
-  const dirs=Object.create(null);raw.split(";").map(x=>x.trim()).filter(Boolean).forEach(item=>{const bits=item.split(/\s+/);dirs[bits[0].toLowerCase()]=bits.slice(1)});
-  const findings=[];
-  if(!dirs["default-src"])findings.push(STR[LANG].csp_default);
-  if(!dirs["object-src"])findings.push(STR[LANG].csp_object);
-  if(!dirs["base-uri"])findings.push(STR[LANG].csp_base);
-  if(Object.values(dirs).some(a=>a.includes("'unsafe-inline'")))findings.push(STR[LANG].csp_inline);
-  if(Object.values(dirs).some(a=>a.includes("'unsafe-eval'")))findings.push(STR[LANG].csp_eval);
-  if(Object.values(dirs).some(a=>a.includes("*")))findings.push(STR[LANG].csp_wildcard);
-  if(!findings.length)findings.push(STR[LANG].csp_no_findings);
-  cspResult.innerHTML='<strong>'+STR[LANG].csp_result+'</strong><ul class="result-list">'+findings.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul>';
-};
-function updateCveLink(){const q=$("#cveInput").value.trim();$("#cveLink").href=q?"https://nvd.nist.gov/vuln/search/results?query="+encodeURIComponent(q):"https://nvd.nist.gov/vuln/search"}
-$("#cveInput").addEventListener("input",updateCveLink);
-
-applyLang(LANG);
-const h=location.hash.slice(1);if(["home","cyber","bounty","tasks","tools"].includes(h))go(h);
-</script>
-</body>
-</html>
+\<!DOCTYPE html>\
+\<html lang="en">\
+\<head>\
+&#x20;   \<meta charset="UTF-8">\
+&#x20;   \<meta name="viewport" content="width=device-width, initial-scale=1.0">\
+&#x20;   \<meta name="theme-color" content="#0b0b0d">\
+&#x20;   \<meta name="description" content="RAMiiN — Something amazing is on the way. Stay tuned.">\
+&#x20;   \<title>RAMiiN | Coming Soon\</title>\
+\
+&#x20;   \<style>\
+&#x20;       /\* ==============================\
+&#x20;          1\. RESET & GLOBAL STYLES\
+&#x20;       \============================== \*/\
+&#x20;       \* {\
+&#x20;           margin: 0;\
+&#x20;           padding: 0;\
+&#x20;           box-sizing: border-box;\
+&#x20;       }\
+\
+&#x20;       :root {\
+&#x20;           \--background: #0b0b0d;\
+&#x20;           \--surface: #111114;\
+&#x20;           \--text: #f5f5f5;\
+&#x20;           \--muted: #85858f;\
+&#x20;           \--accent: #a3a3a3;\
+&#x20;           \--glow: rgba(255, 255, 255, 0.08);\
+&#x20;       }\
+\
+&#x20;       html {\
+&#x20;           scroll-behavior: smooth;\
+&#x20;       }\
+\
+&#x20;       body {\
+&#x20;           min-height: 100vh;\
+&#x20;           display: flex;\
+&#x20;           justify-content: center;\
+&#x20;           align-items: center;\
+&#x20;           overflow: hidden;\
+&#x20;           padding: 24px;\
+&#x20;           background: var(--background);\
+&#x20;           color: var(--text);\
+&#x20;           font-family: Inter, "Segoe UI", Arial, sans-serif;\
+&#x20;       }\
+\
+&#x20;       /\* ==============================\
+&#x20;          2\. BACKGROUND EFFECTS\
+&#x20;       \============================== \*/\
+&#x20;       body::before {\
+&#x20;           content: "";\
+&#x20;           position: fixed;\
+&#x20;           inset: 0;\
+&#x20;           pointer-events: none;\
+&#x20;           background:\
+&#x20;               radial-gradient(\
+&#x20;                   ellipse at 50% 40%,\
+&#x20;                   rgba(255, 255, 255, 0.055),\
+&#x20;                   transparent 55%\
+&#x20;               ),\
+&#x20;               radial-gradient(\
+&#x20;                   circle at 15% 85%,\
+&#x20;                   rgba(110, 110, 125, 0.07),\
+&#x20;                   transparent 35%\
+&#x20;               );\
+&#x20;       }\
+\
+&#x20;       .background-grid {\
+&#x20;           position: fixed;\
+&#x20;           inset: 0;\
+&#x20;           pointer-events: none;\
+&#x20;           opacity: 0.12;\
+&#x20;           background-image:\
+&#x20;               linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),\
+&#x20;               linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);\
+&#x20;           background-size: 55px 55px;\
+&#x20;           mask-image: radial-gradient(ellipse at center, black, transparent 80%);\
+&#x20;       }\
+\
+&#x20;       /\* ==============================\
+&#x20;          3\. MAIN CONTAINER\
+&#x20;       \============================== \*/\
+&#x20;       .container {\
+&#x20;           position: relative;\
+&#x20;           z-index: 1;\
+&#x20;           width: 100%;\
+&#x20;           max-width: 650px;\
+&#x20;           padding: 65px 30px;\
+&#x20;           text-align: center;\
+&#x20;           border: 1px solid rgba(255, 255, 255, 0.075);\
+&#x20;           border-radius: 24px;\
+&#x20;           background: rgba(17, 17, 20, 0.72);\
+&#x20;           box-shadow:\
+&#x20;               0 30px 100px rgba(0, 0, 0, 0.45),\
+&#x20;               0 0 80px rgba(255, 255, 255, 0.025);\
+&#x20;           backdrop-filter: blur(16px);\
+&#x20;           animation: appear 1s ease-out both;\
+&#x20;       }\
+\
+&#x20;       /\* ==============================\
+&#x20;          4\. BRAND\
+&#x20;       \============================== \*/\
+&#x20;       .brand {\
+&#x20;           margin-bottom: 45px;\
+&#x20;           font-size: 21px;\
+&#x20;           font-weight: 800;\
+&#x20;           letter-spacing: 7px;\
+&#x20;           color: var(--text);\
+&#x20;       }\
+\
+&#x20;       .brand span {\
+&#x20;           color: var(--muted);\
+&#x20;       }\
+\
+&#x20;       /\* ==============================\
+&#x20;          5\. LOADING SPINNER\
+&#x20;       \============================== \*/\
+&#x20;       .loader {\
+&#x20;           position: relative;\
+&#x20;           width: 66px;\
+&#x20;           height: 66px;\
+&#x20;           margin: 0 auto 36px;\
+&#x20;           border: 2px solid rgba(255, 255, 255, 0.09);\
+&#x20;           border-top-color: #f5f5f5;\
+&#x20;           border-right-color: rgba(255, 255, 255, 0.35);\
+&#x20;           border-radius: 50%;\
+&#x20;           animation: spin 1.2s linear infinite;\
+&#x20;           box-shadow: 0 0 25px rgba(255, 255, 255, 0.05);\
+&#x20;       }\
+\
+&#x20;       .loader::after {\
+&#x20;           content: "";\
+&#x20;           position: absolute;\
+&#x20;           inset: 9px;\
+&#x20;           border: 1px solid rgba(255, 255, 255, 0.12);\
+&#x20;           border-bottom-color: #a0a0a0;\
+&#x20;           border-radius: 50%;\
+&#x20;           animation: spin 2s linear infinite reverse;\
+&#x20;       }\
+\
+&#x20;       /\* ==============================\
+&#x20;          6\. MAIN TEXT\
+&#x20;       \============================== \*/\
+&#x20;       .title {\
+&#x20;           margin-bottom: 16px;\
+&#x20;           font-size: clamp(34px, 7vw, 54px);\
+&#x20;           font-weight: 800;\
+&#x20;           letter-spacing: 5px;\
+&#x20;           line-height: 1.2;\
+&#x20;           color: #ffffff;\
+&#x20;       }\
+\
+&#x20;       .subtitle {\
+&#x20;           margin-bottom: 13px;\
+&#x20;           color: #b0b0b8;\
+&#x20;           font-size: 16px;\
+&#x20;           font-weight: 400;\
+&#x20;           line-height: 1.7;\
+&#x20;       }\
+\
+&#x20;       .kurdish-subtitle {\
+&#x20;           margin-bottom: 35px;\
+&#x20;           color: var(--muted);\
+&#x20;           font-size: 15px;\
+&#x20;           line-height: 1.9;\
+&#x20;       }\
+\
+&#x20;       /\* ==============================\
+&#x20;          7\. LOADING STATUS\
+&#x20;       \============================== \*/\
+&#x20;       .status {\
+&#x20;           display: flex;\
+&#x20;           justify-content: center;\
+&#x20;           align-items: center;\
+&#x20;           gap: 9px;\
+&#x20;           margin-bottom: 22px;\
+&#x20;           color: #c7c7cc;\
+&#x20;           font-size: 11px;\
+&#x20;           font-weight: 700;\
+&#x20;           letter-spacing: 3px;\
+&#x20;       }\
+\
+&#x20;       .status-indicator {\
+&#x20;           width: 7px;\
+&#x20;           height: 7px;\
+&#x20;           border-radius: 50%;\
+&#x20;           background: #cfcfcf;\
+&#x20;           box-shadow: 0 0 12px rgba(255, 255, 255, 0.7);\
+&#x20;           animation: pulse 1.5s ease-in-out infinite;\
+&#x20;       }\
+\
+&#x20;       .status-kurdish {\
+&#x20;           margin-bottom: 25px;\
+&#x20;           color: var(--muted);\
+&#x20;           font-size: 13px;\
+&#x20;           letter-spacing: 0;\
+&#x20;       }\
+\
+&#x20;       /\* ==============================\
+&#x20;          8\. ANIMATED PROGRESS BAR\
+&#x20;       \============================== \*/\
+&#x20;       .progress-container {\
+&#x20;           width: min(100%, 260px);\
+&#x20;           height: 3px;\
+&#x20;           margin: 0 auto 16px;\
+&#x20;           overflow: hidden;\
+&#x20;           border-radius: 10px;\
+&#x20;           background: rgba(255, 255, 255, 0.09);\
+&#x20;       }\
+\
+&#x20;       .progress-bar {\
+&#x20;           width: 35%;\
+&#x20;           height: 100%;\
+&#x20;           border-radius: 10px;\
+&#x20;           background: linear-gradient(\
+&#x20;               90deg,\
+&#x20;               transparent,\
+&#x20;               \#ffffff,\
+&#x20;               \#8f8f8f,\
+&#x20;               transparent\
+&#x20;           );\
+&#x20;           animation: loading 2s ease-in-out infinite;\
+&#x20;       }\
+\
+&#x20;       /\* ==============================\
+&#x20;          9\. ANIMATED LOADING DOTS\
+&#x20;       \============================== \*/\
+&#x20;       .loading-dots {\
+&#x20;           display: flex;\
+&#x20;           justify-content: center;\
+&#x20;           align-items: center;\
+&#x20;           gap: 7px;\
+&#x20;           margin-bottom: 35px;\
+&#x20;       }\
+\
+&#x20;       .loading-dots span {\
+&#x20;           width: 5px;\
+&#x20;           height: 5px;\
+&#x20;           border-radius: 50%;\
+&#x20;           background: #bdbdc4;\
+&#x20;           animation: dots 1.4s ease-in-out infinite;\
+&#x20;       }\
+\
+&#x20;       .loading-dots span:nth-child(2) {\
+&#x20;           animation-delay: 0.2s;\
+&#x20;       }\
+\
+&#x20;       .loading-dots span:nth-child(3) {\
+&#x20;           animation-delay: 0.4s;\
+&#x20;       }\
+\
+&#x20;       /\* ==============================\
+&#x20;          10\. FOOTER\
+&#x20;       \============================== \*/\
+&#x20;       .footer {\
+&#x20;           padding-top: 22px;\
+&#x20;           border-top: 1px solid rgba(255, 255, 255, 0.07);\
+&#x20;           color: #65656e;\
+&#x20;           font-size: 11px;\
+&#x20;           letter-spacing: 1.5px;\
+&#x20;       }\
+\
+&#x20;       .footer strong {\
+&#x20;           color: #bdbdc4;\
+&#x20;           font-weight: 600;\
+&#x20;       }\
+\
+&#x20;       /\* ==============================\
+&#x20;          11\. CSS ANIMATIONS\
+&#x20;       \============================== \*/\
+&#x20;       @keyframes spin {\
+&#x20;           to {\
+&#x20;               transform: rotate(360deg);\
+&#x20;           }\
+&#x20;       }\
+\
+&#x20;       @keyframes pulse {\
+&#x20;           0%, 100% {\
+&#x20;               opacity: 0.45;\
+&#x20;               transform: scale(0.85);\
+&#x20;           }\
+&#x20;           50% {\
+&#x20;               opacity: 1;\
+&#x20;               transform: scale(1.15);\
+&#x20;           }\
+&#x20;       }\
+\
+&#x20;       @keyframes loading {\
+&#x20;           0% {\
+&#x20;               transform: translateX(-150%);\
+&#x20;           }\
+&#x20;           100% {\
+&#x20;               transform: translateX(400%);\
+&#x20;           }\
+&#x20;       }\
+\
+&#x20;       @keyframes dots {\
+&#x20;           0%, 60%, 100% {\
+&#x20;               opacity: 0.3;\
+&#x20;               transform: translateY(0);\
+&#x20;           }\
+&#x20;           30% {\
+&#x20;               opacity: 1;\
+&#x20;               transform: translateY(-5px);\
+&#x20;           }\
+&#x20;       }\
+\
+&#x20;       @keyframes appear {\
+&#x20;           from {\
+&#x20;               opacity: 0;\
+&#x20;               transform: translateY(20px);\
+&#x20;           }\
+&#x20;           to {\
+&#x20;               opacity: 1;\
+&#x20;               transform: translateY(0);\
+&#x20;           }\
+&#x20;       }\
+\
+&#x20;       /\* ==============================\
+&#x20;          12\. RESPONSIVE DESIGN\
+&#x20;       \============================== \*/\
+&#x20;       @media (max-width: 600px) {\
+&#x20;           body {\
+&#x20;               padding: 16px;\
+&#x20;           }\
+\
+&#x20;           .container {\
+&#x20;               padding: 48px 20px;\
+&#x20;               border-radius: 18px;\
+&#x20;           }\
+\
+&#x20;           .brand {\
+&#x20;               margin-bottom: 38px;\
+&#x20;               font-size: 18px;\
+&#x20;               letter-spacing: 6px;\
+&#x20;           }\
+\
+&#x20;           .loader {\
+&#x20;               width: 58px;\
+&#x20;               height: 58px;\
+&#x20;           }\
+\
+&#x20;           .title {\
+&#x20;               font-size: clamp(30px, 9vw, 42px);\
+&#x20;               letter-spacing: 3px;\
+&#x20;           }\
+\
+&#x20;           .subtitle {\
+&#x20;               font-size: 14px;\
+&#x20;           }\
+\
+&#x20;           .kurdish-subtitle {\
+&#x20;               font-size: 14px;\
+&#x20;           }\
+\
+&#x20;           .footer {\
+&#x20;               font-size: 10px;\
+&#x20;               letter-spacing: 1px;\
+&#x20;           }\
+&#x20;       }\
+\
+&#x20;       /\* ==============================\
+&#x20;          13\. REDUCED MOTION ACCESSIBILITY\
+&#x20;       \============================== \*/\
+&#x20;       @media (prefers-reduced-motion: reduce) {\
+&#x20;           \*,\
+&#x20;           \*::before,\
+&#x20;           \*::after {\
+&#x20;               animation-duration: 0.01ms !important;\
+&#x20;               animation-iteration-count: 1 !important;\
+&#x20;               scroll-behavior: auto !important;\
+&#x20;           }\
+&#x20;       }\
+&#x20;   \</style>\
+\</head>\
+\
+\<body>\
+\
+&#x20;   \<div class="background-grid">\</div>\
+\
+&#x20;   \<main class="container">\
+\
+&#x20;       \<div class="brand">RAM\<span>iiN\</span>\</div>\
+\
+&#x20;       \<div class="loader" aria-hidden="true">\</div>\
+\
+&#x20;       \<h1 class="title">COMING SOON\</h1>\
+\
+&#x20;       \<p class="subtitle">\
+&#x20;           Something amazing is on the way...\
+&#x20;       \</p>\
+\
+&#x20;       \<p class="kurdish-subtitle" lang="ckb" dir="rtl">\
+&#x20;           شتێکی زۆر جوان لە ڕێگادایە...\
+&#x20;       \</p>\
+\
+&#x20;       \<div class="status">\
+&#x20;           \<span class="status-indicator">\</span>\
+&#x20;           \<span>PLEASE WAIT\</span>\
+&#x20;       \</div>\
+\
+&#x20;       \<p class="status-kurdish" lang="ckb" dir="rtl">\
+&#x20;           تکایە چاوەڕێ بکە\
+&#x20;       \</p>\
+\
+&#x20;       \<div class="progress-container" aria-hidden="true">\
+&#x20;           \<div class="progress-bar">\</div>\
+&#x20;       \</div>\
+\
+&#x20;       \<div class="loading-dots" aria-label="Loading">\
+&#x20;           \<span>\</span>\
+&#x20;           \<span>\</span>\
+&#x20;           \<span>\</span>\
+&#x20;       \</div>\
+\
+&#x20;       \<footer class="footer">\
+&#x20;           © 2026 \<strong>RAMiiN\</strong> — ALL RIGHTS RESERVED\
+&#x20;       \</footer>\
+\
+&#x20;   \</main>\
+\
+\</body>\
+\</html>
