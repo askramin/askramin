@@ -3,306 +3,481 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>RAMiiN — AI Engineer · Coming Soon</title>
-
+  <meta name="theme-color" content="#100b18">
+  <meta name="description" content="RAMiiN AI — an independent AI and technology project. Coming soon.">
+  <title>RAMiiN AI — Coming Soon</title>
   <style>
-    /* ================= 1. TOKENS ================= */
     :root {
-      --bg: #0b0c10;
-      --text: #eceef3;
-      --muted: #8d93a5;
-      --line: rgba(255,255,255,.07);
-      --accent-rgb: 110,231,249;   /* changes per module */
-      --accent2-rgb: 139,123,255;
+      color-scheme: dark;
+      --bg: #090b0f;
+      --panel: rgba(17, 22, 29, .78);
+      --panel-strong: rgba(20, 26, 34, .94);
+      --text: #f3f6fa;
+      --muted: #9aa5b4;
+      --subtle: #697586;
+      --line: rgba(220, 232, 245, .11);
+      --accent-rgb: 174, 132, 255;
+      --accent2-rgb: 218, 184, 255;
       --accent: rgb(var(--accent-rgb));
       --accent2: rgb(var(--accent2-rgb));
-      --glow: rgba(var(--accent-rgb), .4);
-      --font: "Segoe UI","Helvetica Neue",Inter,system-ui,Roboto,Arial,sans-serif;
-      --font-ku: "Segoe UI",Tahoma,"Noto Naskh Arabic","Noto Sans Arabic",Arial,sans-serif;
+      --glow: rgba(var(--accent-rgb), .32);
+      --font: Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+      --font-ku: "Noto Sans Arabic", "Noto Naskh Arabic", Tahoma, Arial, sans-serif;
+      --ease: cubic-bezier(.2, .75, .25, 1);
     }
 
-    /* ================= 2. BASE ================= */
-    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
-    html,body { height:100%; }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { min-width: 320px; min-height: 100%; background: var(--bg); }
     body {
-      font-family:var(--font); color:var(--text); background:var(--bg);
-      min-height:100dvh; overflow-x:hidden; -webkit-font-smoothing:antialiased;
+      min-width: 320px;
+      min-height: 100vh;
+      min-height: 100svh;
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
-    [lang="ckb"] { font-family:var(--font-ku); direction:rtl; letter-spacing:0 !important; }
+    button, input, label { font: inherit; }
+    [lang="ckb"] { direction: rtl; font-family: var(--font-ku); letter-spacing: 0 !important; }
 
-    /* Hidden state controls (CSS-only "clicks"). Still keyboard-focusable. */
-    .ctl { position:absolute; opacity:0; pointer-events:none; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .control {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
 
-    /* Module colour themes: selecting a tab re-themes the whole page */
-    #m2:checked ~ .page { --accent-rgb:167,139,250; --accent2-rgb:110,231,249; }
-    #m3:checked ~ .page { --accent-rgb:244,114,182; --accent2-rgb:251,191,36; }
+    /* The three feature selectors recolor the page without JavaScript. */
+    #module-vision:checked ~ .page {
+      --accent-rgb: 143, 119, 255;
+      --accent2-rgb: 199, 169, 255;
+    }
+    #module-language:checked ~ .page {
+      --accent-rgb: 195, 133, 239;
+      --accent2-rgb: 239, 174, 226;
+    }
 
-    /* ================= 3. FANTASY BACKDROP ================= */
     .page {
-      position:relative; min-height:100dvh; isolation:isolate; overflow:hidden;
-      display:flex; flex-direction:column; align-items:center; justify-content:space-between;
-      padding:clamp(1.25rem,4vw,2.5rem) 1.25rem; text-align:center;
-      transition:--accent-rgb .6s;
+      position: relative;
+      isolation: isolate;
+      display: flex;
+      min-height: 100vh;
+      min-height: 100svh;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.6rem;
+      overflow: hidden;
+      padding: max(1.6rem, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-right)) max(1.35rem, env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
+      text-align: center;
     }
 
-    /* Aurora blobs */
-    .aurora { position:absolute; inset:0; z-index:-3; overflow:hidden; }
-    .aurora i {
-      position:absolute; width:55vmax; height:55vmax; border-radius:50%;
-      filter:blur(90px); opacity:.35; transition:background 1s;
-      animation:drift 18s ease-in-out infinite alternate;
+    /* Ambient charcoal background, subtle grid and light grain. */
+    .ambient, .grid, .grain { position: absolute; inset: 0; pointer-events: none; }
+    .ambient { z-index: -4; overflow: hidden; }
+    .ambient::before, .ambient::after {
+      position: absolute;
+      width: min(58rem, 90vw);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      content: "";
+      filter: blur(115px);
+      opacity: .14;
+      animation: drift 24s ease-in-out infinite alternate;
     }
-    .aurora i:nth-child(1) { background:var(--accent);  top:-25vmax; left:-15vmax; }
-    .aurora i:nth-child(2) { background:var(--accent2); bottom:-28vmax; right:-18vmax; animation-delay:-9s; }
-
-    /* Tech grid */
-    .page::before {
-      content:""; position:absolute; inset:0; z-index:-2;
-      background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
-      background-size:52px 52px;
-      -webkit-mask-image:radial-gradient(circle at 50% 40%,#000,transparent 70%);
-              mask-image:radial-gradient(circle at 50% 40%,#000,transparent 70%);
+    .ambient::before { top: -39rem; left: -27rem; background: var(--accent); }
+    .ambient::after { right: -36rem; bottom: -42rem; background: var(--accent2); animation-delay: -12s; }
+    .grid {
+      z-index: -3;
+      background-image: linear-gradient(rgba(255,255,255,.027) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.027) 1px, transparent 1px);
+      background-size: 58px 58px;
+      -webkit-mask-image: radial-gradient(ellipse at center, #000 4%, transparent 75%);
+      mask-image: radial-gradient(ellipse at center, #000 4%, transparent 75%);
     }
-
-    /* Floating data-spark particles */
-    .sparks { position:absolute; inset:0; z-index:-1; pointer-events:none; }
-    .sparks span {
-      position:absolute; bottom:-10px; left:var(--x); width:var(--s); height:var(--s);
-      border-radius:50%; background:var(--accent); box-shadow:0 0 10px var(--glow);
-      opacity:0; animation:rise var(--d) linear infinite; animation-delay:var(--w);
+    .grain {
+      z-index: -2;
+      opacity: .12;
+      background-image: radial-gradient(rgba(255,255,255,.23) .55px, transparent .7px);
+      background-size: 5px 5px;
+      -webkit-mask-image: linear-gradient(transparent, #000 23%, #000 78%, transparent);
+      mask-image: linear-gradient(transparent, #000 23%, #000 78%, transparent);
     }
-
-    /* ================= 4. HEADER ================= */
-    .brand {
-      font-weight:600; font-size:clamp(1.1rem,2.4vw,1.4rem);
-      letter-spacing:.32em; padding-left:.32em; text-shadow:0 0 18px var(--glow);
-    }
-
-    .stage { width:100%; max-width:44rem; display:flex; flex-direction:column; align-items:center; gap:clamp(1.1rem,3vh,1.8rem); }
-
-    /* ================= 5. INTERACTIVE REACTOR ================= */
-    .reactor {
-      --size:clamp(120px,24vw,160px);
-      position:relative; width:var(--size); height:var(--size);
-      display:grid; place-items:center; cursor:pointer; border-radius:50%;
-      transition:transform .35s cubic-bezier(.3,1.5,.5,1);
-      -webkit-tap-highlight-color:transparent;
-    }
-    .reactor:hover  { transform:scale(1.07); }
-    .reactor:active { transform:scale(.94); }
-    #power:focus-visible ~ .page .reactor { outline:2px solid var(--accent); outline-offset:10px; }
-
-    .ring { position:absolute; border-radius:50%; border:2px solid transparent; transition:filter .4s; }
-    .ring--a { inset:0;   border-top-color:var(--accent);  border-right-color:rgba(var(--accent-rgb),.18);
-               filter:drop-shadow(0 0 8px var(--glow)); animation:spin 1.8s cubic-bezier(.55,.15,.45,.85) infinite; }
-    .ring--b { inset:16%; border-bottom-color:var(--accent2); border-left-color:rgba(var(--accent2-rgb),.18);
-               filter:drop-shadow(0 0 8px rgba(var(--accent2-rgb),.5)); animation:spin 2.6s linear infinite reverse; }
-    .ring--c { inset:32%; border:1px dashed rgba(255,255,255,.3); animation:spin 9s linear infinite; }
-    .core {
-      width:15%; height:15%; border-radius:50%; background:var(--accent);
-      box-shadow:0 0 18px 4px var(--glow),0 0 50px 10px rgba(var(--accent2-rgb),.3);
-      animation:pulse 2.2s ease-in-out infinite;
+    .stars { position: absolute; z-index: -1; inset: 0; overflow: hidden; pointer-events: none; }
+    .stars i {
+      position: absolute;
+      left: var(--x);
+      bottom: -10px;
+      width: var(--s);
+      height: var(--s);
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--glow);
+      opacity: 0;
+      animation: rise var(--d) linear infinite;
+      animation-delay: var(--delay);
     }
 
-    /* Neural network drawn around the reactor */
-    .net { position:absolute; inset:-38%; width:176%; height:176%; pointer-events:none; opacity:.85; }
-    .net line { stroke:rgba(var(--accent-rgb),.35); stroke-width:.7; stroke-dasharray:3 4; animation:flow 2.5s linear infinite; }
-    .net circle { fill:var(--accent); animation:node 2.8s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
-    .net circle:nth-of-type(2n)   { animation-delay:-.7s; }
-    .net circle:nth-of-type(3n)   { animation-delay:-1.4s; }
-
-    /* POWER ON state (click the reactor) */
-    #power:checked ~ .page .ring--a { animation-duration:.6s; }
-    #power:checked ~ .page .ring--b { animation-duration:1s; }
-    #power:checked ~ .page .ring--c { animation-duration:3s; }
-    #power:checked ~ .page .core    { animation-duration:.8s; box-shadow:0 0 30px 10px var(--glow),0 0 90px 24px rgba(var(--accent2-rgb),.45); }
-    #power:checked ~ .page .net line { animation-duration:.8s; stroke:rgba(var(--accent-rgb),.7); }
-    #power:checked ~ .page .aurora i { opacity:.55; }
-
-    .hint { font-size:.78rem; color:var(--muted); line-height:1.7; }
-    #power:checked ~ .page .hint { opacity:0; }
-
-    /* ================= 6. TITLES ================= */
-    .title {
-      font-size:clamp(2.1rem,8.5vw,4.4rem); font-weight:200; line-height:1.05;
-      letter-spacing:.16em; padding-left:.16em;
-      background:linear-gradient(180deg,#fff 25%,#9aa1b3 100%); background-size:100% 100%;
-      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
+    .header, .footer { width: min(100%, 72rem); position: relative; z-index: 1; }
+    .header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .brand { display: inline-flex; align-items: center; gap: .72rem; color: var(--text); font-size: 1.02rem; font-weight: 760; letter-spacing: .23em; }
+    .brand-mark {
+      display: grid;
+      width: 2.05rem;
+      aspect-ratio: 1;
+      place-items: center;
+      border: 1px solid rgba(var(--accent-rgb), .45);
+      border-radius: 9px;
+      background: rgba(var(--accent-rgb), .08);
+      box-shadow: 0 0 22px rgba(var(--accent-rgb), .10);
+      color: var(--accent);
+      font-size: .9rem;
+      letter-spacing: 0;
     }
-    #power:checked ~ .page .title {
-      background-image:linear-gradient(90deg,var(--accent),#fff,var(--accent2),#fff,var(--accent));
-      background-size:250% 100%; animation:shine 4s linear infinite;
+    .header-right { display: flex; align-items: center; gap: 1rem; }
+    .dev-status { display: inline-flex; align-items: center; gap: .55rem; color: var(--muted); font-size: .66rem; font-weight: 650; letter-spacing: .15em; text-transform: uppercase; }
+    .dev-status::before { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--glow); content: ""; }
+
+    .language-switch { display: inline-flex; align-items: center; gap: .2rem; padding: .22rem; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.025); }
+    .language-switch label { min-width: 2.6rem; padding: .34rem .55rem; border-radius: 999px; color: var(--subtle); cursor: pointer; font-size: .66rem; font-weight: 700; transition: background .2s ease, color .2s ease; }
+    #lang-en:checked ~ .page .lang-en-label, #lang-ku:checked ~ .page .lang-ku-label { background: rgba(var(--accent-rgb), .13); color: var(--text); }
+    #lang-en:focus-visible ~ .page .lang-en-label, #lang-ku:focus-visible ~ .page .lang-ku-label { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    .stage {
+      display: flex;
+      width: min(100%, 48rem);
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(.85rem, 2.2vh, 1.45rem);
+      padding: .5rem 0;
     }
-    .subtitle { margin-top:.5rem; color:var(--muted); font-weight:300; font-size:clamp(.95rem,2.4vw,1.15rem); }
-    .title--ku { font-size:clamp(1.5rem,6vw,2.4rem); font-weight:600; line-height:1.5; background:none; -webkit-text-fill-color:var(--text); color:var(--text); letter-spacing:0; padding:0; }
-    #power:checked ~ .page .title--ku { background:none; animation:none; }
+    .eyebrow { display: inline-flex; align-items: center; gap: .65rem; color: var(--accent); font-size: .64rem; font-weight: 750; letter-spacing: .24em; text-transform: uppercase; }
+    .eyebrow::before, .eyebrow::after { width: 1.6rem; height: 1px; background: rgba(var(--accent-rgb), .55); content: ""; }
 
-    /* ================= 7. MODULE TABS (radio) ================= */
-    .tabs { display:flex; flex-wrap:wrap; justify-content:center; gap:.6rem; }
-    .tab {
-      cursor:pointer; padding:.55rem 1.1rem; border-radius:999px; font-size:.85rem;
-      border:1px solid var(--line); background:rgba(255,255,255,.03); color:var(--muted);
-      display:flex; flex-direction:column; gap:.1rem; line-height:1.3;
-      transition:all .3s; -webkit-tap-highlight-color:transparent;
+    /* Animated AI core. The label toggles its visual power state. */
+    .reactor-wrap { display: grid; width: clamp(142px, 24vw, 180px); aspect-ratio: 1; place-items: center; margin: .1rem 0; }
+    .reactor { position: relative; display: grid; width: 100%; height: 100%; place-items: center; border-radius: 50%; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform .35s var(--ease); }
+    .reactor:hover { transform: scale(1.045); }
+    .reactor:active { transform: scale(.97); }
+    #power:focus-visible ~ .page .reactor { outline: 2px solid var(--accent); outline-offset: 9px; }
+    .halo { position: absolute; inset: 7%; border: 1px solid rgba(var(--accent-rgb), .13); border-radius: 50%; box-shadow: 0 0 55px rgba(var(--accent-rgb), .07), inset 0 0 35px rgba(var(--accent-rgb), .035); }
+    .ring { position: absolute; border: 1.5px solid transparent; border-radius: 50%; }
+    .ring-a { inset: 0; border-top-color: var(--accent); border-right-color: rgba(var(--accent-rgb), .22); filter: drop-shadow(0 0 8px var(--glow)); animation: spin 5s linear infinite; }
+    .ring-b { inset: 14%; border-bottom-color: var(--accent2); border-left-color: rgba(var(--accent2-rgb), .22); filter: drop-shadow(0 0 8px rgba(var(--accent2-rgb), .35)); animation: spin 7s linear infinite reverse; }
+    .ring-c { inset: 29%; border: 1px dashed rgba(230,239,249,.31); animation: spin 16s linear infinite; }
+    .core { position: relative; width: 13%; aspect-ratio: 1; border-radius: 50%; background: var(--accent); box-shadow: 0 0 18px 5px var(--glow), 0 0 48px 10px rgba(var(--accent2-rgb), .22); animation: pulse 2.8s ease-in-out infinite; }
+    .core::after { position: absolute; inset: -100%; border: 1px solid rgba(var(--accent-rgb), .2); border-radius: 50%; content: ""; animation: wave 2.8s ease-out infinite; }
+    .network { position: absolute; inset: -33%; width: 166%; height: 166%; overflow: visible; pointer-events: none; opacity: .7; }
+    .network line { stroke: rgba(var(--accent-rgb), .35); stroke-width: .8; stroke-dasharray: 3 5; animation: flow 4s linear infinite; }
+    .network circle { fill: var(--accent); transform-box: fill-box; transform-origin: center; animation: node 3.4s ease-in-out infinite; }
+    .network circle:nth-of-type(2n) { animation-delay: -.8s; }
+    .network circle:nth-of-type(3n) { animation-delay: -1.5s; }
+    #power:checked ~ .page .ring-a { animation-duration: 1.7s; }
+    #power:checked ~ .page .ring-b { animation-duration: 2.5s; }
+    #power:checked ~ .page .ring-c { animation-duration: 6s; }
+    #power:checked ~ .page .core { animation-duration: 1.35s; box-shadow: 0 0 30px 9px var(--glow), 0 0 78px 18px rgba(var(--accent2-rgb), .34); }
+    #power:checked ~ .page .network line { stroke: rgba(var(--accent-rgb), .68); animation-duration: 1.8s; }
+    #power:checked ~ .page .ambient::before, #power:checked ~ .page .ambient::after { opacity: .23; }
+    .activate-hint { color: var(--subtle); font-size: .69rem; line-height: 1.6; }
+    .activate-hint strong { color: var(--muted); font-weight: 650; }
+    #power:checked ~ .page .activate-hint { opacity: 0; }
+
+    .headline { max-width: 100%; }
+    .title { margin: 0; color: var(--text); font-size: clamp(2.35rem, 8.4vw, 4.65rem); font-weight: 250; line-height: 1.04; letter-spacing: .145em; padding-left: .145em; text-wrap: balance; }
+    #power:checked ~ .page .title { background: linear-gradient(90deg, var(--accent), #fff 44%, var(--accent2), var(--accent)); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; animation: shine 5s linear infinite; }
+    .subtitle { margin: .72rem 0 0; color: var(--muted); font-size: clamp(.92rem, 2.4vw, 1.08rem); font-weight: 350; line-height: 1.7; }
+    .kurdish-title { margin: 0; color: var(--text); font-size: clamp(1.65rem, 5.8vw, 2.25rem); font-weight: 650; line-height: 1.55; }
+    .kurdish-subtitle { margin: .05rem 0 0; color: var(--muted); font-size: .96rem; line-height: 1.8; }
+
+    /* CSS-only language switch: English is the default. */
+    .copy-ku { display: none; }
+    #lang-ku:checked ~ .page .copy-en { display: none; }
+    #lang-ku:checked ~ .page .copy-ku { display: block; }
+
+    .modules { display: flex; flex-wrap: wrap; justify-content: center; gap: .55rem; margin-top: .25rem; }
+    .module-tab { display: flex; min-width: 6.7rem; flex-direction: column; align-items: center; gap: .17rem; padding: .62rem 1rem .58rem; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.025); color: var(--muted); cursor: pointer; font-size: .77rem; font-weight: 650; line-height: 1.25; transition: transform .22s ease, border-color .22s ease, background .22s ease, color .22s ease; -webkit-tap-highlight-color: transparent; }
+    .module-tab small { font-family: var(--font-ku); font-size: .68rem; font-weight: 400; }
+    .module-tab:hover { transform: translateY(-2px); border-color: rgba(var(--accent-rgb), .48); color: var(--text); }
+    #module-neural:checked ~ .page label[for="module-neural"], #module-vision:checked ~ .page label[for="module-vision"], #module-language:checked ~ .page label[for="module-language"] { border-color: rgba(var(--accent-rgb), .78); background: rgba(var(--accent-rgb), .11); box-shadow: 0 0 20px rgba(var(--accent-rgb), .1); color: var(--text); }
+    #module-neural:focus-visible ~ .page label[for="module-neural"], #module-vision:focus-visible ~ .page label[for="module-vision"], #module-language:focus-visible ~ .page label[for="module-language"] { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .feature-panel { display: none; width: min(100%, 28rem); min-height: 4.5rem; padding: .88rem 1.15rem; border: 1px solid rgba(var(--accent-rgb), .2); border-radius: 15px; background: var(--panel); box-shadow: 0 14px 48px rgba(0,0,0,.16); -webkit-backdrop-filter: blur(13px); backdrop-filter: blur(13px); animation: reveal .32s var(--ease) both; }
+    .feature-panel p { margin: 0; color: #c7cfda; font-size: .83rem; line-height: 1.65; }
+    .feature-panel p + p { margin-top: .12rem; }
+    #module-neural:checked ~ .page .panel-neural, #module-vision:checked ~ .page .panel-vision, #module-language:checked ~ .page .panel-language { display: block; }
+
+    /* Extra click-to-open project cards. The default radio hides all cards. */
+    .detail-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: .48rem; margin-top: .12rem; }
+    .detail-tab {
+      display: inline-flex; align-items: center; justify-content: center; gap: .42rem;
+      min-height: 2.45rem; padding: .58rem .95rem; border: 1px solid rgba(var(--accent-rgb), .25);
+      border-radius: 999px; background: rgba(var(--accent-rgb), .045); color: #c9c0df;
+      cursor: pointer; font-size: .72rem; font-weight: 650; letter-spacing: .015em;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
+      -webkit-tap-highlight-color: transparent;
     }
-    .tab small { font-size:.78rem; font-family:var(--font-ku); direction:rtl; }
-    .tab:hover { color:var(--text); border-color:rgba(var(--accent-rgb),.5); transform:translateY(-2px); }
-    .tab:active { transform:scale(.96); }
-    #m1:checked ~ .page label[for="m1"],
-    #m2:checked ~ .page label[for="m2"],
-    #m3:checked ~ .page label[for="m3"] {
-      color:var(--text); border-color:var(--accent); background:rgba(var(--accent-rgb),.12);
-      box-shadow:0 0 22px rgba(var(--accent-rgb),.3);
+    .detail-tab:hover { transform: translateY(-2px); border-color: rgba(var(--accent-rgb), .7); background: rgba(var(--accent-rgb), .10); color: #fff; }
+    .detail-tab:active { transform: scale(.97); }
+    #view-about:focus-visible ~ .page label[for="view-about"],
+    #view-roadmap:focus-visible ~ .page label[for="view-roadmap"],
+    #view-status:focus-visible ~ .page label[for="view-status"] { outline: 2px solid var(--accent); outline-offset: 3px; }
+    #view-about:checked ~ .page label[for="view-about"],
+    #view-roadmap:checked ~ .page label[for="view-roadmap"],
+    #view-status:checked ~ .page label[for="view-status"] {
+      border-color: rgba(var(--accent-rgb), .8); background: rgba(var(--accent-rgb), .16);
+      color: #fff; box-shadow: 0 0 18px rgba(var(--accent-rgb), .13);
     }
-    #m1:focus-visible ~ .page label[for="m1"],
-    #m2:focus-visible ~ .page label[for="m2"],
-    #m3:focus-visible ~ .page label[for="m3"] { outline:2px solid var(--accent); outline-offset:3px; }
-
-    /* Panels: only the selected one is shown, with a soft reveal */
-    .panel {
-      display:none; max-width:26rem; padding:1rem 1.25rem; border-radius:14px;
-      border:1px solid rgba(var(--accent-rgb),.25); background:rgba(255,255,255,.03);
-      backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
-      animation:reveal .5s ease both;
+    .detail-card {
+      display: none; position: relative; width: min(100%, 32rem); padding: 1rem 1.2rem;
+      border: 1px solid rgba(var(--accent-rgb), .27); border-radius: 16px;
+      background: linear-gradient(145deg, rgba(27, 22, 43, .88), rgba(16, 17, 27, .9));
+      box-shadow: 0 18px 55px rgba(0,0,0,.24), inset 0 1px rgba(255,255,255,.035);
+      text-align: left; -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+      animation: reveal .3s var(--ease) both;
     }
-    .panel p { font-size:.92rem; line-height:1.6; color:#c6cad6; }
-    .panel p + p { margin-top:.35rem; }
-    #m1:checked ~ .page .panel--1,
-    #m2:checked ~ .page .panel--2,
-    #m3:checked ~ .page .panel--3 { display:block; }
+    .detail-card h2 { margin: 0 2.2rem .38rem 0; color: #f5f0ff; font-size: .88rem; font-weight: 750; letter-spacing: .025em; }
+    .detail-card p { margin: 0; color: #b9b2c9; font-size: .78rem; line-height: 1.7; }
+    .detail-card p + p { margin-top: .32rem; }
+    .detail-card[lang="ckb"] { text-align: right; }
+    .detail-card[lang="ckb"] h2 { margin: 0 0 .38rem 2.2rem; }
+    .detail-close { position: absolute; top: .65rem; right: .7rem; display: grid; width: 1.8rem; height: 1.8rem; place-items: center; border: 1px solid var(--line); border-radius: 50%; color: var(--muted); cursor: pointer; font-size: 1rem; line-height: 1; transition: background .2s ease, color .2s ease; }
+    .detail-close:hover { background: rgba(var(--accent-rgb), .15); color: #fff; }
+    #view-about:checked ~ .page .detail-about,
+    #view-roadmap:checked ~ .page .detail-roadmap,
+    #view-status:checked ~ .page .detail-status { display: block; }
+    #lang-ku:checked ~ .page .detail-card.copy-en { display: none; }
+    #lang-en:checked ~ .page .detail-card.copy-ku { display: none; }
 
-    /* ================= 8. PROGRESS + STATUS ================= */
-    .progress { position:relative; width:min(18rem,70vw); height:3px; border-radius:3px; background:rgba(255,255,255,.08); overflow:hidden; }
-    .progress::after {
-      content:""; position:absolute; inset:0 auto 0 0; width:40%; border-radius:inherit;
-      background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),transparent);
-      box-shadow:0 0 12px var(--glow); animation:sweep 2.4s ease-in-out infinite;
+    .power-button {
+      display: inline-flex; align-items: center; justify-content: center; gap: .48rem;
+      min-height: 2.45rem; padding: .62rem 1rem; border: 1px solid rgba(var(--accent-rgb), .52);
+      border-radius: 999px; background: linear-gradient(135deg, rgba(var(--accent-rgb), .2), rgba(var(--accent2-rgb), .1));
+      box-shadow: 0 5px 22px rgba(var(--accent-rgb), .08); color: #f5efff; cursor: pointer;
+      font-size: .72rem; font-weight: 750; letter-spacing: .07em; transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
     }
-    #power:checked ~ .page .progress::after { animation-duration:1s; }
+    .power-button:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(var(--accent-rgb), .2); }
+    .power-button:active { transform: scale(.97); }
+    .power-button .power-off { display: none; }
+    #power:checked ~ .page .power-button .power-on { display: none; }
+    #power:checked ~ .page .power-button .power-off { display: inline; }
+    .power-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
-    .status { display:flex; flex-direction:column; align-items:center; gap:.45rem; font-size:.8rem; color:var(--muted); }
-    .status__row { display:flex; align-items:center; gap:.7rem; letter-spacing:.28em; }
-    .dots { display:inline-flex; gap:6px; }
-    .dots span { width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px var(--glow); animation:dot 1.4s ease-in-out infinite; }
-    .dots span:nth-child(2) { animation-delay:.18s; }
-    .dots span:nth-child(3) { animation-delay:.36s; }
+    .progress { position: relative; width: min(17rem, 66vw); height: 3px; overflow: hidden; border-radius: 99px; background: rgba(255,255,255,.09); }
+    .progress::after { position: absolute; inset: 0 auto 0 0; width: 35%; border-radius: inherit; background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent); box-shadow: 0 0 12px var(--glow); content: ""; animation: sweep 2.8s var(--ease) infinite; }
+    #power:checked ~ .page .progress::after { animation-duration: 1.45s; }
 
-    /* Wait / Ready text swap */
-    .ready { display:none; color:var(--accent); }
-    #power:checked ~ .page .ready { display:inline; }
-    #power:checked ~ .page .wait  { display:none; }
+    .footer { display: flex; flex-direction: column; align-items: center; gap: .5rem; color: var(--muted); font-size: .68rem; }
+    .status { display: inline-flex; align-items: center; gap: .65rem; letter-spacing: .18em; }
+    .dots { display: inline-flex; gap: 5px; }
+    .dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--glow); animation: bounce 1.5s ease-in-out infinite; }
+    .dots i:nth-child(2) { animation-delay: .18s; }
+    .dots i:nth-child(3) { animation-delay: .36s; }
+    .ready { display: none; color: var(--accent); }
+    #power:checked ~ .page .ready { display: inline; }
+    #power:checked ~ .page .waiting { display: none; }
+    .footer-copy { color: var(--subtle); font-size: .7rem; }
+    .copyright { margin-top: .15rem; color: #596371; font-size: .62rem; letter-spacing: .07em; }
+    #lang-ku:checked ~ .page .footer-en { display: none; }
+    #lang-en:checked ~ .page .footer-ku { display: none; }
 
-    /* ================= 9. KEYFRAMES ================= */
-    @keyframes spin   { to { transform:rotate(360deg); } }
-    @keyframes pulse  { 0%,100% { transform:scale(.8); opacity:.7; } 50% { transform:scale(1.25); opacity:1; } }
-    @keyframes sweep  { from { transform:translateX(-100%); } to { transform:translateX(250%); } }
-    @keyframes dot    { 0%,80%,100% { transform:translateY(0) scale(.7); opacity:.35; } 40% { transform:translateY(-6px) scale(1); opacity:1; } }
-    @keyframes flow   { to { stroke-dashoffset:-14; } }
-    @keyframes node   { 0%,100% { transform:scale(.6); opacity:.5; } 50% { transform:scale(1.4); opacity:1; } }
-    @keyframes shine  { to { background-position:-250% 0; } }
-    @keyframes reveal { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
-    @keyframes drift  { to { transform:translate(8vmax,6vmax) scale(1.15); } }
-    @keyframes rise   { 0% { transform:translateY(0); opacity:0; } 15% { opacity:.9; } 100% { transform:translateY(-105vh); opacity:0; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse { 0%,100% { transform: scale(.82); opacity: .78; } 50% { transform: scale(1.16); opacity: 1; } }
+    @keyframes wave { 0% { transform: scale(.55); opacity: .7; } 100% { transform: scale(2.2); opacity: 0; } }
+    @keyframes sweep { from { transform: translateX(-125%); } to { transform: translateX(340%); } }
+    @keyframes bounce { 0%,80%,100% { transform: translateY(0) scale(.7); opacity: .4; } 40% { transform: translateY(-5px) scale(1); opacity: 1; } }
+    @keyframes flow { to { stroke-dashoffset: -24; } }
+    @keyframes node { 0%,100% { transform: scale(.7); opacity: .55; } 50% { transform: scale(1.35); opacity: 1; } }
+    @keyframes shine { to { background-position: -220% 0; } }
+    @keyframes reveal { from { transform: translateY(7px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes drift { to { transform: translate(7vw, 5vh) scale(1.12); } }
+    @keyframes rise { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .7; } 100% { transform: translateY(-110vh); opacity: 0; } }
 
-    /* ================= 10. RESPONSIVE + A11Y ================= */
-    @media (max-width:480px) {
-      .title { letter-spacing:.09em; padding-left:.09em; }
-      .brand { letter-spacing:.24em; }
-      .stage { gap:1rem; }
+    @media (max-width: 560px) {
+      .page { gap: 1rem; padding-top: max(1.2rem, env(safe-area-inset-top)); }
+      .header { align-items: flex-start; }
+      .brand { gap: .55rem; font-size: .92rem; letter-spacing: .18em; }
+      .brand-mark { width: 1.8rem; border-radius: 8px; }
+      .header-right { flex-direction: column-reverse; align-items: flex-end; gap: .45rem; }
+      .dev-status { font-size: .54rem; letter-spacing: .1em; }
+      .language-switch label { min-width: 2.35rem; padding: .3rem .45rem; font-size: .62rem; }
+      .stage { gap: .95rem; padding: .35rem 0; }
+      .reactor-wrap { width: clamp(134px, 39vw, 158px); }
+      .title { font-size: clamp(2rem, 9.8vw, 3.1rem); letter-spacing: .085em; padding-left: .085em; }
+      .subtitle { margin-top: .5rem; }
+      .modules { gap: .42rem; }
+      .module-tab { min-width: 5.8rem; padding: .55rem .78rem; }
+      .feature-panel { padding: .78rem .92rem; }
+      .detail-tabs { gap: .38rem; }
+      .detail-tab, .power-button { min-height: 2.35rem; padding: .55rem .78rem; font-size: .68rem; }
+      .detail-card { padding: .9rem 1rem; }
     }
-    @media (prefers-reduced-motion:reduce) {
-      *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition:none !important; }
+    @media (max-height: 730px) and (min-width: 561px) {
+      .page { gap: .7rem; padding-top: 1.05rem; padding-bottom: .9rem; }
+      .stage { gap: .72rem; }
+      .reactor-wrap { width: 125px; }
+      .title { font-size: clamp(2rem, 6.4vw, 3.7rem); }
+      .feature-panel { min-height: auto; padding: .62rem .95rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
     }
   </style>
 </head>
-
 <body>
-  <!-- CSS-only state controls: power toggle + module selector -->
-  <input class="ctl" type="checkbox" id="power" aria-label="Power up the AI engine">
-  <input class="ctl" type="radio" name="module" id="m1" checked aria-label="Neural">
-  <input class="ctl" type="radio" name="module" id="m2" aria-label="Vision">
-  <input class="ctl" type="radio" name="module" id="m3" aria-label="Language">
+  <!-- All interactions are CSS-only: no scripts are used. -->
+  <input class="control" type="checkbox" id="power" aria-label="Activate the RAMiiN AI core">
+  <input class="control" type="radio" name="language" id="lang-en" checked aria-label="English language">
+  <input class="control" type="radio" name="language" id="lang-ku" aria-label="Kurdish language">
+  <input class="control" type="radio" name="module" id="module-neural" checked aria-label="Neural module">
+  <input class="control" type="radio" name="module" id="module-vision" aria-label="Vision module">
+  <input class="control" type="radio" name="module" id="module-language" aria-label="Language module">
+  <input class="control" type="radio" name="project-view" id="view-none" checked aria-label="Close project information">
+  <input class="control" type="radio" name="project-view" id="view-about" aria-label="About RAMiiN AI">
+  <input class="control" type="radio" name="project-view" id="view-roadmap" aria-label="Project roadmap">
+  <input class="control" type="radio" name="project-view" id="view-status" aria-label="Development status">
 
   <main class="page">
-
-    <!-- Backdrop -->
-    <div class="aurora" aria-hidden="true"><i></i><i></i></div>
-    <div class="sparks" aria-hidden="true">
-      <span style="--x:8%;  --s:3px; --d:9s;  --w:0s"></span>
-      <span style="--x:22%; --s:2px; --d:12s; --w:-4s"></span>
-      <span style="--x:35%; --s:4px; --d:10s; --w:-7s"></span>
-      <span style="--x:48%; --s:2px; --d:13s; --w:-2s"></span>
-      <span style="--x:61%; --s:3px; --d:9s;  --w:-5s"></span>
-      <span style="--x:74%; --s:2px; --d:11s; --w:-8s"></span>
-      <span style="--x:86%; --s:4px; --d:14s; --w:-3s"></span>
-      <span style="--x:94%; --s:2px; --d:10s; --w:-6s"></span>
+    <div class="ambient" aria-hidden="true"></div>
+    <div class="grid" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="stars" aria-hidden="true">
+      <i style="--x:8%;--s:2px;--d:13s;--delay:-2s"></i>
+      <i style="--x:21%;--s:3px;--d:16s;--delay:-8s"></i>
+      <i style="--x:34%;--s:2px;--d:12s;--delay:-5s"></i>
+      <i style="--x:49%;--s:3px;--d:17s;--delay:-10s"></i>
+      <i style="--x:63%;--s:2px;--d:14s;--delay:-4s"></i>
+      <i style="--x:77%;--s:3px;--d:18s;--delay:-12s"></i>
+      <i style="--x:90%;--s:2px;--d:15s;--delay:-7s"></i>
     </div>
 
-    <header class="brand">RAMiiN</header>
+    <header class="header">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">R</span>RAMiiN</div>
+      <div class="header-right">
+        <span class="dev-status">AI LAB · IN DEVELOPMENT</span>
+        <fieldset class="language-switch" aria-label="Choose language" style="border:0;margin:0">
+          <legend class="sr-only">Choose language</legend>
+          <label class="lang-en-label" for="lang-en">EN</label>
+          <label class="lang-ku-label" for="lang-ku">کوردی</label>
+        </fieldset>
+      </div>
+    </header>
 
-    <section class="stage">
+    <section class="stage" aria-labelledby="main-title">
+      <p class="eyebrow">A NEW EXPERIENCE IS TAKING SHAPE</p>
 
-      <!-- Click the reactor to power up -->
-      <label class="reactor" for="power" title="Tap to power up">
-        <svg class="net" viewBox="0 0 200 200" aria-hidden="true">
-          <line x1="22" y1="100" x2="58" y2="52"/><line x1="22" y1="100" x2="58" y2="148"/>
-          <line x1="58" y1="52" x2="100" y2="24"/><line x1="58" y1="148" x2="100" y2="176"/>
-          <line x1="100" y1="24" x2="142" y2="52"/><line x1="100" y1="176" x2="142" y2="148"/>
-          <line x1="142" y1="52" x2="178" y2="100"/><line x1="142" y1="148" x2="178" y2="100"/>
-          <line x1="58" y1="52" x2="142" y2="148"/><line x1="58" y1="148" x2="142" y2="52"/>
-          <circle cx="22" cy="100" r="3"/><circle cx="58" cy="52" r="3"/><circle cx="58" cy="148" r="3"/>
-          <circle cx="100" cy="24" r="3"/><circle cx="100" cy="176" r="3"/><circle cx="142" cy="52" r="3"/>
-          <circle cx="142" cy="148" r="3"/><circle cx="178" cy="100" r="3"/>
-        </svg>
-        <span class="ring ring--a"></span>
-        <span class="ring ring--b"></span>
-        <span class="ring ring--c"></span>
-        <span class="core"></span>
-      </label>
-      <p class="hint">Tap the core to power up<br><span lang="ckb">کلیک لە ناوەڕاست بکە بۆ کارپێکردن</span></p>
+      <div class="reactor-wrap">
+        <label class="reactor" for="power" title="Activate the AI core">
+          <svg class="network" viewBox="0 0 200 200" aria-hidden="true">
+            <line x1="22" y1="100" x2="58" y2="52"/><line x1="22" y1="100" x2="58" y2="148"/>
+            <line x1="58" y1="52" x2="100" y2="24"/><line x1="58" y1="148" x2="100" y2="176"/>
+            <line x1="100" y1="24" x2="142" y2="52"/><line x1="100" y1="176" x2="142" y2="148"/>
+            <line x1="142" y1="52" x2="178" y2="100"/><line x1="142" y1="148" x2="178" y2="100"/>
+            <line x1="58" y1="52" x2="142" y2="148"/><line x1="58" y1="148" x2="142" y2="52"/>
+            <circle cx="22" cy="100" r="3"/><circle cx="58" cy="52" r="3"/><circle cx="58" cy="148" r="3"/>
+            <circle cx="100" cy="24" r="3"/><circle cx="100" cy="176" r="3"/><circle cx="142" cy="52" r="3"/>
+            <circle cx="142" cy="148" r="3"/><circle cx="178" cy="100" r="3"/>
+          </svg>
+          <span class="halo"></span><span class="ring ring-a"></span><span class="ring ring-b"></span><span class="ring ring-c"></span><span class="core"></span>
+        </label>
+      </div>
+      <p class="activate-hint"><strong>ACTIVATE THE CORE</strong> · CLICK THE CENTER</p>
+      <label class="power-button" for="power"><span aria-hidden="true">◉</span><span class="power-on">POWER UP CORE</span><span class="power-off">POWER DOWN CORE</span></label>
 
-      <div>
-        <h1 class="title">COMING SOON</h1>
-        <p class="subtitle">Something amazing is on the way...</p>
+      <div class="headline">
+        <div class="copy-en">
+          <h1 class="title" id="main-title">COMING SOON</h1>
+          <p class="subtitle">Something extraordinary is being built.</p>
+        </div>
+        <div class="copy-ku" lang="ckb">
+          <h1 class="kurdish-title" id="main-title-ku">بەم زووانە</h1>
+          <p class="kurdish-subtitle">شتێکی تایبەت لە ڕێگایە...</p>
+        </div>
       </div>
 
-      <div lang="ckb" dir="rtl">
-        <h2 class="title title--ku">بەم زووانە</h2>
-        <p class="subtitle">شتێکی سەرسوڕهێنەر لە ڕێگایە...</p>
-      </div>
-
-      <!-- Module selector -->
-      <nav class="tabs" aria-label="AI modules">
-        <label class="tab" for="m1">Neural <small>تۆڕی دەمار</small></label>
-        <label class="tab" for="m2">Vision <small>بینین</small></label>
-        <label class="tab" for="m3">Language <small>زمان</small></label>
+      <nav class="modules" aria-label="AI feature modules">
+        <label class="module-tab" for="module-neural">Neural <small lang="ckb">تۆڕی دەمار</small></label>
+        <label class="module-tab" for="module-vision">Vision <small lang="ckb">بینین</small></label>
+        <label class="module-tab" for="module-language">Language <small lang="ckb">زمان</small></label>
       </nav>
 
-      <div class="panel panel--1">
-        <p>Layers that learn patterns from data.</p>
-        <p lang="ckb">چینەکان کە لە داتاوە شێوازەکان فێر دەبن.</p>
+      <div class="feature-panel panel-neural">
+        <p>Neural networks that learn patterns and relationships from data.</p>
+        <p lang="ckb">تۆڕە دەمارەکان کە شێواز و پەیوەندییەکان لە داتاوە فێر دەبن.</p>
       </div>
-      <div class="panel panel--2">
-        <p>Models that see and understand images.</p>
-        <p lang="ckb">مۆدێلەکان کە وێنە دەبینن و تێدەگەن.</p>
+      <div class="feature-panel panel-vision">
+        <p>Computer vision systems that interpret images and visual information.</p>
+        <p lang="ckb">سیستەمی بینینی کۆمپیوتەر بۆ تێگەیشتن لە وێنە و زانیارییە بینراوەکان.</p>
       </div>
-      <div class="panel panel--3">
-        <p>Systems that read, write and reason.</p>
-        <p lang="ckb">سیستەمەکان کە دەخوێننەوە، دەنووسن و بیردەکەنەوە.</p>
+      <div class="feature-panel panel-language">
+        <p>Language models built to understand, generate and work with text.</p>
+        <p lang="ckb">مۆدێلە زمانییەکان بۆ تێگەیشتن، بەرهەمهێنان و کارکردن لەگەڵ دەق.</p>
       </div>
 
-      <div class="progress" role="progressbar" aria-label="Loading"></div>
+      <nav class="detail-tabs" aria-label="More about the project">
+        <label class="detail-tab" for="view-about">✦ <span class="copy-en">ABOUT</span><span class="copy-ku" lang="ckb">دەربارە</span></label>
+        <label class="detail-tab" for="view-roadmap">⌁ <span class="copy-en">ROADMAP</span><span class="copy-ku" lang="ckb">پلانی کار</span></label>
+        <label class="detail-tab" for="view-status">◷ <span class="copy-en">STATUS</span><span class="copy-ku" lang="ckb">دۆخی پڕۆژە</span></label>
+      </nav>
+
+      <section class="detail-card detail-about copy-en" aria-live="polite">
+        <label class="detail-close" for="view-none" aria-label="Close this panel">×</label>
+        <h2>About RAMiiN AI</h2>
+        <p>An independent technology project exploring artificial intelligence, practical software and modern digital tools.</p>
+      </section>
+      <section class="detail-card detail-about copy-ku" lang="ckb" aria-live="polite">
+        <label class="detail-close" for="view-none" aria-label="داخستنی ئەم بەشە">×</label>
+        <h2>دەربارەی RAMiiN AI</h2>
+        <p>پڕۆژەیەکی تەکنەلۆژیای سەربەخۆیە کە لەسەر ژیریی دەستکرد، نەرمەکاڵای کرداری و ئامرازە دیجیتاڵییە نوێکان کار دەکات.</p>
+      </section>
+      <section class="detail-card detail-roadmap copy-en" aria-live="polite">
+        <label class="detail-close" for="view-none" aria-label="Close this panel">×</label>
+        <h2>Project roadmap</h2>
+        <p>Step by step: research and learning, building useful prototypes, testing the experience, then sharing project updates.</p>
+      </section>
+      <section class="detail-card detail-roadmap copy-ku" lang="ckb" aria-live="polite">
+        <label class="detail-close" for="view-none" aria-label="داخستنی ئەم بەشە">×</label>
+        <h2>پلانی کارکردنی پڕۆژە</h2>
+        <p>هەنگاو بە هەنگاو: توێژینەوە و فێربوون، دروستکردنی نموونەی کرداری، تاقیکردنەوەی ئەزموونی بەکارهێنان، پاشان بڵاوکردنەوەی نوێکارییەکان.</p>
+      </section>
+      <section class="detail-card detail-status copy-en" aria-live="polite">
+        <label class="detail-close" for="view-none" aria-label="Close this panel">×</label>
+        <h2>Development status</h2>
+        <p><strong>Currently:</strong> In development. This page is a preview; launch timing and feature availability will be announced when confirmed.</p>
+      </section>
+      <section class="detail-card detail-status copy-ku" lang="ckb" aria-live="polite">
+        <label class="detail-close" for="view-none" aria-label="داخستنی ئەم بەشە">×</label>
+        <h2>دۆخی گەشەپێدانی پڕۆژە</h2>
+        <p><strong>ئێستا:</strong> لە قۆناغی گەشەپێداندایە. ئەم پەڕەیە پیشاندانی پێشوەختەیە؛ کاتی کردنەوە و بەردەستبوونی تایبەتمەندییەکان کاتێک پشتڕاست کرانەوە ڕادەگەیەنرێن.</p>
+      </section>
+
+      <div class="progress" role="progressbar" aria-label="Indeterminate development animation"></div>
     </section>
 
-    <footer class="status" role="status">
-      <div class="status__row">
-        <span class="wait">PLEASE WAIT</span>
-        <span class="ready">AI ENGINE ONLINE</span>
-        <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+    <footer class="footer" role="status">
+      <div class="status">
+        <span class="waiting">PROJECT IN DEVELOPMENT</span>
+        <span class="ready">CORE ACTIVATED</span>
+        <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
       </div>
-      <span lang="ckb"><span class="wait">تکایە چاوەڕێ بکە...</span><span class="ready">ئامێری ژیریی دەستکرد کارا بوو</span></span>
+      <p class="footer-copy footer-en">Building ideas at the intersection of AI and technology.</p>
+      <p class="footer-copy footer-ku" lang="ckb">بیرۆکە لە خاڵی یەکگرتنی ژیریی دەستکرد و تەکنەلۆژیا دروست دەکەین.</p>
+      <p class="copyright">© RAMiiN · ALL RIGHTS RESERVED</p>
     </footer>
-
   </main>
 </body>
 </html>
