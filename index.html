@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#100b18">
-  <meta name="description" content="RAMiiN AI — an independent AI and technology project. Coming soon.">
-  <title>RAMiiN AI — Coming Soon</title>
+  <meta name="theme-color" content="#090b0f">
+  <meta name="description" content="RAMiiN AI — an independent AI and technology project, proudly rooted in Kurdistan. Coming soon.">
+  <title>RAMiiN AI — Kurdistan Edition</title>
   <style>
     :root {
       color-scheme: dark;
@@ -208,7 +208,10 @@
     /* CSS-only language switch: English is the default. */
     .copy-ku { display: none; }
     #lang-ku:checked ~ .page .copy-en { display: none; }
-    #lang-ku:checked ~ .page .copy-ku { display: block; }
+    /* Keep detail cards hidden until their matching tab is selected. */
+    #lang-ku:checked ~ .page .headline .copy-ku,
+    #lang-ku:checked ~ .page .detail-tab .copy-ku,
+    #lang-ku:checked ~ .page .footer-ku { display: block; }
 
     .modules { display: flex; flex-wrap: wrap; justify-content: center; gap: .55rem; margin-top: .25rem; }
     .module-tab { display: flex; min-width: 6.7rem; flex-direction: column; align-items: center; gap: .17rem; padding: .62rem 1rem .58rem; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.025); color: var(--muted); cursor: pointer; font-size: .77rem; font-weight: 650; line-height: 1.25; transition: transform .22s ease, border-color .22s ease, background .22s ease, color .22s ease; -webkit-tap-highlight-color: transparent; }
@@ -219,6 +222,9 @@
     .feature-panel { display: none; width: min(100%, 28rem); min-height: 4.5rem; padding: .88rem 1.15rem; border: 1px solid rgba(var(--accent-rgb), .2); border-radius: 15px; background: var(--panel); box-shadow: 0 14px 48px rgba(0,0,0,.16); -webkit-backdrop-filter: blur(13px); backdrop-filter: blur(13px); animation: reveal .32s var(--ease) both; }
     .feature-panel p { margin: 0; color: #c7cfda; font-size: .83rem; line-height: 1.65; }
     .feature-panel p + p { margin-top: .12rem; }
+    .feature-panel p[lang="ckb"] { display: none; }
+    #lang-ku:checked ~ .page .feature-panel p:not([lang="ckb"]) { display: none; }
+    #lang-ku:checked ~ .page .feature-panel p[lang="ckb"] { display: block; }
     #module-neural:checked ~ .page .panel-neural, #module-vision:checked ~ .page .panel-vision, #module-language:checked ~ .page .panel-language { display: block; }
 
     /* Extra click-to-open project cards. The default radio hides all cards. */
@@ -295,6 +301,53 @@
     #lang-ku:checked ~ .page .footer-en { display: none; }
     #lang-en:checked ~ .page .footer-ku { display: none; }
 
+
+    /* A restrained Kurdistan flag backdrop: visible at the edges, softened behind content. */
+    .flag-backdrop {
+      position: absolute;
+      z-index: -5;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      opacity: .30;
+      -webkit-mask-image: radial-gradient(ellipse at 50% 46%, #000 20%, rgba(0,0,0,.88) 52%, transparent 100%);
+      mask-image: radial-gradient(ellipse at 50% 46%, #000 20%, rgba(0,0,0,.88) 52%, transparent 100%);
+    }
+    .flag-backdrop svg {
+      position: absolute;
+      width: max(112vw, 112rem);
+      height: max(100vh, 100svh);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(-7deg) scale(1.08);
+      filter: saturate(1.18);
+    }
+    .flag-backdrop::after {
+      position: absolute;
+      inset: 0;
+      content: "";
+      background: linear-gradient(180deg, rgba(8,10,15,.18), rgba(8,10,15,.48)),
+                  radial-gradient(ellipse at center, transparent 8%, rgba(8,10,15,.48) 78%);
+    }
+    .dev-status { white-space: nowrap; }
+    .flag-caption {
+      display: inline-flex;
+      align-items: center;
+      gap: .42rem;
+      margin-top: .2rem;
+      color: rgba(244, 235, 196, .78);
+      font-size: .57rem;
+      font-weight: 750;
+      letter-spacing: .19em;
+      text-transform: uppercase;
+    }
+    .flag-caption .sun-mark { color: #f3c94f; font-size: .95rem; line-height: 1; text-shadow: 0 0 12px rgba(243,201,79,.42); }
+    @media (max-width: 560px) {
+      .flag-backdrop { opacity: .25; }
+      .flag-backdrop svg { width: 165vw; height: 100svh; }
+      .flag-caption { font-size: .52rem; letter-spacing: .13em; }
+    }
+
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes pulse { 0%,100% { transform: scale(.82); opacity: .78; } 50% { transform: scale(1.16); opacity: 1; } }
     @keyframes wave { 0% { transform: scale(.55); opacity: .7; } 100% { transform: scale(2.2); opacity: 0; } }
@@ -352,6 +405,15 @@
   <input class="control" type="radio" name="project-view" id="view-status" aria-label="Development status">
 
   <main class="page">
+    <div class="flag-backdrop" aria-hidden="true">
+      <svg viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <rect width="1200" height="225" fill="#e32636"/>
+        <rect y="225" width="1200" height="225" fill="#f7f5ef"/>
+        <rect y="450" width="1200" height="225" fill="#159447"/>
+        <g fill="none" stroke="#f5c928" stroke-width="13" stroke-linecap="round"><line x1="600.00" y1="246.50" x2="600.00" y2="192.50"/><line x1="626.82" y1="250.54" x2="642.74" y2="198.94"/><line x1="651.26" y1="262.31" x2="681.68" y2="217.70"/><line x1="671.15" y1="280.76" x2="713.37" y2="247.09"/><line x1="684.71" y1="304.25" x2="734.98" y2="284.53"/><line x1="690.75" y1="330.70" x2="744.59" y2="326.66"/><line x1="688.72" y1="357.75" x2="741.36" y2="369.77"/><line x1="678.81" y1="383.00" x2="725.57" y2="410.00"/><line x1="661.90" y1="404.21" x2="698.63" y2="443.79"/><line x1="639.48" y1="419.49" x2="662.91" y2="468.14"/><line x1="613.56" y1="427.48" x2="621.61" y2="480.88"/><line x1="586.44" y1="427.48" x2="578.39" y2="480.88"/><line x1="560.52" y1="419.49" x2="537.09" y2="468.14"/><line x1="538.10" y1="404.21" x2="501.37" y2="443.79"/><line x1="521.19" y1="383.00" x2="474.43" y2="410.00"/><line x1="511.28" y1="357.75" x2="458.64" y2="369.77"/><line x1="509.25" y1="330.70" x2="455.41" y2="326.66"/><line x1="515.29" y1="304.25" x2="465.02" y2="284.53"/><line x1="528.85" y1="280.76" x2="486.63" y2="247.09"/><line x1="548.74" y1="262.31" x2="518.32" y2="217.70"/><line x1="573.18" y1="250.54" x2="557.26" y2="198.94"/></g>
+        <circle cx="600" cy="337.5" r="76" fill="#f5c928"/>
+      </svg>
+    </div>
     <div class="ambient" aria-hidden="true"></div>
     <div class="grid" aria-hidden="true"></div>
     <div class="grain" aria-hidden="true"></div>
@@ -368,7 +430,8 @@
     <header class="header">
       <div class="brand"><span class="brand-mark" aria-hidden="true">R</span>RAMiiN</div>
       <div class="header-right">
-        <span class="dev-status">AI LAB · IN DEVELOPMENT</span>
+        <span class="dev-status">KURDISTAN · AI LAB</span>
+        <span class="flag-caption"><span class="sun-mark" aria-hidden="true">☼</span> ROOTED IN KURDISTAN</span>
         <fieldset class="language-switch" aria-label="Choose language" style="border:0;margin:0">
           <legend class="sr-only">Choose language</legend>
           <label class="lang-en-label" for="lang-en">EN</label>
