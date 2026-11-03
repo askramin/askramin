@@ -3,353 +3,304 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>RAMiiN — Coming Soon</title>
-  <meta name="description" content="RAMiiN is coming soon.">
+  <title>RAMiiN — AI Engineer · Coming Soon</title>
 
   <style>
-    /* ==========================================================
-       1. DESIGN TOKENS
-       ========================================================== */
+    /* ================= 1. TOKENS ================= */
     :root {
-      --bg-0: #0d0e11;          /* deepest charcoal */
-      --bg-1: #17191f;          /* lifted charcoal */
-      --line: rgba(255, 255, 255, 0.08);
-      --text: #eceef3;          /* primary text */
-      --muted: #8a90a0;         /* secondary text */
-      --accent: #6ee7f9;        /* ice cyan */
-      --accent-2: #8b7bff;      /* soft violet */
-      --glow: rgba(110, 231, 249, 0.35);
-
-      /* Latin + Kurdish (Arabic script) system font stacks, no downloads */
-      --font-latin: "Segoe UI", "Helvetica Neue", Inter, system-ui, -apple-system, Roboto, Arial, sans-serif;
-      --font-kurdish: "Segoe UI", Tahoma, "Noto Naskh Arabic", "Noto Sans Arabic", "Arabic Typesetting", Arial, sans-serif;
+      --bg: #0b0c10;
+      --text: #eceef3;
+      --muted: #8d93a5;
+      --line: rgba(255,255,255,.07);
+      --accent-rgb: 110,231,249;   /* changes per module */
+      --accent2-rgb: 139,123,255;
+      --accent: rgb(var(--accent-rgb));
+      --accent2: rgb(var(--accent2-rgb));
+      --glow: rgba(var(--accent-rgb), .4);
+      --font: "Segoe UI","Helvetica Neue",Inter,system-ui,Roboto,Arial,sans-serif;
+      --font-ku: "Segoe UI",Tahoma,"Noto Naskh Arabic","Noto Sans Arabic",Arial,sans-serif;
     }
 
-    /* ==========================================================
-       2. RESET & BASE
-       ========================================================== */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html, body { height: 100%; }
-
+    /* ================= 2. BASE ================= */
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    html,body { height:100%; }
     body {
-      font-family: var(--font-latin);
-      color: var(--text);
-      background:
-        radial-gradient(ellipse 70% 55% at 50% 38%, #1d2029 0%, transparent 70%),
-        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%);
-      background-color: var(--bg-0);
-      min-height: 100vh;
-      min-height: 100dvh;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
+      font-family:var(--font); color:var(--text); background:var(--bg);
+      min-height:100dvh; overflow-x:hidden; -webkit-font-smoothing:antialiased;
     }
+    [lang="ckb"] { font-family:var(--font-ku); direction:rtl; letter-spacing:0 !important; }
 
-    /* Faint technical grid, fades out toward the edges */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(var(--line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--line) 1px, transparent 1px);
-      background-size: 56px 56px;
-      -webkit-mask-image: radial-gradient(circle at 50% 42%, #000 0%, transparent 68%);
-              mask-image: radial-gradient(circle at 50% 42%, #000 0%, transparent 68%);
-      opacity: 0.6;
-      pointer-events: none;
-    }
+    /* Hidden state controls (CSS-only "clicks"). Still keyboard-focusable. */
+    .ctl { position:absolute; opacity:0; pointer-events:none; }
 
-    /* Kurdish text: right-to-left, and NO letter-spacing (breaks Arabic joining) */
-    [lang="ckb"] {
-      font-family: var(--font-kurdish);
-      direction: rtl;
-      letter-spacing: 0 !important;
-    }
+    /* Module colour themes: selecting a tab re-themes the whole page */
+    #m2:checked ~ .page { --accent-rgb:167,139,250; --accent2-rgb:110,231,249; }
+    #m3:checked ~ .page { --accent-rgb:244,114,182; --accent2-rgb:251,191,36; }
 
-    /* ==========================================================
-       3. PAGE LAYOUT
-       ========================================================== */
+    /* ================= 3. FANTASY BACKDROP ================= */
     .page {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      min-height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      padding: clamp(1.5rem, 4vw, 3rem) 1.25rem;
-      text-align: center;
+      position:relative; min-height:100dvh; isolation:isolate; overflow:hidden;
+      display:flex; flex-direction:column; align-items:center; justify-content:space-between;
+      padding:clamp(1.25rem,4vw,2.5rem) 1.25rem; text-align:center;
+      transition:--accent-rgb .6s;
     }
 
-    /* ---------- Brand (top) ---------- */
+    /* Aurora blobs */
+    .aurora { position:absolute; inset:0; z-index:-3; overflow:hidden; }
+    .aurora i {
+      position:absolute; width:55vmax; height:55vmax; border-radius:50%;
+      filter:blur(90px); opacity:.35; transition:background 1s;
+      animation:drift 18s ease-in-out infinite alternate;
+    }
+    .aurora i:nth-child(1) { background:var(--accent);  top:-25vmax; left:-15vmax; }
+    .aurora i:nth-child(2) { background:var(--accent2); bottom:-28vmax; right:-18vmax; animation-delay:-9s; }
+
+    /* Tech grid */
+    .page::before {
+      content:""; position:absolute; inset:0; z-index:-2;
+      background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+      background-size:52px 52px;
+      -webkit-mask-image:radial-gradient(circle at 50% 40%,#000,transparent 70%);
+              mask-image:radial-gradient(circle at 50% 40%,#000,transparent 70%);
+    }
+
+    /* Floating data-spark particles */
+    .sparks { position:absolute; inset:0; z-index:-1; pointer-events:none; }
+    .sparks span {
+      position:absolute; bottom:-10px; left:var(--x); width:var(--s); height:var(--s);
+      border-radius:50%; background:var(--accent); box-shadow:0 0 10px var(--glow);
+      opacity:0; animation:rise var(--d) linear infinite; animation-delay:var(--w);
+    }
+
+    /* ================= 4. HEADER ================= */
     .brand {
-      font-size: clamp(1.1rem, 2.4vw, 1.4rem);
-      font-weight: 600;
-      letter-spacing: 0.32em;
-      padding-left: 0.32em;     /* optically re-centres tracked text */
-      color: var(--text);
-      text-shadow: 0 0 18px var(--glow);
+      font-weight:600; font-size:clamp(1.1rem,2.4vw,1.4rem);
+      letter-spacing:.32em; padding-left:.32em; text-shadow:0 0 18px var(--glow);
     }
 
-    /* ---------- Centre stack ---------- */
-    .stage {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: clamp(1.5rem, 4vh, 2.5rem);
-      width: 100%;
-      max-width: 40rem;
-    }
+    .stage { width:100%; max-width:44rem; display:flex; flex-direction:column; align-items:center; gap:clamp(1.1rem,3vh,1.8rem); }
 
-    /* ==========================================================
-       4. SPINNER — three counter-rotating rings + pulsing core
-       ========================================================== */
-    .spinner {
-      --size: clamp(120px, 26vw, 168px);
-      position: relative;
-      width: var(--size);
-      height: var(--size);
-      display: grid;
-      place-items: center;
+    /* ================= 5. INTERACTIVE REACTOR ================= */
+    .reactor {
+      --size:clamp(120px,24vw,160px);
+      position:relative; width:var(--size); height:var(--size);
+      display:grid; place-items:center; cursor:pointer; border-radius:50%;
+      transition:transform .35s cubic-bezier(.3,1.5,.5,1);
+      -webkit-tap-highlight-color:transparent;
     }
+    .reactor:hover  { transform:scale(1.07); }
+    .reactor:active { transform:scale(.94); }
+    #power:focus-visible ~ .page .reactor { outline:2px solid var(--accent); outline-offset:10px; }
 
-    .ring {
-      position: absolute;
-      border-radius: 50%;
-      border: 2px solid transparent;
-    }
-
-    /* Outer ring: cyan arc, clockwise */
-    .ring--outer {
-      inset: 0;
-      border-top-color: var(--accent);
-      border-right-color: rgba(110, 231, 249, 0.18);
-      filter: drop-shadow(0 0 8px var(--glow));
-      animation: spin 1.8s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
-    }
-
-    /* Middle ring: violet arc, counter-clockwise */
-    .ring--middle {
-      inset: 16%;
-      border-bottom-color: var(--accent-2);
-      border-left-color: rgba(139, 123, 255, 0.18);
-      filter: drop-shadow(0 0 8px rgba(139, 123, 255, 0.45));
-      animation: spin 2.6s linear infinite reverse;
-    }
-
-    /* Inner ring: thin dashed orbit */
-    .ring--inner {
-      inset: 32%;
-      border: 1px dashed rgba(255, 255, 255, 0.28);
-      animation: spin 9s linear infinite;
-    }
-
-    /* Glowing core */
+    .ring { position:absolute; border-radius:50%; border:2px solid transparent; transition:filter .4s; }
+    .ring--a { inset:0;   border-top-color:var(--accent);  border-right-color:rgba(var(--accent-rgb),.18);
+               filter:drop-shadow(0 0 8px var(--glow)); animation:spin 1.8s cubic-bezier(.55,.15,.45,.85) infinite; }
+    .ring--b { inset:16%; border-bottom-color:var(--accent2); border-left-color:rgba(var(--accent2-rgb),.18);
+               filter:drop-shadow(0 0 8px rgba(var(--accent2-rgb),.5)); animation:spin 2.6s linear infinite reverse; }
+    .ring--c { inset:32%; border:1px dashed rgba(255,255,255,.3); animation:spin 9s linear infinite; }
     .core {
-      width: 14%;
-      height: 14%;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 18px 4px var(--glow), 0 0 48px 10px rgba(139, 123, 255, 0.25);
-      animation: pulse 2.2s ease-in-out infinite;
+      width:15%; height:15%; border-radius:50%; background:var(--accent);
+      box-shadow:0 0 18px 4px var(--glow),0 0 50px 10px rgba(var(--accent2-rgb),.3);
+      animation:pulse 2.2s ease-in-out infinite;
     }
 
-    /* ==========================================================
-       5. TYPOGRAPHY
-       ========================================================== */
+    /* Neural network drawn around the reactor */
+    .net { position:absolute; inset:-38%; width:176%; height:176%; pointer-events:none; opacity:.85; }
+    .net line { stroke:rgba(var(--accent-rgb),.35); stroke-width:.7; stroke-dasharray:3 4; animation:flow 2.5s linear infinite; }
+    .net circle { fill:var(--accent); animation:node 2.8s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+    .net circle:nth-of-type(2n)   { animation-delay:-.7s; }
+    .net circle:nth-of-type(3n)   { animation-delay:-1.4s; }
+
+    /* POWER ON state (click the reactor) */
+    #power:checked ~ .page .ring--a { animation-duration:.6s; }
+    #power:checked ~ .page .ring--b { animation-duration:1s; }
+    #power:checked ~ .page .ring--c { animation-duration:3s; }
+    #power:checked ~ .page .core    { animation-duration:.8s; box-shadow:0 0 30px 10px var(--glow),0 0 90px 24px rgba(var(--accent2-rgb),.45); }
+    #power:checked ~ .page .net line { animation-duration:.8s; stroke:rgba(var(--accent-rgb),.7); }
+    #power:checked ~ .page .aurora i { opacity:.55; }
+
+    .hint { font-size:.78rem; color:var(--muted); line-height:1.7; }
+    #power:checked ~ .page .hint { opacity:0; }
+
+    /* ================= 6. TITLES ================= */
     .title {
-      font-size: clamp(2.1rem, 8.5vw, 4.5rem);
-      font-weight: 200;
-      line-height: 1.05;
-      letter-spacing: 0.16em;
-      padding-left: 0.16em;
-      background: linear-gradient(180deg, #ffffff 25%, #9aa1b3 100%);
-      -webkit-background-clip: text;
-              background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: transparent;
-      animation: breathe 4.5s ease-in-out infinite;
+      font-size:clamp(2.1rem,8.5vw,4.4rem); font-weight:200; line-height:1.05;
+      letter-spacing:.16em; padding-left:.16em;
+      background:linear-gradient(180deg,#fff 25%,#9aa1b3 100%); background-size:100% 100%;
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
     }
-
-    .title--ku {
-      font-size: clamp(1.6rem, 6vw, 2.6rem);
-      font-weight: 600;
-      line-height: 1.4;
-      margin-top: -0.5rem;
-      /* Kurdish title uses a solid colour for crisp Arabic glyphs */
-      background: none;
-      -webkit-text-fill-color: var(--text);
-      color: var(--text);
-      animation: none;
-      opacity: 0.9;
+    #power:checked ~ .page .title {
+      background-image:linear-gradient(90deg,var(--accent),#fff,var(--accent2),#fff,var(--accent));
+      background-size:250% 100%; animation:shine 4s linear infinite;
     }
+    .subtitle { margin-top:.5rem; color:var(--muted); font-weight:300; font-size:clamp(.95rem,2.4vw,1.15rem); }
+    .title--ku { font-size:clamp(1.5rem,6vw,2.4rem); font-weight:600; line-height:1.5; background:none; -webkit-text-fill-color:var(--text); color:var(--text); letter-spacing:0; padding:0; }
+    #power:checked ~ .page .title--ku { background:none; animation:none; }
 
-    .subtitle {
-      font-size: clamp(0.95rem, 2.4vw, 1.15rem);
-      font-weight: 300;
-      color: var(--muted);
-      line-height: 1.6;
+    /* ================= 7. MODULE TABS (radio) ================= */
+    .tabs { display:flex; flex-wrap:wrap; justify-content:center; gap:.6rem; }
+    .tab {
+      cursor:pointer; padding:.55rem 1.1rem; border-radius:999px; font-size:.85rem;
+      border:1px solid var(--line); background:rgba(255,255,255,.03); color:var(--muted);
+      display:flex; flex-direction:column; gap:.1rem; line-height:1.3;
+      transition:all .3s; -webkit-tap-highlight-color:transparent;
     }
-
-    .subtitle--ku {
-      font-size: clamp(1rem, 2.5vw, 1.2rem);
-      margin-top: 0.25rem;
+    .tab small { font-size:.78rem; font-family:var(--font-ku); direction:rtl; }
+    .tab:hover { color:var(--text); border-color:rgba(var(--accent-rgb),.5); transform:translateY(-2px); }
+    .tab:active { transform:scale(.96); }
+    #m1:checked ~ .page label[for="m1"],
+    #m2:checked ~ .page label[for="m2"],
+    #m3:checked ~ .page label[for="m3"] {
+      color:var(--text); border-color:var(--accent); background:rgba(var(--accent-rgb),.12);
+      box-shadow:0 0 22px rgba(var(--accent-rgb),.3);
     }
+    #m1:focus-visible ~ .page label[for="m1"],
+    #m2:focus-visible ~ .page label[for="m2"],
+    #m3:focus-visible ~ .page label[for="m3"] { outline:2px solid var(--accent); outline-offset:3px; }
 
-    /* ==========================================================
-       6. PROGRESS BAR
-       ========================================================== */
-    .progress {
-      position: relative;
-      width: min(18rem, 70vw);
-      height: 3px;
-      border-radius: 3px;
-      background: rgba(255, 255, 255, 0.08);
-      overflow: hidden;
+    /* Panels: only the selected one is shown, with a soft reveal */
+    .panel {
+      display:none; max-width:26rem; padding:1rem 1.25rem; border-radius:14px;
+      border:1px solid rgba(var(--accent-rgb),.25); background:rgba(255,255,255,.03);
+      backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+      animation:reveal .5s ease both;
     }
+    .panel p { font-size:.92rem; line-height:1.6; color:#c6cad6; }
+    .panel p + p { margin-top:.35rem; }
+    #m1:checked ~ .page .panel--1,
+    #m2:checked ~ .page .panel--2,
+    #m3:checked ~ .page .panel--3 { display:block; }
 
+    /* ================= 8. PROGRESS + STATUS ================= */
+    .progress { position:relative; width:min(18rem,70vw); height:3px; border-radius:3px; background:rgba(255,255,255,.08); overflow:hidden; }
     .progress::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 40%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
-      box-shadow: 0 0 12px var(--glow);
-      animation: sweep 2.4s ease-in-out infinite;
+      content:""; position:absolute; inset:0 auto 0 0; width:40%; border-radius:inherit;
+      background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),transparent);
+      box-shadow:0 0 12px var(--glow); animation:sweep 2.4s ease-in-out infinite;
     }
+    #power:checked ~ .page .progress::after { animation-duration:1s; }
 
-    /* ==========================================================
-       7. STATUS + LOADING DOTS (bottom)
-       ========================================================== */
-    .status {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.8rem;
-      color: var(--muted);
+    .status { display:flex; flex-direction:column; align-items:center; gap:.45rem; font-size:.8rem; color:var(--muted); }
+    .status__row { display:flex; align-items:center; gap:.7rem; letter-spacing:.28em; }
+    .dots { display:inline-flex; gap:6px; }
+    .dots span { width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px var(--glow); animation:dot 1.4s ease-in-out infinite; }
+    .dots span:nth-child(2) { animation-delay:.18s; }
+    .dots span:nth-child(3) { animation-delay:.36s; }
+
+    /* Wait / Ready text swap */
+    .ready { display:none; color:var(--accent); }
+    #power:checked ~ .page .ready { display:inline; }
+    #power:checked ~ .page .wait  { display:none; }
+
+    /* ================= 9. KEYFRAMES ================= */
+    @keyframes spin   { to { transform:rotate(360deg); } }
+    @keyframes pulse  { 0%,100% { transform:scale(.8); opacity:.7; } 50% { transform:scale(1.25); opacity:1; } }
+    @keyframes sweep  { from { transform:translateX(-100%); } to { transform:translateX(250%); } }
+    @keyframes dot    { 0%,80%,100% { transform:translateY(0) scale(.7); opacity:.35; } 40% { transform:translateY(-6px) scale(1); opacity:1; } }
+    @keyframes flow   { to { stroke-dashoffset:-14; } }
+    @keyframes node   { 0%,100% { transform:scale(.6); opacity:.5; } 50% { transform:scale(1.4); opacity:1; } }
+    @keyframes shine  { to { background-position:-250% 0; } }
+    @keyframes reveal { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+    @keyframes drift  { to { transform:translate(8vmax,6vmax) scale(1.15); } }
+    @keyframes rise   { 0% { transform:translateY(0); opacity:0; } 15% { opacity:.9; } 100% { transform:translateY(-105vh); opacity:0; } }
+
+    /* ================= 10. RESPONSIVE + A11Y ================= */
+    @media (max-width:480px) {
+      .title { letter-spacing:.09em; padding-left:.09em; }
+      .brand { letter-spacing:.24em; }
+      .stage { gap:1rem; }
     }
-
-    .status__row {
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      letter-spacing: 0.28em;
-    }
-
-    .dots {
-      display: inline-flex;
-      gap: 6px;
-    }
-
-    .dots span {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 8px var(--glow);
-      animation: dot 1.4s ease-in-out infinite;
-    }
-    .dots span:nth-child(2) { animation-delay: 0.18s; }
-    .dots span:nth-child(3) { animation-delay: 0.36s; }
-
-    .status__ku { font-size: 0.9rem; }
-
-    /* ==========================================================
-       8. KEYFRAMES
-       ========================================================== */
-    @keyframes spin   { to { transform: rotate(360deg); } }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(0.8); opacity: 0.7; }
-      50%      { transform: scale(1.25); opacity: 1; }
-    }
-
-    @keyframes breathe {
-      0%, 100% { filter: drop-shadow(0 0 0 rgba(110, 231, 249, 0)); }
-      50%      { filter: drop-shadow(0 0 22px rgba(110, 231, 249, 0.28)); }
-    }
-
-    @keyframes sweep {
-      0%   { transform: translateX(-100%); }
-      100% { transform: translateX(250%); }
-    }
-
-    @keyframes dot {
-      0%, 80%, 100% { transform: translateY(0) scale(0.7); opacity: 0.35; }
-      40%           { transform: translateY(-6px) scale(1); opacity: 1; }
-    }
-
-    /* ==========================================================
-       9. RESPONSIVE + ACCESSIBILITY
-       ========================================================== */
-    @media (max-width: 480px) {
-      .title    { letter-spacing: 0.1em; padding-left: 0.1em; }
-      .brand    { letter-spacing: 0.24em; }
-      .status__row { letter-spacing: 0.2em; }
-    }
-
-    @media (max-height: 560px) {
-      .stage { gap: 1rem; }
-      .spinner { --size: 96px; }
-    }
-
-    /* Respect users who prefer less motion */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-      }
+    @media (prefers-reduced-motion:reduce) {
+      *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition:none !important; }
     }
   </style>
 </head>
 
 <body>
+  <!-- CSS-only state controls: power toggle + module selector -->
+  <input class="ctl" type="checkbox" id="power" aria-label="Power up the AI engine">
+  <input class="ctl" type="radio" name="module" id="m1" checked aria-label="Neural">
+  <input class="ctl" type="radio" name="module" id="m2" aria-label="Vision">
+  <input class="ctl" type="radio" name="module" id="m3" aria-label="Language">
+
   <main class="page">
 
-    <!-- Brand name -->
-    <header class="brand" aria-label="RAMiiN">RAMiiN</header>
+    <!-- Backdrop -->
+    <div class="aurora" aria-hidden="true"><i></i><i></i></div>
+    <div class="sparks" aria-hidden="true">
+      <span style="--x:8%;  --s:3px; --d:9s;  --w:0s"></span>
+      <span style="--x:22%; --s:2px; --d:12s; --w:-4s"></span>
+      <span style="--x:35%; --s:4px; --d:10s; --w:-7s"></span>
+      <span style="--x:48%; --s:2px; --d:13s; --w:-2s"></span>
+      <span style="--x:61%; --s:3px; --d:9s;  --w:-5s"></span>
+      <span style="--x:74%; --s:2px; --d:11s; --w:-8s"></span>
+      <span style="--x:86%; --s:4px; --d:14s; --w:-3s"></span>
+      <span style="--x:94%; --s:2px; --d:10s; --w:-6s"></span>
+    </div>
 
-    <!-- Centre content -->
+    <header class="brand">RAMiiN</header>
+
     <section class="stage">
 
-      <!-- Animated CSS spinner (decorative) -->
-      <div class="spinner" aria-hidden="true">
-        <span class="ring ring--outer"></span>
-        <span class="ring ring--middle"></span>
-        <span class="ring ring--inner"></span>
+      <!-- Click the reactor to power up -->
+      <label class="reactor" for="power" title="Tap to power up">
+        <svg class="net" viewBox="0 0 200 200" aria-hidden="true">
+          <line x1="22" y1="100" x2="58" y2="52"/><line x1="22" y1="100" x2="58" y2="148"/>
+          <line x1="58" y1="52" x2="100" y2="24"/><line x1="58" y1="148" x2="100" y2="176"/>
+          <line x1="100" y1="24" x2="142" y2="52"/><line x1="100" y1="176" x2="142" y2="148"/>
+          <line x1="142" y1="52" x2="178" y2="100"/><line x1="142" y1="148" x2="178" y2="100"/>
+          <line x1="58" y1="52" x2="142" y2="148"/><line x1="58" y1="148" x2="142" y2="52"/>
+          <circle cx="22" cy="100" r="3"/><circle cx="58" cy="52" r="3"/><circle cx="58" cy="148" r="3"/>
+          <circle cx="100" cy="24" r="3"/><circle cx="100" cy="176" r="3"/><circle cx="142" cy="52" r="3"/>
+          <circle cx="142" cy="148" r="3"/><circle cx="178" cy="100" r="3"/>
+        </svg>
+        <span class="ring ring--a"></span>
+        <span class="ring ring--b"></span>
+        <span class="ring ring--c"></span>
         <span class="core"></span>
-      </div>
+      </label>
+      <p class="hint">Tap the core to power up<br><span lang="ckb">کلیک لە ناوەڕاست بکە بۆ کارپێکردن</span></p>
 
-      <!-- English -->
       <div>
         <h1 class="title">COMING SOON</h1>
         <p class="subtitle">Something amazing is on the way...</p>
       </div>
 
-      <!-- Kurdish (Sorani) -->
       <div lang="ckb" dir="rtl">
         <h2 class="title title--ku">بەم زووانە</h2>
-        <p class="subtitle subtitle--ku">شتێکی سەرسوڕهێنەر لە ڕێگایە...</p>
+        <p class="subtitle">شتێکی سەرسوڕهێنەر لە ڕێگایە...</p>
       </div>
 
-      <!-- Indeterminate progress bar -->
+      <!-- Module selector -->
+      <nav class="tabs" aria-label="AI modules">
+        <label class="tab" for="m1">Neural <small>تۆڕی دەمار</small></label>
+        <label class="tab" for="m2">Vision <small>بینین</small></label>
+        <label class="tab" for="m3">Language <small>زمان</small></label>
+      </nav>
+
+      <div class="panel panel--1">
+        <p>Layers that learn patterns from data.</p>
+        <p lang="ckb">چینەکان کە لە داتاوە شێوازەکان فێر دەبن.</p>
+      </div>
+      <div class="panel panel--2">
+        <p>Models that see and understand images.</p>
+        <p lang="ckb">مۆدێلەکان کە وێنە دەبینن و تێدەگەن.</p>
+      </div>
+      <div class="panel panel--3">
+        <p>Systems that read, write and reason.</p>
+        <p lang="ckb">سیستەمەکان کە دەخوێننەوە، دەنووسن و بیردەکەنەوە.</p>
+      </div>
+
       <div class="progress" role="progressbar" aria-label="Loading"></div>
     </section>
 
-    <!-- Status text + loading dots -->
     <footer class="status" role="status">
       <div class="status__row">
-        <span>PLEASE WAIT</span>
+        <span class="wait">PLEASE WAIT</span>
+        <span class="ready">AI ENGINE ONLINE</span>
         <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
       </div>
-      <span class="status__ku" lang="ckb" dir="rtl">تکایە چاوەڕێ بکە...</span>
+      <span lang="ckb"><span class="wait">تکایە چاوەڕێ بکە...</span><span class="ready">ئامێری ژیریی دەستکرد کارا بوو</span></span>
     </footer>
 
   </main>
