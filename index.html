@@ -1,421 +1,357 @@
-\<!DOCTYPE html>\
-\<html lang="en">\
-\<head>\
-&#x20;   \<meta charset="UTF-8">\
-&#x20;   \<meta name="viewport" content="width=device-width, initial-scale=1.0">\
-&#x20;   \<meta name="theme-color" content="#0b0b0d">\
-&#x20;   \<meta name="description" content="RAMiiN — Something amazing is on the way. Stay tuned.">\
-&#x20;   \<title>RAMiiN | Coming Soon\</title>\
-\
-&#x20;   \<style>\
-&#x20;       /\* ==============================\
-&#x20;          1\. RESET & GLOBAL STYLES\
-&#x20;       \============================== \*/\
-&#x20;       \* {\
-&#x20;           margin: 0;\
-&#x20;           padding: 0;\
-&#x20;           box-sizing: border-box;\
-&#x20;       }\
-\
-&#x20;       :root {\
-&#x20;           \--background: #0b0b0d;\
-&#x20;           \--surface: #111114;\
-&#x20;           \--text: #f5f5f5;\
-&#x20;           \--muted: #85858f;\
-&#x20;           \--accent: #a3a3a3;\
-&#x20;           \--glow: rgba(255, 255, 255, 0.08);\
-&#x20;       }\
-\
-&#x20;       html {\
-&#x20;           scroll-behavior: smooth;\
-&#x20;       }\
-\
-&#x20;       body {\
-&#x20;           min-height: 100vh;\
-&#x20;           display: flex;\
-&#x20;           justify-content: center;\
-&#x20;           align-items: center;\
-&#x20;           overflow: hidden;\
-&#x20;           padding: 24px;\
-&#x20;           background: var(--background);\
-&#x20;           color: var(--text);\
-&#x20;           font-family: Inter, "Segoe UI", Arial, sans-serif;\
-&#x20;       }\
-\
-&#x20;       /\* ==============================\
-&#x20;          2\. BACKGROUND EFFECTS\
-&#x20;       \============================== \*/\
-&#x20;       body::before {\
-&#x20;           content: "";\
-&#x20;           position: fixed;\
-&#x20;           inset: 0;\
-&#x20;           pointer-events: none;\
-&#x20;           background:\
-&#x20;               radial-gradient(\
-&#x20;                   ellipse at 50% 40%,\
-&#x20;                   rgba(255, 255, 255, 0.055),\
-&#x20;                   transparent 55%\
-&#x20;               ),\
-&#x20;               radial-gradient(\
-&#x20;                   circle at 15% 85%,\
-&#x20;                   rgba(110, 110, 125, 0.07),\
-&#x20;                   transparent 35%\
-&#x20;               );\
-&#x20;       }\
-\
-&#x20;       .background-grid {\
-&#x20;           position: fixed;\
-&#x20;           inset: 0;\
-&#x20;           pointer-events: none;\
-&#x20;           opacity: 0.12;\
-&#x20;           background-image:\
-&#x20;               linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),\
-&#x20;               linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);\
-&#x20;           background-size: 55px 55px;\
-&#x20;           mask-image: radial-gradient(ellipse at center, black, transparent 80%);\
-&#x20;       }\
-\
-&#x20;       /\* ==============================\
-&#x20;          3\. MAIN CONTAINER\
-&#x20;       \============================== \*/\
-&#x20;       .container {\
-&#x20;           position: relative;\
-&#x20;           z-index: 1;\
-&#x20;           width: 100%;\
-&#x20;           max-width: 650px;\
-&#x20;           padding: 65px 30px;\
-&#x20;           text-align: center;\
-&#x20;           border: 1px solid rgba(255, 255, 255, 0.075);\
-&#x20;           border-radius: 24px;\
-&#x20;           background: rgba(17, 17, 20, 0.72);\
-&#x20;           box-shadow:\
-&#x20;               0 30px 100px rgba(0, 0, 0, 0.45),\
-&#x20;               0 0 80px rgba(255, 255, 255, 0.025);\
-&#x20;           backdrop-filter: blur(16px);\
-&#x20;           animation: appear 1s ease-out both;\
-&#x20;       }\
-\
-&#x20;       /\* ==============================\
-&#x20;          4\. BRAND\
-&#x20;       \============================== \*/\
-&#x20;       .brand {\
-&#x20;           margin-bottom: 45px;\
-&#x20;           font-size: 21px;\
-&#x20;           font-weight: 800;\
-&#x20;           letter-spacing: 7px;\
-&#x20;           color: var(--text);\
-&#x20;       }\
-\
-&#x20;       .brand span {\
-&#x20;           color: var(--muted);\
-&#x20;       }\
-\
-&#x20;       /\* ==============================\
-&#x20;          5\. LOADING SPINNER\
-&#x20;       \============================== \*/\
-&#x20;       .loader {\
-&#x20;           position: relative;\
-&#x20;           width: 66px;\
-&#x20;           height: 66px;\
-&#x20;           margin: 0 auto 36px;\
-&#x20;           border: 2px solid rgba(255, 255, 255, 0.09);\
-&#x20;           border-top-color: #f5f5f5;\
-&#x20;           border-right-color: rgba(255, 255, 255, 0.35);\
-&#x20;           border-radius: 50%;\
-&#x20;           animation: spin 1.2s linear infinite;\
-&#x20;           box-shadow: 0 0 25px rgba(255, 255, 255, 0.05);\
-&#x20;       }\
-\
-&#x20;       .loader::after {\
-&#x20;           content: "";\
-&#x20;           position: absolute;\
-&#x20;           inset: 9px;\
-&#x20;           border: 1px solid rgba(255, 255, 255, 0.12);\
-&#x20;           border-bottom-color: #a0a0a0;\
-&#x20;           border-radius: 50%;\
-&#x20;           animation: spin 2s linear infinite reverse;\
-&#x20;       }\
-\
-&#x20;       /\* ==============================\
-&#x20;          6\. MAIN TEXT\
-&#x20;       \============================== \*/\
-&#x20;       .title {\
-&#x20;           margin-bottom: 16px;\
-&#x20;           font-size: clamp(34px, 7vw, 54px);\
-&#x20;           font-weight: 800;\
-&#x20;           letter-spacing: 5px;\
-&#x20;           line-height: 1.2;\
-&#x20;           color: #ffffff;\
-&#x20;       }\
-\
-&#x20;       .subtitle {\
-&#x20;           margin-bottom: 13px;\
-&#x20;           color: #b0b0b8;\
-&#x20;           font-size: 16px;\
-&#x20;           font-weight: 400;\
-&#x20;           line-height: 1.7;\
-&#x20;       }\
-\
-&#x20;       .kurdish-subtitle {\
-&#x20;           margin-bottom: 35px;\
-&#x20;           color: var(--muted);\
-&#x20;           font-size: 15px;\
-&#x20;           line-height: 1.9;\
-&#x20;       }\
-\
-&#x20;       /\* ==============================\
-&#x20;          7\. LOADING STATUS\
-&#x20;       \============================== \*/\
-&#x20;       .status {\
-&#x20;           display: flex;\
-&#x20;           justify-content: center;\
-&#x20;           align-items: center;\
-&#x20;           gap: 9px;\
-&#x20;           margin-bottom: 22px;\
-&#x20;           color: #c7c7cc;\
-&#x20;           font-size: 11px;\
-&#x20;           font-weight: 700;\
-&#x20;           letter-spacing: 3px;\
-&#x20;       }\
-\
-&#x20;       .status-indicator {\
-&#x20;           width: 7px;\
-&#x20;           height: 7px;\
-&#x20;           border-radius: 50%;\
-&#x20;           background: #cfcfcf;\
-&#x20;           box-shadow: 0 0 12px rgba(255, 255, 255, 0.7);\
-&#x20;           animation: pulse 1.5s ease-in-out infinite;\
-&#x20;       }\
-\
-&#x20;       .status-kurdish {\
-&#x20;           margin-bottom: 25px;\
-&#x20;           color: var(--muted);\
-&#x20;           font-size: 13px;\
-&#x20;           letter-spacing: 0;\
-&#x20;       }\
-\
-&#x20;       /\* ==============================\
-&#x20;          8\. ANIMATED PROGRESS BAR\
-&#x20;       \============================== \*/\
-&#x20;       .progress-container {\
-&#x20;           width: min(100%, 260px);\
-&#x20;           height: 3px;\
-&#x20;           margin: 0 auto 16px;\
-&#x20;           overflow: hidden;\
-&#x20;           border-radius: 10px;\
-&#x20;           background: rgba(255, 255, 255, 0.09);\
-&#x20;       }\
-\
-&#x20;       .progress-bar {\
-&#x20;           width: 35%;\
-&#x20;           height: 100%;\
-&#x20;           border-radius: 10px;\
-&#x20;           background: linear-gradient(\
-&#x20;               90deg,\
-&#x20;               transparent,\
-&#x20;               \#ffffff,\
-&#x20;               \#8f8f8f,\
-&#x20;               transparent\
-&#x20;           );\
-&#x20;           animation: loading 2s ease-in-out infinite;\
-&#x20;       }\
-\
-&#x20;       /\* ==============================\
-&#x20;          9\. ANIMATED LOADING DOTS\
-&#x20;       \============================== \*/\
-&#x20;       .loading-dots {\
-&#x20;           display: flex;\
-&#x20;           justify-content: center;\
-&#x20;           align-items: center;\
-&#x20;           gap: 7px;\
-&#x20;           margin-bottom: 35px;\
-&#x20;       }\
-\
-&#x20;       .loading-dots span {\
-&#x20;           width: 5px;\
-&#x20;           height: 5px;\
-&#x20;           border-radius: 50%;\
-&#x20;           background: #bdbdc4;\
-&#x20;           animation: dots 1.4s ease-in-out infinite;\
-&#x20;       }\
-\
-&#x20;       .loading-dots span:nth-child(2) {\
-&#x20;           animation-delay: 0.2s;\
-&#x20;       }\
-\
-&#x20;       .loading-dots span:nth-child(3) {\
-&#x20;           animation-delay: 0.4s;\
-&#x20;       }\
-\
-&#x20;       /\* ==============================\
-&#x20;          10\. FOOTER\
-&#x20;       \============================== \*/\
-&#x20;       .footer {\
-&#x20;           padding-top: 22px;\
-&#x20;           border-top: 1px solid rgba(255, 255, 255, 0.07);\
-&#x20;           color: #65656e;\
-&#x20;           font-size: 11px;\
-&#x20;           letter-spacing: 1.5px;\
-&#x20;       }\
-\
-&#x20;       .footer strong {\
-&#x20;           color: #bdbdc4;\
-&#x20;           font-weight: 600;\
-&#x20;       }\
-\
-&#x20;       /\* ==============================\
-&#x20;          11\. CSS ANIMATIONS\
-&#x20;       \============================== \*/\
-&#x20;       @keyframes spin {\
-&#x20;           to {\
-&#x20;               transform: rotate(360deg);\
-&#x20;           }\
-&#x20;       }\
-\
-&#x20;       @keyframes pulse {\
-&#x20;           0%, 100% {\
-&#x20;               opacity: 0.45;\
-&#x20;               transform: scale(0.85);\
-&#x20;           }\
-&#x20;           50% {\
-&#x20;               opacity: 1;\
-&#x20;               transform: scale(1.15);\
-&#x20;           }\
-&#x20;       }\
-\
-&#x20;       @keyframes loading {\
-&#x20;           0% {\
-&#x20;               transform: translateX(-150%);\
-&#x20;           }\
-&#x20;           100% {\
-&#x20;               transform: translateX(400%);\
-&#x20;           }\
-&#x20;       }\
-\
-&#x20;       @keyframes dots {\
-&#x20;           0%, 60%, 100% {\
-&#x20;               opacity: 0.3;\
-&#x20;               transform: translateY(0);\
-&#x20;           }\
-&#x20;           30% {\
-&#x20;               opacity: 1;\
-&#x20;               transform: translateY(-5px);\
-&#x20;           }\
-&#x20;       }\
-\
-&#x20;       @keyframes appear {\
-&#x20;           from {\
-&#x20;               opacity: 0;\
-&#x20;               transform: translateY(20px);\
-&#x20;           }\
-&#x20;           to {\
-&#x20;               opacity: 1;\
-&#x20;               transform: translateY(0);\
-&#x20;           }\
-&#x20;       }\
-\
-&#x20;       /\* ==============================\
-&#x20;          12\. RESPONSIVE DESIGN\
-&#x20;       \============================== \*/\
-&#x20;       @media (max-width: 600px) {\
-&#x20;           body {\
-&#x20;               padding: 16px;\
-&#x20;           }\
-\
-&#x20;           .container {\
-&#x20;               padding: 48px 20px;\
-&#x20;               border-radius: 18px;\
-&#x20;           }\
-\
-&#x20;           .brand {\
-&#x20;               margin-bottom: 38px;\
-&#x20;               font-size: 18px;\
-&#x20;               letter-spacing: 6px;\
-&#x20;           }\
-\
-&#x20;           .loader {\
-&#x20;               width: 58px;\
-&#x20;               height: 58px;\
-&#x20;           }\
-\
-&#x20;           .title {\
-&#x20;               font-size: clamp(30px, 9vw, 42px);\
-&#x20;               letter-spacing: 3px;\
-&#x20;           }\
-\
-&#x20;           .subtitle {\
-&#x20;               font-size: 14px;\
-&#x20;           }\
-\
-&#x20;           .kurdish-subtitle {\
-&#x20;               font-size: 14px;\
-&#x20;           }\
-\
-&#x20;           .footer {\
-&#x20;               font-size: 10px;\
-&#x20;               letter-spacing: 1px;\
-&#x20;           }\
-&#x20;       }\
-\
-&#x20;       /\* ==============================\
-&#x20;          13\. REDUCED MOTION ACCESSIBILITY\
-&#x20;       \============================== \*/\
-&#x20;       @media (prefers-reduced-motion: reduce) {\
-&#x20;           \*,\
-&#x20;           \*::before,\
-&#x20;           \*::after {\
-&#x20;               animation-duration: 0.01ms !important;\
-&#x20;               animation-iteration-count: 1 !important;\
-&#x20;               scroll-behavior: auto !important;\
-&#x20;           }\
-&#x20;       }\
-&#x20;   \</style>\
-\</head>\
-\
-\<body>\
-\
-&#x20;   \<div class="background-grid">\</div>\
-\
-&#x20;   \<main class="container">\
-\
-&#x20;       \<div class="brand">RAM\<span>iiN\</span>\</div>\
-\
-&#x20;       \<div class="loader" aria-hidden="true">\</div>\
-\
-&#x20;       \<h1 class="title">COMING SOON\</h1>\
-\
-&#x20;       \<p class="subtitle">\
-&#x20;           Something amazing is on the way...\
-&#x20;       \</p>\
-\
-&#x20;       \<p class="kurdish-subtitle" lang="ckb" dir="rtl">\
-&#x20;           شتێکی زۆر جوان لە ڕێگادایە...\
-&#x20;       \</p>\
-\
-&#x20;       \<div class="status">\
-&#x20;           \<span class="status-indicator">\</span>\
-&#x20;           \<span>PLEASE WAIT\</span>\
-&#x20;       \</div>\
-\
-&#x20;       \<p class="status-kurdish" lang="ckb" dir="rtl">\
-&#x20;           تکایە چاوەڕێ بکە\
-&#x20;       \</p>\
-\
-&#x20;       \<div class="progress-container" aria-hidden="true">\
-&#x20;           \<div class="progress-bar">\</div>\
-&#x20;       \</div>\
-\
-&#x20;       \<div class="loading-dots" aria-label="Loading">\
-&#x20;           \<span>\</span>\
-&#x20;           \<span>\</span>\
-&#x20;           \<span>\</span>\
-&#x20;       \</div>\
-\
-&#x20;       \<footer class="footer">\
-&#x20;           © 2026 \<strong>RAMiiN\</strong> — ALL RIGHTS RESERVED\
-&#x20;       \</footer>\
-\
-&#x20;   \</main>\
-\
-\</body>\
-\</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RAMiiN — Coming Soon</title>
+  <meta name="description" content="RAMiiN is coming soon.">
+
+  <style>
+    /* ==========================================================
+       1. DESIGN TOKENS
+       ========================================================== */
+    :root {
+      --bg-0: #0d0e11;          /* deepest charcoal */
+      --bg-1: #17191f;          /* lifted charcoal */
+      --line: rgba(255, 255, 255, 0.08);
+      --text: #eceef3;          /* primary text */
+      --muted: #8a90a0;         /* secondary text */
+      --accent: #6ee7f9;        /* ice cyan */
+      --accent-2: #8b7bff;      /* soft violet */
+      --glow: rgba(110, 231, 249, 0.35);
+
+      /* Latin + Kurdish (Arabic script) system font stacks, no downloads */
+      --font-latin: "Segoe UI", "Helvetica Neue", Inter, system-ui, -apple-system, Roboto, Arial, sans-serif;
+      --font-kurdish: "Segoe UI", Tahoma, "Noto Naskh Arabic", "Noto Sans Arabic", "Arabic Typesetting", Arial, sans-serif;
+    }
+
+    /* ==========================================================
+       2. RESET & BASE
+       ========================================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { height: 100%; }
+
+    body {
+      font-family: var(--font-latin);
+      color: var(--text);
+      background:
+        radial-gradient(ellipse 70% 55% at 50% 38%, #1d2029 0%, transparent 70%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%);
+      background-color: var(--bg-0);
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* Faint technical grid, fades out toward the edges */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 56px 56px;
+      -webkit-mask-image: radial-gradient(circle at 50% 42%, #000 0%, transparent 68%);
+              mask-image: radial-gradient(circle at 50% 42%, #000 0%, transparent 68%);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    /* Kurdish text: right-to-left, and NO letter-spacing (breaks Arabic joining) */
+    [lang="ckb"] {
+      font-family: var(--font-kurdish);
+      direction: rtl;
+      letter-spacing: 0 !important;
+    }
+
+    /* ==========================================================
+       3. PAGE LAYOUT
+       ========================================================== */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: clamp(1.5rem, 4vw, 3rem) 1.25rem;
+      text-align: center;
+    }
+
+    /* ---------- Brand (top) ---------- */
+    .brand {
+      font-size: clamp(1.1rem, 2.4vw, 1.4rem);
+      font-weight: 600;
+      letter-spacing: 0.32em;
+      padding-left: 0.32em;     /* optically re-centres tracked text */
+      color: var(--text);
+      text-shadow: 0 0 18px var(--glow);
+    }
+
+    /* ---------- Centre stack ---------- */
+    .stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(1.5rem, 4vh, 2.5rem);
+      width: 100%;
+      max-width: 40rem;
+    }
+
+    /* ==========================================================
+       4. SPINNER — three counter-rotating rings + pulsing core
+       ========================================================== */
+    .spinner {
+      --size: clamp(120px, 26vw, 168px);
+      position: relative;
+      width: var(--size);
+      height: var(--size);
+      display: grid;
+      place-items: center;
+    }
+
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid transparent;
+    }
+
+    /* Outer ring: cyan arc, clockwise */
+    .ring--outer {
+      inset: 0;
+      border-top-color: var(--accent);
+      border-right-color: rgba(110, 231, 249, 0.18);
+      filter: drop-shadow(0 0 8px var(--glow));
+      animation: spin 1.8s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+    }
+
+    /* Middle ring: violet arc, counter-clockwise */
+    .ring--middle {
+      inset: 16%;
+      border-bottom-color: var(--accent-2);
+      border-left-color: rgba(139, 123, 255, 0.18);
+      filter: drop-shadow(0 0 8px rgba(139, 123, 255, 0.45));
+      animation: spin 2.6s linear infinite reverse;
+    }
+
+    /* Inner ring: thin dashed orbit */
+    .ring--inner {
+      inset: 32%;
+      border: 1px dashed rgba(255, 255, 255, 0.28);
+      animation: spin 9s linear infinite;
+    }
+
+    /* Glowing core */
+    .core {
+      width: 14%;
+      height: 14%;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 18px 4px var(--glow), 0 0 48px 10px rgba(139, 123, 255, 0.25);
+      animation: pulse 2.2s ease-in-out infinite;
+    }
+
+    /* ==========================================================
+       5. TYPOGRAPHY
+       ========================================================== */
+    .title {
+      font-size: clamp(2.1rem, 8.5vw, 4.5rem);
+      font-weight: 200;
+      line-height: 1.05;
+      letter-spacing: 0.16em;
+      padding-left: 0.16em;
+      background: linear-gradient(180deg, #ffffff 25%, #9aa1b3 100%);
+      -webkit-background-clip: text;
+              background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      animation: breathe 4.5s ease-in-out infinite;
+    }
+
+    .title--ku {
+      font-size: clamp(1.6rem, 6vw, 2.6rem);
+      font-weight: 600;
+      line-height: 1.4;
+      margin-top: -0.5rem;
+      /* Kurdish title uses a solid colour for crisp Arabic glyphs */
+      background: none;
+      -webkit-text-fill-color: var(--text);
+      color: var(--text);
+      animation: none;
+      opacity: 0.9;
+    }
+
+    .subtitle {
+      font-size: clamp(0.95rem, 2.4vw, 1.15rem);
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .subtitle--ku {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      margin-top: 0.25rem;
+    }
+
+    /* ==========================================================
+       6. PROGRESS BAR
+       ========================================================== */
+    .progress {
+      position: relative;
+      width: min(18rem, 70vw);
+      height: 3px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .progress::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 40%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
+      box-shadow: 0 0 12px var(--glow);
+      animation: sweep 2.4s ease-in-out infinite;
+    }
+
+    /* ==========================================================
+       7. STATUS + LOADING DOTS (bottom)
+       ========================================================== */
+    .status {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .status__row {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      letter-spacing: 0.28em;
+    }
+
+    .dots {
+      display: inline-flex;
+      gap: 6px;
+    }
+
+    .dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--glow);
+      animation: dot 1.4s ease-in-out infinite;
+    }
+    .dots span:nth-child(2) { animation-delay: 0.18s; }
+    .dots span:nth-child(3) { animation-delay: 0.36s; }
+
+    .status__ku { font-size: 0.9rem; }
+
+    /* ==========================================================
+       8. KEYFRAMES
+       ========================================================== */
+    @keyframes spin   { to { transform: rotate(360deg); } }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.8); opacity: 0.7; }
+      50%      { transform: scale(1.25); opacity: 1; }
+    }
+
+    @keyframes breathe {
+      0%, 100% { filter: drop-shadow(0 0 0 rgba(110, 231, 249, 0)); }
+      50%      { filter: drop-shadow(0 0 22px rgba(110, 231, 249, 0.28)); }
+    }
+
+    @keyframes sweep {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(250%); }
+    }
+
+    @keyframes dot {
+      0%, 80%, 100% { transform: translateY(0) scale(0.7); opacity: 0.35; }
+      40%           { transform: translateY(-6px) scale(1); opacity: 1; }
+    }
+
+    /* ==========================================================
+       9. RESPONSIVE + ACCESSIBILITY
+       ========================================================== */
+    @media (max-width: 480px) {
+      .title    { letter-spacing: 0.1em; padding-left: 0.1em; }
+      .brand    { letter-spacing: 0.24em; }
+      .status__row { letter-spacing: 0.2em; }
+    }
+
+    @media (max-height: 560px) {
+      .stage { gap: 1rem; }
+      .spinner { --size: 96px; }
+    }
+
+    /* Respect users who prefer less motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <!-- Brand name -->
+    <header class="brand" aria-label="RAMiiN">RAMiiN</header>
+
+    <!-- Centre content -->
+    <section class="stage">
+
+      <!-- Animated CSS spinner (decorative) -->
+      <div class="spinner" aria-hidden="true">
+        <span class="ring ring--outer"></span>
+        <span class="ring ring--middle"></span>
+        <span class="ring ring--inner"></span>
+        <span class="core"></span>
+      </div>
+
+      <!-- English -->
+      <div>
+        <h1 class="title">COMING SOON</h1>
+        <p class="subtitle">Something amazing is on the way...</p>
+      </div>
+
+      <!-- Kurdish (Sorani) -->
+      <div lang="ckb" dir="rtl">
+        <h2 class="title title--ku">بەم زووانە</h2>
+        <p class="subtitle subtitle--ku">شتێکی سەرسوڕهێنەر لە ڕێگایە...</p>
+      </div>
+
+      <!-- Indeterminate progress bar -->
+      <div class="progress" role="progressbar" aria-label="Loading"></div>
+    </section>
+
+    <!-- Status text + loading dots -->
+    <footer class="status" role="status">
+      <div class="status__row">
+        <span>PLEASE WAIT</span>
+        <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+      </div>
+      <span class="status__ku" lang="ckb" dir="rtl">تکایە چاوەڕێ بکە...</span>
+    </footer>
+
+  </main>
+</body>
+</html>
